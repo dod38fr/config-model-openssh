@@ -24,7 +24,7 @@ Once this module is installed, you can run:
   # cme edit sshd
 
 If L<cme> fails to load your C<sshd_config>, you can try L<cme> with
--force option.
+C<-force> option.
 
 Likewise, you can edit your C<~/.ssh/config> file with:
 
