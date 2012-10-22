@@ -26,7 +26,7 @@ to specify port forwarding in a ssh configuration.',
 
 By default, the local port is bound in accordance with the GatewayPorts setting. However, an explicit bind_address may be used to bind the connection to a specific address.
 
-The bind_address of \x{201c}localhost\x{201d} indicates that the listening port be bound for local use only, while an empty address or \x{2018}*\x{2019} indicates that the port should be available from all interfaces."
+The bind_address of 'localhost' indicates that the listening port be bound for local use only, while an empty address or '*' indicates that the port should be available from all interfaces."
       },
       'port',
       {

@@ -29,14 +29,14 @@ inside a Host directive of a ssh configuration.',
         'value_type' => 'boolean',
         'upstream_default' => '0',
         'type' => 'leaf',
-        'description' => "If set to \x{201c}yes\x{201d}, passphrase/password querying will be disabled. In addition, the ServerAliveInterval option will be set to 300 seconds by default. This option is useful in scripts and other batch jobs where no user is present to supply the password, and where it is desirable to detect a broken network swiftly. "
+        'description' => "If set to 'yes', passphrase/password querying will be disabled. In addition, the ServerAliveInterval option will be set to 300 seconds by default. This option is useful in scripts and other batch jobs where no user is present to supply the password, and where it is desirable to detect a broken network swiftly. "
       },
       'BindAddress',
       {
         'value_type' => 'uniline',
         'experience' => 'advanced',
         'type' => 'leaf',
-        'description' => "Use the specified address on the local machine as the source address of the connection. Only useful on systems with more than one address. Note that this option does not work if UsePrivilegedPort is set to \x{201c}yes\x{201d}."
+        'description' => "Use the specified address on the local machine as the source address of the connection. Only useful on systems with more than one address. Note that this option does not work if UsePrivilegedPort is set to 'yes'."
       },
       'ChallengeResponseAuthentication',
       {
@@ -159,14 +159,14 @@ inside a Host directive of a ssh configuration.',
         'upstream_default' => 'no',
         'experience' => 'master',
         'type' => 'leaf',
-        'description' => 'Enables the sharing of multiple sessions over a single network connection. When set to ``yes\'\', ssh(1) will listen for connections on a control socket specified using the ControlPath argument. Additional sessions can connect to this socket using the same ControlPath with ControlMaster set to ``no\'\' (the default). These sessions will try to reuse the master instance\'s network connection rather than initiating new ones, but will fall back to connecting normally if the control socket does not exist, or is not listening.
+        'description' => 'Enables the sharing of multiple sessions over a single network connection. When set to \'yes\', ssh(1) will listen for connections on a control socket specified using the ControlPath argument. Additional sessions can connect to this socket using the same ControlPath with ControlMaster set to \'no\' (the default). These sessions will try to reuse the master instance\'s network connection rather than initiating new ones, but will fall back to connecting normally if the control socket does not exist, or is not listening.
 
-Setting this to ``ask\'\' will cause ssh to listen for control connections, but require confirmation using the SSH_ASKPASS program before they are accepted (see ssh-add(1) for details). If the ControlPath cannot be opened, ssh will continue without connecting to a master instance.
+Setting this to \'ask\' will cause ssh to listen for control connections, but require confirmation using the SSH_ASKPASS program before they are accepted (see ssh-add(1) for details). If the ControlPath cannot be opened, ssh will continue without connecting to a master instance.
 
 X11 and ssh-agent(1) forwarding is supported over these multiplexed connections, however the display and agent forwarded will be the one belonging to the master connection i.e. it is not pos sible to forward multiple displays or agents.
 
 Two additional options allow for opportunistic multiplexing: try to use a master connection but fall back to creating a new one if
- one does not already exist. These options are: ``auto\'\' and ``autoask\'\'. The latter requires confirmation like the ``ask\'\' option.
+ one does not already exist. These options are: \'auto\' and \'autoask\'. The latter requires confirmation like the \'ask\' option.
 ',
         'choice' => [
           'no',
@@ -181,7 +181,7 @@ Two additional options allow for opportunistic multiplexing: try to use a master
         'value_type' => 'uniline',
         'experience' => 'master',
         'type' => 'leaf',
-        'description' => 'Specify the path to the control socket used for connection sharing as described in the ControlMaster section above or the string ``none\'\' to disable connection sharing.  In the path, `%l\' will be substituted by the local host name, `%h\' will be substituted by the target host name, `%p\' the port, and `%r\' by the remotelogin username. It is recommended that any ControlPath used for opportunistic connection sharing include at least %h, %p, and %r. This ensures that shared connections are uniquely identified.
+        'description' => 'Specify the path to the control socket used for connection sharing as described in the ControlMaster section above or the string \'none\' to disable connection sharing.  In the path, \'%l\' will be substituted by the local host name, \'%h\' will be substituted by the target host name, \'%p\' the port, and \'%r\' by the remotelogin username. It is recommended that any ControlPath used for opportunistic connection sharing include at least %h, %p, and %r. This ensures that shared connections are uniquely identified.
 '
       },
       'DynamicForward',
@@ -194,7 +194,7 @@ Two additional options allow for opportunistic multiplexing: try to use a master
         'type' => 'list',
         'description' => 'Specifies that a TCP port on the local machine be forwarded over the secure channel, and the application protocol is then used to determine where to connect to from the remote machine.
 
-The argument must be [bind_address:]port. IPv6 addresses can be specified by enclosing addresses in square brackets or by using an alternative syntax: [bind_address/]port. By default, the local port is bound in accordance with the GatewayPorts setting. However, an explicit bind_address may be used to bind the connection to a specific address. The bind_address of ``localhost\'\' indicates that the listening port be bound for local use only, while an empty address or `*\' indicates that the port should be available from all interfaces.
+The argument must be [bind_address:]port. IPv6 addresses can be specified by enclosing addresses in square brackets or by using an alternative syntax: [bind_address/]port. By default, the local port is bound in accordance with the GatewayPorts setting. However, an explicit bind_address may be used to bind the connection to a specific address. The bind_address of \'localhost\' indicates that the listening port be bound for local use only, while an empty address or \'*\' indicates that the port should be available from all interfaces.
 
 Currently the SOCKS4 and SOCKS5 protocols are supported, and ssh(1) will act as a SOCKS server. Multiple forwardings may be specified, and additional forwardings can be given on the command line. Only the superuser can forward privileged ports.
 '
@@ -204,7 +204,7 @@ Currently the SOCKS4 and SOCKS5 protocols are supported, and ssh(1) will act as 
         'value_type' => 'uniline',
         'upstream_default' => '~',
         'type' => 'leaf',
-        'description' => 'Sets the escape character (default: `~\'). The escape character can also be set on the command line.  The argument should be a single character, `^\' followed by a letter, or ``none\'\' to disable the escape character entirely (making the connection transparent for binary data).
+        'description' => 'Sets the escape character (default: \'~\'). The escape character can also be set on the command line.  The argument should be a single character, \'^\' followed by a letter, or \'none\' to disable the escape character entirely (making the connection transparent for binary data).
 '
       },
       'ExitOnForwardFailure',
@@ -337,7 +337,7 @@ See the X11 SECURITY extension specification for full details on the restriction
         'type' => 'list',
         'description' => 'Specifies a file from which the user\'s RSA or DSA authentication identity is read. The default is ~/.ssh/identity for protocol version 1, and ~/.ssh/id_rsa and ~/.ssh/id_dsa for protocol version 2. Additionally, any identities represented by the authentication agent will be used for authentication.
 
-The file name may use the tilde syntax to refer to a user\'s home directory or one of the following escape characters: `%d\' (local user\'s home directory), `%u\' (local user name), `%l\' (local host  name), `%h\' (remote host name) or `%r\' (remote user name).
+The file name may use the tilde syntax to refer to a user\'s home directory or one of the following escape characters: \'%d\' (local user\'s home directory), \'%u\' (local user name), \'%l\' (local host  name), \'%h\' (remote host name) or \'%r\' (remote user name).
 
 It is possible to have multiple identity files specified in con figuration files; all these identities will be tried in sequence.
 '
@@ -358,7 +358,7 @@ It is possible to have multiple identity files specified in con figuration files
         },
         'experience' => 'master',
         'type' => 'list',
-        'description' => 'Specifies the list of methods to use in keyboard-interactive authentication.  Multiple method names must be comma-separated. The default is to use the server specified list. The methods available vary depending on what the server supports. For an OpenSSH server, it may be zero or more of: ``bsdauth\'\', ``pam\'\', and ``skey\'\'.'
+        'description' => 'Specifies the list of methods to use in keyboard-interactive authentication.  Multiple method names must be comma-separated. The default is to use the server specified list. The methods available vary depending on what the server supports. For an OpenSSH server, it may be zero or more of: \'bsdauth\', \'pam\', and \'skey\'.'
       },
       'GatewayPorts',
       {
