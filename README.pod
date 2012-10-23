@@ -21,24 +21,25 @@ L<Config::Model>
 
 Once this module is installed, you can run:
 
-  # cme edit sshd
+ # cme edit sshd
 
 If L<cme> fails to load your C<sshd_config>, you can try L<cme> with
 C<-force> option.
 
 Likewise, you can edit your C<~/.ssh/config> file with:
 
-  $ cme edit ssh
+ $ cme edit ssh
 
 Or to edit C</etc/ssh/ssh_config>, run as root:
 
-  # cme edit ssh
+ # cme edit ssh
 
-=head2 Installation
+=head2 Installation from git
 
-   	perl Build.PL
-	./Build test
+Make sure that L<Config::Model> and C<Dist::Zilla> are installed.
 
-If you want to install this software without packaging, type also:
+ dzil build
 
-    ./Build install
+If you want to install this software without packaging, you can also run:
+
+ dzil install
