@@ -13,13 +13,13 @@ Config::Model::OpenSsh - OpenSsh config editor
 The following will launch a graphical editor (if L<Config::Model::TkUI>
 is installed):
 
- config-edit -application sshd 
+ sudo cme edit sshd 
 
 =head2 command line
 
 This command will add a C<Host Foo> section in C<~/.ssh/config>: 
 
- config-edit -application ssh -ui none Host:Foo ForwardX11=yes
+ cme modify ssh Host:Foo ForwardX11=yes
  
 =head2 programmatic
 
@@ -44,19 +44,19 @@ content of these configuration files from a Perl programs.
 Once this module is installed, you can edit C</etc/ssh/sshd_config> 
 with run (as root) :
 
- # config-edit -application sshd 
+ # cme edit sshd 
 
 To edit F</etc/ssh/ssh_config>, run (as root):
 
- # config-edit -application ssh
+ # cme edit ssh
 
 To edit F<~/.ssh/config>, run as a normal user:
 
- # config-edit -application ssh
+ # cme edit ssh
 
 =head1 user interfaces
 
-As mentioned in L<config-edit>, several user interfaces are available:
+As mentioned in L<cme>, several user interfaces are available with C<edit> subcommand:
 
 =over
 
@@ -66,16 +66,11 @@ A graphical interface is proposed by default if L<Config::Model::TkUI> is instal
 
 =item *
 
-A Curses interface with option C<-ui curses> if L<Config::Model::CursesUI> is installed.
+A Curses interface with option C<cme edit ssh -ui curses> if L<Config::Model::CursesUI> is installed.
 
 =item *
 
-A Shell like interface with option C<-ui term>.
-
-=item *
-
-A L<Fuse> virtual file system with option C<< -ui fuse -fuse_dir <mountpoint> >> 
-if L<Fuse> is installed (Linux only)
+A Shell like interface with option C<cme edit ssh -ui shell>.
 
 =back
 
@@ -86,4 +81,4 @@ Dominique Dumont, (ddumont at cpan dot org)
 
 =head1 SEE ALSO
 
-L<config-edit>, L<Config::Model>,
+L<cme>, L<Config::Model>,
