@@ -36,7 +36,7 @@ Or to edit C</etc/ssh/ssh_config>, run as root:
 
 =head2 Installation from git
 
-Make sure that L<Config::Model> and C<Dist::Zilla> are installed.
+Make sure that L<Config::Model> and L<Dist::Zilla> are installed, then run:
 
  dzil build
 
