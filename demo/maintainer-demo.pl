@@ -77,7 +77,7 @@ foreach my $inc (@INC) {
     }
 }
 
-my $showpostinst = "perl -I../lib -S config-edit -model Sshd -ui none -save" ;
+my $showpostinst = "perl -I../lib -S cme migrate sshd" ;
 my $postinst = $showpostinst . " -model_dir lib/Config/Model/models "
 	 . "-root_dir .  ";
 
