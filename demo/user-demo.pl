@@ -79,11 +79,11 @@ foreach my $inc (@INC) {
     }
 }
 
-my $postinst = "perl -I../lib -S config-edit -model Sshd -model_dir lib/Config/Model/models "
-	 . "-root_dir . -ui none  -save";
+my $postinst = "perl -I../lib -S cme migrate sshd -model-dir lib/Config/Model/models "
+	 . "-root-dir . ";
 
 print "Upstream changelog: KeepAlive is changed to TCPKeepAlive\n";
-print "User file is updated by package posinst...\n";
+print "User file is updated by package postinst...\n";
 my_system($postinst) ;
 
 print "Changing model to reflect maintainer's work. Please wait ..." ;
@@ -107,25 +107,22 @@ print "Package upgrade: same postinst, Cipher list is added in config file\n";
 my_system($postinst) ;
 
 print "Even command line is safe for users: try to modify IgnoreRhosts with bad value\n";
-print "Run: 'config-edit-sshd -ui none IgnoreRhosts=oui'\n";
-my_system("perl -I../lib -S config-edit -model Sshd -model_dir lib/Config/Model/models ".
- 	 "-root_dir . -ui none  IgnoreRhosts=oui") ;
+my_system("perl -I../lib -S cme modify sshd -model_dir lib/Config/Model/models ".
+ 	 "-root_dir . IgnoreRhosts=oui", 'cme modify sshd IgnoreRhosts=oui') ;
 
 my $fuse_dir = 'my_fuse' ;
 say "If you prefer to use a virtual file system (script ?)" ;
-say "Run: 'config-edit-sshd -ui fuse -fuse_dir $fuse_dir'";
 mkdir ($fuse_dir,0755) unless -d $fuse_dir ;
-my_system("perl -I../lib -S config-edit -model Sshd -model_dir lib/Config/Model/models ".
-    "-root_dir .  -ui fuse -fuse_dir $fuse_dir"
+my_system("perl -I../lib -S cme fusefs sshd -model_dir lib/Config/Model/models ".
+    "-root_dir .  -fuse_dir $fuse_dir", "cme fusefs sshd -fuse_dir $fuse_dir"
 ) ;
 my_system("ls --classify $fuse_dir",1);
 my_system(qq!echo "/etc/my_banner.txt" > $fuse_dir/Banner!,1) ; 
 my_system("fusermount -u $fuse_dir",1);	 
 	 
 print "Beginners will probably prefer a GUI\n";
-print "Run: config-edit-sshd\n";
-my_system("perl -I../lib -S config-edit -model Sshd -model_dir lib/Config/Model/models ".
-	 "-root_dir .  ") ;
+my_system("perl -I../lib -S cme edit sshd -model_dir lib/Config/Model/models ".
+	 "-root_dir .  ", 'cme edit sshd') ;
 
 END {
     system("fusermount -u $fuse_dir");
