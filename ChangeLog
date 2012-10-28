@@ -1,3 +1,10 @@
+2012-10-28  Dominique Dumont <domi.dumont@free.fr> v 1.225
+
+    Doc and demo fix release
+    * updated demos to use cme instead of deprecated config-edit
+    * likewise, clean up pod doc to use cme command
+    * removed non utf-8 char from ssh doc (Fix RT 79077)
+
 2012-05-22  Dominique Dumont <domi.dumont@free.fr> v 1.224
 
     * Backend: make sure that AuthorizedKeysFile items are
