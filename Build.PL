@@ -25,7 +25,7 @@ use strict ;
 
 require 5.010;
 
-my %model_files = map { ($_, $_ ) } glob("lib/Config/Model/*.d/*") ;
+my %appli_files = map { ( $_, $_ ) } glob("lib/Config/Model/*.d/*");
 
 # check that pod docs are up-to-date this is redundant with work done by
 # dzil. But this enable to re-build the docs downstream.
@@ -65,6 +65,6 @@ my $build = $class->new
 
 
 $build->add_build_element('pl');
-$build->add_build_element('model'); # see model_files above
+$build->add_build_element('appli');
 
 $build->create_build_script;
