@@ -38,7 +38,7 @@ my $class = Module::Build->subclass(
 sub ACTION_build {
     my $self = shift;
     # below requires Config::Model 2.026
-    system ($^X, qw!-Ilib script/cme gen-class-pod!) ;
+    system ($^X, qw!-Ilib -S cme gen-class-pod!) ;
     $self->SUPER::ACTION_build;
 }
 SUBCLASS
@@ -49,17 +49,10 @@ my $build = $class->new
    license       => 'lgpl',
    dist_author   => "Dominique Dumont (ddumont at cpan dot org)",
    dist_abstract => "OpenSsh configuration files graphical editor",
-   model_files => \%model_files ,
+   appli_files   => \%appli_files ,
  
 ##{ $plugin->get_prereqs ##}
 
-    meta_merge => {
-        resources => {
-            homepage => 'http://config-model.wiki.sourceforge.net',
-            MailingList => 'https://lists.sourceforge.net/lists/listinfo/config-model-users',
-            repository => 'http://config-model.hg.sourceforge.net:8000/hgroot/config-model/config-model',
-        },
-   },
    add_to_cleanup => [qw/wr_test/] ,
   );
 
