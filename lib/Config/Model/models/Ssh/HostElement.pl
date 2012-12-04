@@ -182,6 +182,14 @@ Two additional options allow for opportunistic multiplexing: try to use a master
         'description' => 'Specify the path to the control socket used for connection sharing as described in the ControlMaster section above or the string \'none\' to disable connection sharing.  In the path, \'%l\' will be substituted by the local host name, \'%h\' will be substituted by the target host name, \'%p\' the port, and \'%r\' by the remotelogin username. It is recommended that any ControlPath used for opportunistic connection sharing include at least %h, %p, and %r. This ensures that shared connections are uniquely identified.
 '
       },
+      'ControlPersist',
+      {
+        'value_type' => 'uniline',
+        'summary' => 'persists the master connection in the background',
+        'match' => '^(?i)yes|no|\\d+$',
+        'type' => 'leaf',
+        'description' => 'When used in conjunction with ControlMaster, specifies that the master connection should remain open in the background (waiting for future client connections) after the initial client connection has been closed. If set to ``no\'\', then the master connection will not be placed into the background, and will close as soon as the initial client connection is closed. If set to ``yes\'\', then the master connection will remain in the background indef- initely (until killed or closed via a mechanism such as the ssh(1) ``-O exit\'\' option). If set to a time in seconds, or a time in any of the formats documented in sshd_config(5), then the backgrounded master connection will automatically terminate after it has remained idle (with no client connections) for the specified time.'
+      },
       'DynamicForward',
       {
         'cargo' => {

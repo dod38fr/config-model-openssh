@@ -218,4 +218,6 @@ ForwardX11           yes
 HostName             localhost
 Port                 20022
 User                 ocad
+ControlPersist       YES
+
 
