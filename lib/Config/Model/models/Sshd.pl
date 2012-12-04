@@ -88,12 +88,12 @@ validate /etc/ssh/sshd_config
       },
       'AuthorizedKeysFile',
       {
-        'migrate_values_from' => '- AuthorizedKeysFile2',
         'cargo' => {
           'value_type' => 'uniline',
           'type' => 'leaf'
         },
         'experience' => 'advanced',
+        'migrate_values_from' => '- AuthorizedKeysFile2',
         'type' => 'list',
         'description' => 'Specifies the file that contains the public keys that can be used for user authentication. AuthorizedKeysFile may contain tokens of the form %T which are substituted during connection setup.'
       },

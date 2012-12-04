@@ -29,14 +29,14 @@ inside a Host directive of a ssh configuration.',
         'value_type' => 'boolean',
         'upstream_default' => '0',
         'type' => 'leaf',
-        'description' => "If set to 'yes', passphrase/password querying will be disabled. In addition, the ServerAliveInterval option will be set to 300 seconds by default. This option is useful in scripts and other batch jobs where no user is present to supply the password, and where it is desirable to detect a broken network swiftly. "
+        'description' => 'If set to \'yes\', passphrase/password querying will be disabled. In addition, the ServerAliveInterval option will be set to 300 seconds by default. This option is useful in scripts and other batch jobs where no user is present to supply the password, and where it is desirable to detect a broken network swiftly. '
       },
       'BindAddress',
       {
         'value_type' => 'uniline',
         'experience' => 'advanced',
         'type' => 'leaf',
-        'description' => "Use the specified address on the local machine as the source address of the connection. Only useful on systems with more than one address. Note that this option does not work if UsePrivilegedPort is set to 'yes'."
+        'description' => 'Use the specified address on the local machine as the source address of the connection. Only useful on systems with more than one address. Note that this option does not work if UsePrivilegedPort is set to \'yes\'.'
       },
       'ChallengeResponseAuthentication',
       {
