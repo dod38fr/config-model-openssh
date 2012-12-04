@@ -157,7 +157,6 @@ inside a Host directive of a ssh configuration.',
       {
         'value_type' => 'enum',
         'upstream_default' => 'no',
-        'experience' => 'master',
         'type' => 'leaf',
         'description' => 'Enables the sharing of multiple sessions over a single network connection. When set to \'yes\', ssh(1) will listen for connections on a control socket specified using the ControlPath argument. Additional sessions can connect to this socket using the same ControlPath with ControlMaster set to \'no\' (the default). These sessions will try to reuse the master instance\'s network connection rather than initiating new ones, but will fall back to connecting normally if the control socket does not exist, or is not listening.
 
@@ -179,7 +178,6 @@ Two additional options allow for opportunistic multiplexing: try to use a master
       'ControlPath',
       {
         'value_type' => 'uniline',
-        'experience' => 'master',
         'type' => 'leaf',
         'description' => 'Specify the path to the control socket used for connection sharing as described in the ControlMaster section above or the string \'none\' to disable connection sharing.  In the path, \'%l\' will be substituted by the local host name, \'%h\' will be substituted by the target host name, \'%p\' the port, and \'%r\' by the remotelogin username. It is recommended that any ControlPath used for opportunistic connection sharing include at least %h, %p, and %r. This ensures that shared connections are uniquely identified.
 '
