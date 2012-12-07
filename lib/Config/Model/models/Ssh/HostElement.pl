@@ -558,6 +558,24 @@ This directive is useful in conjunction with nc(1) and its proxy support. For ex
 
 If the bind_address is not specified, the default is to only bind to loopback addresses. If the bind_address is \'*\' or an empty string, then the forwarding is requested to listen on all inter faces. Specifying a remote bind_address will only succeed if the server\'s GatewayPorts option is enabled (see sshd_config(5)).'
       },
+      'RequestTTY',
+      {
+        'value_type' => 'enum',
+        'help' => {
+          'yes' => 'always request a TTY when standard input is a TTY',
+          'auto' => 'request a TTY when opening a login session',
+          'no' => 'never request a TTY',
+          'force' => 'always request a TTY'
+        },
+        'type' => 'leaf',
+        'description' => 'Specifies whether to request a pseudo-tty for the session. This option mirrors the -t and -T flags for C<ssh>.',
+        'choice' => [
+          'yes',
+          'no',
+          'force',
+          'auto'
+        ]
+      },
       'RhostsRSAAuthentication',
       {
         'value_type' => 'boolean',
