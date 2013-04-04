@@ -31,12 +31,6 @@ else {
     Log::Log4perl->easy_init($log ? $DEBUG: $ERROR);
 }
 
-# trap warning if Augeas backend is not installed
-if (not  eval {require Config::Model::Backend::Augeas; } ) {
-    # do not use Test::Warnings with this
-    $SIG{__WARN__} = sub { warn $_[0] unless $_[0] =~ /unknown backend/};
-}
-
 my $model = Config::Model -> new ( ) ;
 
 Config::Model::Exception::Any->Trace(1) if $arg =~ /e/;

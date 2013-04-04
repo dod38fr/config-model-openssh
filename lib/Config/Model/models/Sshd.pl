@@ -842,17 +842,6 @@ If UsePAM is enabled, you will not be able to run sshd(8) as a non-root user.  T
       {
         'backend' => 'OpenSsh::Sshd',
         'config_dir' => '/etc/ssh'
-      },
-      {
-        'save' => 'backup',
-        'file' => 'sshd_config',
-        'backend' => 'augeas',
-        'sequential_lens' => [
-          'HostKey',
-          'Subsystem',
-          'Match'
-        ],
-        'config_dir' => '/etc/ssh'
       }
     ]
   }
