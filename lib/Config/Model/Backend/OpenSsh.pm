@@ -1,6 +1,6 @@
 package Config::Model::Backend::OpenSsh ;
 
-use Any::Moose ;
+use Mouse ;
 extends "Config::Model::Backend::Any" ;
 
 has 'current_node'  => ( 
@@ -193,7 +193,7 @@ sub write_node_content {
     return $result.$match ;
 }
 
-no Any::Moose;
+no Mouse;
 
 1;
 
