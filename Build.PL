@@ -1,4 +1,4 @@
-#    Copyright (c) 2008-2012 Dominique Dumont.
+#    Copyright (c) 2008-2013 Dominique Dumont.
 #
 #    This file is part of Config-Model-OpenSsh.
 #
@@ -18,7 +18,6 @@
 #    02110-1301 USA
 
 use Module::Build;
-use Data::Dumper ;
 
 use warnings FATAL => qw(all) ;
 use strict ;
