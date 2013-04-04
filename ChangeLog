@@ -1,5 +1,13 @@
 {{$NEXT}}
 
+2013-04-04 - 1.227
+
+    * Removed Augeas backend (no longer needed, comments are handled
+      by Config::Model::Backend::OpenSsh)
+    * Removed unused deps (File::Slurp)
+    * Replaced Any::Moose with Mouse. Directly depend on Mouse.
+      Removed dependency on Any::Mooose
+
 2012-12-07 - 1.226
 
     * ssh model:
