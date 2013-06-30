@@ -56,6 +56,9 @@ sub read_ssh_file {
     # try to get global comments (comments before a blank line)
     $self->read_global_comments(\@lines,'#') ;
 
+    # need to reset this when reading user ssh file after system ssh file
+    $self->current_node($config_root) ;
+
     my @assoc = $self->associates_comments_with_data( \@lines, '#' ) ;
     foreach my $item (@assoc) {
         my ( $vdata, $comment ) = @$item;
@@ -81,7 +84,7 @@ sub read_ssh_file {
 sub assign {
     my ($self,$root, $raw_key,$arg,$comment) = @_ ;
     $logger->debug("assign: $raw_key @$arg # $comment");
-    $self->current_node($root) unless defined $self->current_node ;
+
 
     # keys are case insensitive, try to find a match
     my $key = $self->current_node->find_element ($raw_key, case => 'any') ;
