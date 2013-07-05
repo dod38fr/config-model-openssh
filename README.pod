@@ -1,5 +1,5 @@
 
-=head2 Config::Model::OpenSsh - OpenSsh graphical configuration editor
+=head2 Config::Model::OpenSsh - OpenSSH graphical configuration editor
 
 This module provides a graphical configuration editor for
 C</etc/ssh/sshd_config> and C</etc/ssh/ssh_config> (for root) and
@@ -74,7 +74,7 @@ If you want to install this software without packaging, you can also run:
 
  dzil install
 
-=head2 Update OpenSsh model
+=head2 Update OpenSSH model
 
 To update the model, the easiest way is to use the following command:
 
