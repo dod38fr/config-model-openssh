@@ -41,7 +41,8 @@ or ~/.ssh/config (when run as a regular user).
     'read_config' => [
       {
         'backend' => 'OpenSsh::Ssh',
-        'config_dir' => '/etc/ssh'
+        'config_dir' => '/etc/ssh',
+	'os_config_dir' => { 'darwin' => '/etc' }
       }
     ]
   }
