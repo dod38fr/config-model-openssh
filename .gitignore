@@ -2,4 +2,4 @@ Config-Model-OpenSsh*
 lib/Config/Model/models/*.pod
 lib/Config/Model/models/Ssh/*.pod
 lib/Config/Model/models/Sshd/*.pod
- 
+*~
