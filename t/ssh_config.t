@@ -3,7 +3,7 @@
 use ExtUtils::testlib;
 use Test::More tests => 21;
 use Config::Model ;
-use Config::Model::Backend::OpenSsh::Ssh ; # required for tests
+use Config::Model::BackendMgr; # required for tests
 use Log::Log4perl qw(:easy) ;
 use File::Path ;
 use English;
@@ -58,7 +58,7 @@ close SSHD ;
 
 # special global variable used only for tests
 my $joe_home = "/home/joe" ;
-&Config::Model::Backend::OpenSsh::Ssh::_set_test_ssh_home($joe_home) ; 
+Config::Model::BackendMgr::_set_test_home($joe_home) ;
 
 # set up Joe's environment
 my $joe_ssh = $wr_dir.$joe_home.'/.ssh';
@@ -77,12 +77,9 @@ sub read_user_ssh {
 
 print "Test from directory $testdir\n" if $trace ;
 
-# special global variable used only for tests
-&Config::Model::Backend::OpenSsh::Ssh::_set_test_ssh_root_file(1);
-
 note "Running test like root (no layered config)" ;
 
-my $root_inst = $model->instance (root_class_name   => 'Ssh',
+my $root_inst = $model->instance (root_class_name   => 'SystemSsh',
 				  instance_name     => 'root_ssh_instance',
 				  root_dir          => $wr_dir,
 				 );
@@ -118,7 +115,7 @@ $root_inst->write_back() ;
 
 ok(1,"wrote ssh_config data in $wr_dir") ;
 
-my $inst2 = $model->instance (root_class_name   => 'Ssh',
+my $inst2 = $model->instance (root_class_name   => 'SystemSsh',
 			      instance_name     => 'root_ssh_instance2',
 			      root_dir          => $wr_dir,
 			     );
@@ -135,9 +132,6 @@ SKIP: {
        unless $EUID > 0 ;
 
     note "Running test like user with layered config";
-
-    # now test reading user configuration file on top of root file
-    &Config::Model::Backend::OpenSsh::Ssh::_set_test_ssh_root_file(0);
 
     my $user_inst = $model->instance (root_class_name   => 'Ssh',
 				      instance_name     => 'user_ssh_instance',
