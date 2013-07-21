@@ -37,6 +37,10 @@ sub read {
     $logger->info("loading config file ".$args{file_path});
 
     my $fh = $args{io_handle} ;
+    if (not defined $fh) {
+        $logger->warn("cannot read $args{file_path}");
+        return 0;
+    }
 
     my @lines = $fh->getlines ;
     # try to get global comments (comments before a blank line)
