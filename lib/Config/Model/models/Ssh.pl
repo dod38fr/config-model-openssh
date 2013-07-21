@@ -1,8 +1,7 @@
 [
   {
     'class_description' => 'Configuration class used by L<Config::Model> to edit or 
-validate /etc/ssh/ssh_config (when run as root)
-or ~/.ssh/config (when run as a regular user).
+validate ~/.ssh/config.
 ',
     'include_after' => 'Host',
     'name' => 'Ssh',
@@ -10,10 +9,10 @@ or ~/.ssh/config (when run as a regular user).
       'Ssh::HostElement'
     ],
     'copyright' => [
-      '2009-2011 Dominique Dumont'
+      '2009-2013 Dominique Dumont'
     ],
     'author' => [
-      'Dominique Dumont'
+      'Dominique Dumont <ddumon at cpan.org>'
     ],
     'license' => 'LGPL2',
     'element' => [
