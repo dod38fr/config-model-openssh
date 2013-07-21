@@ -11,12 +11,6 @@ use File::Path ;
 
 my $logger = Log::Log4perl::get_logger("Backend::OpenSsh");
 
-sub suffix {return } 
-
-sub read {
-    my $self = shift ;
-    $self->read_ssh_file( @_,  file => 'sshd_config',) ;
-}
 
 sub _host {
     my ($self,$root,$patterns,$comment)  = @_;
