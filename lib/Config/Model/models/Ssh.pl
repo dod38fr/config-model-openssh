@@ -39,9 +39,16 @@ validate ~/.ssh/config.
     ],
     'read_config' => [
       {
+        'default_layer' => {
+          'os_config_dir' => {
+            'darwin' => '/etc'
+          },
+          'file' => 'ssh_config',
+          'config_dir' => '/etc/ssh'
+        },
+        'file' => 'config',
         'backend' => 'OpenSsh::Ssh',
-        'config_dir' => '/etc/ssh',
-	'os_config_dir' => { 'darwin' => '/etc' }
+        'config_dir' => '~/.ssh'
       }
     ]
   }
