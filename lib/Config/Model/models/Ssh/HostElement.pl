@@ -84,7 +84,7 @@ inside a Host directive of a ssh configuration.',
           'cast128-cbc'
         ],
         'type' => 'check_list',
-        'description' => 'Specifies the ciphers allowed for protocol version 2 in order of preference. By default, all ciphers are allowed.',
+        'description' => 'Specifies the ciphers allowed for protocol version 2 in order of preference. By default, all ciphers are allowed. User cipher list will override system list',
         'choice' => [
           'aes128-cbc',
           '3des-cbc',
