@@ -1,5 +1,31 @@
 {{$NEXT}}
 
+1.228    2013-07-21
+
+	[ Usage changes ]
+
+    * 'cme edit ssh|sshd|system-ssh' is now working on MacOS X
+    * '/etc/ssh/ssh_config' is now handled by system-ssh. I.e.
+       use 'cme edit system-ssh' to change this file
+    * root user can edit its ~/.ssh/config file like any other user 
+      with 'cme edit ssh'.
+
+	[ Bug fixes ]
+
+    * corrected OpenSSH project name (was OpenSsh)
+    * ssh backend: fix bug that prevented reading user file with 
+      global parameters
+    * Ssh model: allow config file creation
+
+    [ Other changes ]
+
+    * renamed ChangeLog in Changes
+    * Ssh model: use new default layer from C::M 2.040 to 
+      read system config file (hence the updated requirement 
+      on Config::Model 2.040)
+    * All backends: removed custom code to open file. Lets 
+      Config::Model::BackendMgr handle this
+
 2013-04-04 - 1.227
 
     * Removed Augeas backend (no longer needed, comments are handled
