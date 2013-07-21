@@ -77,36 +77,9 @@ sub match {
 
 
 # now the write part
-
 sub write {
-    my $self = shift ;
-    my %args = @_ ;
-    my $config_root = $args{object}
-      || croak __PACKAGE__," sshd_write: undefined config root object";
-    my $dir = $args{root}.$args{config_dir} ;
-
-    mkpath($dir, {mode => 0755} )  unless -d $dir ;
-
-    my $file = "$dir/sshd_config" ;
-    if (-r "$file") {
-	my $backup = "$file.".time.".bak" ;
-	$logger->info("Backing up file $file in $backup");
-	copy($file,$backup);
-    }
-
-    $logger->info("writing config file $file");
-
-    my $ioh = IO::File->new ;
-    $ioh-> open($file,">") || die "cannot open $file:$!";
-    $self->write_global_comment($ioh,'#') ;
-
-    my $result = $self->write_node_content($config_root);
-
-    #print $result ;
-    $ioh->print ($result);
-    $ioh -> close ;
-
-    return 1;
+    my $self = shift;
+    $self->ssh_write(@_) ;
 }
 
 sub _write_line {

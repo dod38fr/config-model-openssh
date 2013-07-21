@@ -13,6 +13,11 @@ use File::HomeDir ;
 
 my $logger = Log::Log4perl::get_logger("Backend::OpenSsh");
 
+sub write {
+    my $self = shift;
+    $self->ssh_write(@_, ssh_mode => 'custom') ;
+}
+
 
 sub host {
     my ($self,$root,$key, $patterns,$comment)  = @_;
@@ -61,25 +66,6 @@ sub forward {
 
     $logger->debug("load string $load_str") ; 
     $self->current_node -> load($load_str) ;
-}
-
-sub write {
-    my $self = shift ;
-    my %args = @_ ;
-
-    my $config_root = $args{object}
-      || croak __PACKAGE__," ssh_write: undefined config root object";
-
-    $logger->info("writing config file $args{file_path}");
-
-    my $ioh = $args{io_handle} || croak __PACKAGE__," ssh_write: undefined io_handle";;
-    $self->write_global_comment($ioh,'#') ;
-
-    my $result = $self->write_node_content($config_root,'custom');
-
-    $ioh->print ($result);
-
-    return 1;
 }
 
 sub write_all_host_block {

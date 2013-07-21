@@ -67,6 +67,25 @@ sub read {
     return 1;
 }
 
+sub ssh_write {
+    my $self = shift ;
+    my %args = @_ ;
+
+    my $config_root = $args{object}
+      || croak __PACKAGE__," ssh_write: undefined config root object";
+
+    $logger->info("writing config file $args{file_path}");
+
+    my $ioh = $args{io_handle} || croak __PACKAGE__," ssh_write: undefined io_handle";;
+    $self->write_global_comment($ioh,'#') ;
+
+    my $result = $self->write_node_content($config_root,$args{ssh_mode});
+
+    $ioh->print ($result);
+
+    return 1;
+}
+
 sub assign {
     my ($self,$root, $raw_key,$arg,$comment) = @_ ;
     $logger->debug("assign: $raw_key @$arg # $comment");
