@@ -46,6 +46,7 @@ validate ~/.ssh/config.
           'file' => 'ssh_config',
           'config_dir' => '/etc/ssh'
         },
+        'auto_create' => '1',
         'file' => 'config',
         'backend' => 'OpenSsh::Ssh',
         'config_dir' => '~/.ssh'
