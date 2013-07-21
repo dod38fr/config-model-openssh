@@ -26,31 +26,17 @@ my @dispatch = (
     qr/\w/                     => 'assign',
 );
 
-sub skip_open { 1 ;} # tell AutoRead not to try to open a file
+sub suffix {return '';}
 
-sub read_ssh_file {
+sub read {
     my $self = shift ;
     my %args = @_ ;
     my $config_root = $args{object}
       || croak __PACKAGE__," read_ssh_file: undefined config root object";
-    my $dir = $args{root}.$args{config_dir} ;
-    my $skip_notes = $args{skip_notes} || 0 ;
 
-    unless (-d $dir ) {
-	$logger->info("read_ssh_file: unknown config dir $dir");
-	return 0;
-    }
+    $logger->info("loading config file ".$args{file_path});
 
-    my $file = $dir.'/'.$args{file} ;
-    unless (-r "$file") {
-	$logger->info("read_ssh_file: unknown file $file");
-	return 0;
-    }
-
-    $logger->info("loading config file $file");
-
-    my $fh = IO::File->new( $file, "r")  
-        || die __PACKAGE__," read_ssh_file: can't open $file:$!";
+    my $fh = $args{io_handle} ;
 
     my @lines = $fh->getlines ;
     # try to get global comments (comments before a blank line)

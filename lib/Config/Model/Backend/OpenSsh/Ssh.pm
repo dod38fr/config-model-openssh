@@ -1,6 +1,7 @@
 package Config::Model::Backend::OpenSsh::Ssh ;
 
 use Mouse ;
+use 5.10.1;
 extends "Config::Model::Backend::OpenSsh" ;
 
 use Carp ;
@@ -8,52 +9,9 @@ use IO::File ;
 use Log::Log4perl;
 use File::Copy ;
 use File::Path ;
+use File::HomeDir ;
 
 my $logger = Log::Log4perl::get_logger("Backend::OpenSsh");
-
-my $__test_ssh_root_file = 0;
-sub _set_test_ssh_root_file { $__test_ssh_root_file = shift ;} 
-my $__test_ssh_home = '';
-sub _set_test_ssh_home { $__test_ssh_home = shift ;}
-
-# for ssh_read:
-# if root: use /etc/ssh/ssh_config as usual
-# if normal user: load root file in "preset mode" 
-#                 load ~/.ssh/config in normal mode
-#                 write back to ~/.ssh/config
-#                 Ssh model can only specify root config_dir
-
-sub read {
-    my $self=shift;
-    my %args = @_ ;
-    my $config_root = $args{object}
-      || croak __PACKAGE__," ssh_read: undefined config root object";
-    my $instance = $config_root -> instance ;
-
-    my $is_user = 1 ;
-
-    # $__test_root_file is a special global variable used only for tests
-    $is_user = 0 if ($> == 0 or $__test_ssh_root_file ); 
-
-    my $home_dir = $__test_ssh_home || $ENV{HOME} ;
-
-    $logger->info("ssh_read: reading ".($is_user ? 'user' :'root').
-		 " ssh config in ". ($is_user ? $home_dir : $args{config_dir}));
-
-    $instance -> layered_start if $is_user ; # regular user
-
-    my $ret = $self->read_ssh_file( @_, file => 'ssh_config' ) ;
-
-    $instance -> layered_stop if $is_user ;
-
-    if ( $is_user) {
-	# don't croak if user config file is missing
-	$self->read_ssh_file( @_ , file => 'config',
-		       config_dir => $home_dir.'/.ssh') ;
-    }
-
-    return $ret ;
-}
 
 
 sub host {
@@ -105,42 +63,21 @@ sub forward {
     $self->current_node -> load($load_str) ;
 }
 
-# for ssh_write:
-# if root: use /etc/ssh/ssh_config as usual
-# if normal user: load root file in "preset mode" 
-#                 load ~/.ssh/config in normal mode
-#                 write back to ~/.ssh/config
-#                 Ssh model can only specify root config_dir
-
 sub write {
     my $self = shift ;
     my %args = @_ ;
+
     my $config_root = $args{object}
       || croak __PACKAGE__," ssh_write: undefined config root object";
 
-    my $is_user = 1 ;
-    # $__test_root_file is a special global variable used only for tests
-    $is_user = 0 if ($> == 0 or $__test_ssh_root_file ); 
-    my $home_dir = $__test_ssh_home || $ENV{HOME} ;
+    $logger->info("writing config file $args{file_path}");
 
-    my $config_dir = $is_user ? $home_dir.'/.ssh' : $args{config_dir} ;
-    my $dir = $args{root}.$config_dir ;
-
-    mkpath($dir, {mode => 0755} )  unless -d $dir ;
-
-    my $file = $is_user ? "$dir/config" : "$dir/ssh_config" ;
-
-    $logger->info("writing config file $file");
-
-    my $ioh = IO::File->new ;
-    $ioh-> open($file,">") || die "cannot open $file:$!";
+    my $ioh = $args{io_handle} || croak __PACKAGE__," ssh_write: undefined io_handle";;
     $self->write_global_comment($ioh,'#') ;
 
     my $result = $self->write_node_content($config_root,'custom');
 
-    #print $result ;
     $ioh->print ($result);
-    $ioh -> close ;
 
     return 1;
 }
