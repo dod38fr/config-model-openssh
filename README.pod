@@ -1,13 +1,23 @@
 
-=head2 Config::Model::OpenSsh - OpenSSH graphical configuration editor
+=head1 Config::Model::OpenSsh - OpenSSH graphical configuration editor
 
-This module provides a graphical configuration editor for
-C</etc/ssh/sshd_config> and C</etc/ssh/ssh_config> (for root) and
-C<~/.ssh/config> for non-root users.
+This module provides a graphical configuration editor for:
 
-=head2 Installation
+=over
 
-On Debian or Ubuntu:
+=item C</etc/ssh/sshd_config>
+
+=item C</etc/ssh/ssh_config>
+
+=item C<~/.ssh/config>
+
+=back
+
+=head1 Installation
+
+=head2 Debian or Ubuntu
+
+As root,type:
 
  sudo aptitude install libconfig-model-openssh-perl
 
@@ -15,12 +25,34 @@ To get the GUI, you should also do:
 
  sudo aptitude install libconfig-model-tkui-perl
 
+=head2 On Mac or Windows
+
+The easiest way is to:
+
+=over
+
+=item *
+
+install Perl from L<ActiveState|http://www.activestate.com/activeperl>,
+
+=item *
+
+Run PPM
+
+=item *
+
+Select and install C<config-model-openssh> and C<config-model-tkui>
+
+=back
+
+=head2 Other
+
 You can also install these modules from CPAN:
 
  cpanm Config::Model::OpenSsh
  cpanm Config::Model::TkUI
 
-=head2 Usage
+=head1 Usage
 
 Once this module is installed, you can launch a GUI to edit C</etc/ssh/sshd_config> with:
 
@@ -35,34 +67,29 @@ Likewise, you can edit your C<~/.ssh/config> file with:
 
 Or to edit C</etc/ssh/ssh_config>, run as root:
 
- $ sudo cme edit ssh
+ $ sudo cme edit system-ssh
 
-=head2 Installation from git
+=head1 More information
 
-Config::Model::OpenSsh is built with Dist::Zilla.
+For more information, see:
 
-You must make sure that the following modules are installed:
+=over
 
-	Dist::Zilla::Plugin::MetaResources
-	Dist::Zilla::Plugin::ModuleBuild::Custom
-	Dist::Zilla::Plugin::Test::PodSpelling
-	Dist::Zilla::Plugin::PodVersion
-	Dist::Zilla::Plugin::Prepender
-	Dist::Zilla::Plugin::Prereqs
-	Dist::Zilla::Plugin::Run::BeforeBuild
-	Dist::Zilla::PluginBundle::Filter
-	Dist::Zilla::Plugin::Git::NextVersion
-	Config::Model
+=item https://github.com/dod38fr/config-model/wiki
+
+=item L<config-model-users at lists.sourceforge.net|https://lists.sourceforge.net/lists/listinfo/config-model-users>
+
+=back
+
+=head1 Installation from git
+
+L<Config::Model::OpenSsh> is built with L<Dist::Zilla>.
+
+Please follow the L<instructions to build Config::Model with git|https://github.com/dod38fr/config-model/blob/master/README.build-from-git> to install all modules related to L<Dist::Zilla>.
+
+Then, make sure that L<Config::Model> is installed.
 
 On debian or ubuntu, do:
-
- sudo aptitude install \
-     libdist-zilla-plugin-prepender-perl \
-     libdist-zilla-plugin-run-perl \
-     libdist-zilla-plugins-cjm-perl \
-     libdist-zilla-perl \
-     libdist-zilla-plugin-podspellingtests-perl \
-     libdist-zilla-plugin-git-perl
 
  sudo aptitude build-dep libconfig-model-openssh-perl
 
@@ -74,7 +101,7 @@ If you want to install this software without packaging, you can also run:
 
  dzil install
 
-=head2 Update OpenSSH model
+=head1 Update OpenSSH model
 
 To update the model, the easiest way is to use the following command:
 
