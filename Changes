@@ -1,5 +1,9 @@
 {{$NEXT}}
 
+1.230_01 2013-08-07
+
+    * Fixed dist.ini to tweak $VERSION in all module files
+
 1.229 2013-07-23
 
     * fixed dist::zilla files to include .ssh dir needed for tests
