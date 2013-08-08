@@ -1,5 +1,10 @@
 {{$NEXT}}
 
+1.230_02 2013-08-08
+
+    * Load AnyEvent at beginning of test to avoid failure in CPAN
+      smoke tests.
+
 1.230_01 2013-08-07
 
     * Fixed dist.ini to tweak $VERSION in all module files
