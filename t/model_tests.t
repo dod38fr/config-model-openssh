@@ -2,6 +2,7 @@
 use warnings;
 
 use strict;
+use AnyEvent;
 
 use Config::Model::Tester ;
 use ExtUtils::testlib;
