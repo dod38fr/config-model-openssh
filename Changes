@@ -1,5 +1,10 @@
 {{$NEXT}}
 
+1.230_03 2013-08-09
+
+    * Load EV at beginning of test to avoid failure in CPAN
+      smoke tests.
+
 1.230_02 2013-08-08
 
     * Load AnyEvent at beginning of test to avoid failure in CPAN
