@@ -1,15 +1,23 @@
 use Config::Model::BackendMgr;
 # test loading layered config à la ssh_config
 
-$home_for_test = '/home/joe' ;
+$home_for_test = $^O eq 'darwin' ? '/Users/joe'
+               :                   '/home/joe' ;
 Config::Model::BackendMgr::_set_test_home($home_for_test) ;
 
 $model_to_test = "Ssh" ;
 
 @tests = (
-    { # t0
+    {
       name => 'basic',
-    check => [
+      setup => {
+        'system_ssh_config' => {
+            'darwin' => '/etc/ssh_config',
+            'default' => '/etc/ssh/ssh_config',
+        },
+        'user_ssh_config' => "$home_for_test/.ssh/config"
+      },
+      check => [
         'Host:"*" Port'    => {qw/mode layered value 22/},
         'Host:"*" Port'    => '1022',
         # user value will completely override layered values
