@@ -1,5 +1,10 @@
 {{$NEXT}}
 
+1.230_04 2013-08-19
+
+    * Depends on Config::Model 2.041
+	* Build depends on Config::Model::Tester 2.042
+
 1.230_03 2013-08-09
 
     * Load EV at beginning of test to avoid failure in CPAN
