@@ -45,21 +45,25 @@ my $wr_root = 'wr_test';
 
 my $testdir = 'ssh_test' ;
 
+my $ssh_path = $^O eq 'darwin' ? '/etc'
+               :                 '/etc/ssh' ;
+
 # cleanup before tests
 rmtree($wr_root);
 
 my @orig = <DATA> ;
 
 my $wr_dir = $wr_root.'/'.$testdir ;
-mkpath($wr_dir.'/etc/ssh', { mode => 0755 }) 
+mkpath($wr_dir.$ssh_path, { mode => 0755 })
   || die "can't mkpath: $!";
-open(SSHD,"> $wr_dir/etc/ssh/ssh_config")
+open(SSHD,"> $wr_dir$ssh_path/ssh_config")
   || die "can't open file: $!";
 print SSHD @orig ;
 close SSHD ;
 
 # special global variable used only for tests
-my $joe_home = "/home/joe" ;
+my $joe_home = $^O eq 'darwin' ? '/Users/joe'
+             :                   '/home/joe' ; ;
 Config::Model::BackendMgr::_set_test_home($joe_home) ;
 
 # set up Joe's environment
@@ -86,7 +90,7 @@ my $root_inst = $model->instance (root_class_name   => 'SystemSsh',
 				  root_dir          => $wr_dir,
 				 );
 
-ok($root_inst,"Read $wr_dir/etc/ssh/ssh_config and created instance") ;
+ok($root_inst,"Read $wr_dir$ssh_path/ssh_config and created instance") ;
 
 my $root_cfg = $root_inst -> config_root ;
 $root_cfg->init ;

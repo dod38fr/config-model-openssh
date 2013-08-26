@@ -42,15 +42,18 @@ my $wr_root = 'wr_test';
 
 my $testdir = 'custom_sshd' ;
 
+my $ssh_path = $^O eq 'darwin' ? '/etc'
+               :                 '/etc/ssh' ;
+
 # cleanup before tests
 rmtree($wr_root);
 
 my @orig = <DATA> ;
 
 my $wr_dir = $wr_root.'/'.$testdir ;
-mkpath($wr_dir.'/etc/ssh', { mode => 0755 }) 
+mkpath($wr_dir.$ssh_path, { mode => 0755 })
   || die "can't mkpath: $!";
-open(SSHD,"> $wr_dir/etc/ssh/sshd_config")
+open(SSHD,"> $wr_dir$ssh_path/sshd_config")
   || die "can't open file: $!";
 print SSHD @orig ;
 close SSHD ;
@@ -61,7 +64,7 @@ my $inst = $model->instance (root_class_name   => 'Sshd',
 			     backend => 'OpenSsh::Sshd',
 			    );
 
-ok($inst,"Read $wr_dir/etc/ssh/sshd_config and created instance") ;
+ok($inst,"Read $wr_dir$ssh_path/sshd_config and created instance") ;
 
 my $root = $inst -> config_root ;
 
@@ -78,9 +81,9 @@ ok(1,"wrote data in $wr_dir") ;
 
 
 # copy data in wr_dir2
-my $wr_dir2 = $wr_dir.'b' ;
-mkpath($wr_dir2.'/etc/ssh/', { mode => 0755 }) ;
-copy($wr_dir.'/etc/ssh/sshd_config',$wr_dir2.'/etc/ssh/') ;
+my $wr_dir2 = $wr_dir.'b/' ;
+mkpath($wr_dir2.$ssh_path, { mode => 0755 }) ;
+copy($wr_dir.$ssh_path.'/sshd_config',$wr_dir2.$ssh_path) ;
 
 my $inst2 = $model->instance (root_class_name   => 'Sshd',
 			      instance_name     => 'sshd_instance2',
@@ -88,7 +91,7 @@ my $inst2 = $model->instance (root_class_name   => 'Sshd',
 			      backend => 'OpenSsh::Sshd',
 			     );
 
-ok($inst2,"Read $wr_dir2/etc/ssh/sshd_config and created instance") ;
+ok($inst2,"Read $wr_dir2$ssh_path/sshd_config and created instance") ;
 
 my $root2 = $inst2 -> config_root ;
 my $dump2 = $root2 -> dump_tree ();
