@@ -1,5 +1,13 @@
 {{$NEXT}}
 
+1.230 2013-08-27
+
+    This new release now works on MacOS X. It does take into account
+    the different location of ssh configuration files compared to Linux
+    or BSD.
+
+    * Fixed tests for MacOS X
+
 1.230_04 2013-08-19
 
     * Depends on Config::Model 2.041
