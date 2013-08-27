@@ -5,12 +5,16 @@ use Config::Model::BackendMgr;
 # test loading layered config à la ssh_config
 
 $model_to_test = "SystemSsh";
-$conf_file_name = "ssh_config";
-$conf_dir= '/etc/ssh';
 
 @tests = (
     {    # t0
         name  => 'basic',
+        setup => {
+            'system_ssh_config' => {
+                'darwin' => '/etc/ssh_config',
+                'default' => '/etc/ssh/ssh_config',
+            },
+        },
         check => {
             'Host:"*" Ciphers' => 'aes128-ctr,aes192-ctr,aes256-ctr,arcfour256,arcfour128,aes128-cbc,3des-cbc',
             'Host:"*" IdentityFile:1' => '~/.ssh/id_rsa',
