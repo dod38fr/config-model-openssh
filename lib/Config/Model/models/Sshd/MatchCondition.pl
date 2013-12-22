@@ -1,41 +1,41 @@
 [
   {
-    'class_description' => 'Conidtion to apply to identify matched items inside 
-a sshd_config match block.',
-    'name' => 'Sshd::MatchCondition',
-    'copyright' => [
-      '2009-2011 Dominique Dumont'
-    ],
     'author' => [
       'Dominique Dumont'
     ],
-    'license' => 'LGPL2',
+    'class_description' => 'Conidtion to apply to identify matched items inside 
+a sshd_config match block.',
+    'copyright' => [
+      '2009-2011 Dominique Dumont'
+    ],
     'element' => [
       'User',
       {
-        'value_type' => 'uniline',
+        'description' => 'Define the User criteria of a conditional block. The value of this field is a pattern that is tested against user name.',
         'type' => 'leaf',
-        'description' => 'Define the User criteria of a conditional block. The value of this field is a pattern that is tested against user name.'
+        'value_type' => 'uniline'
       },
       'Group',
       {
-        'value_type' => 'uniline',
+        'description' => 'Define the Group criteria of a conditional block. The value of this field is a pattern that is tested against group name.',
         'type' => 'leaf',
-        'description' => 'Define the Group criteria of a conditional block. The value of this field is a pattern that is tested against group name.'
+        'value_type' => 'uniline'
       },
       'Host',
       {
-        'value_type' => 'uniline',
+        'description' => 'Define the Host criteria of a conditional block. The value of this field is a pattern that is tested against host name.',
         'type' => 'leaf',
-        'description' => 'Define the Host criteria of a conditional block. The value of this field is a pattern that is tested against host name.'
+        'value_type' => 'uniline'
       },
       'Address',
       {
-        'value_type' => 'uniline',
+        'description' => 'Define the Address criteria of a conditional block. The value of this field is a pattern that is tested against the address of the incoming connection.',
         'type' => 'leaf',
-        'description' => 'Define the Address criteria of a conditional block. The value of this field is a pattern that is tested against the address of the incoming connection.'
+        'value_type' => 'uniline'
       }
-    ]
+    ],
+    'license' => 'LGPL2',
+    'name' => 'Sshd::MatchCondition'
   }
 ]
 ;

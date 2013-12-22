@@ -1,31 +1,31 @@
 [
   {
+    'author' => [
+      'Dominique Dumont'
+    ],
     'class_description' => 'Class to represent a Match block inside a sshd_config file. 
 
 It\'s made of a list of conditions to match and a list of 
 parameters to apply to the matched items.',
-    'name' => 'Sshd::MatchBlock',
     'copyright' => [
       '2009-2011 Dominique Dumont'
     ],
-    'author' => [
-      'Dominique Dumont'
-    ],
-    'license' => 'LGPL2',
     'element' => [
       'Condition',
       {
-        'type' => 'node',
+        'config_class_name' => 'Sshd::MatchCondition',
         'description' => 'Specify the condition (User, Group, Host, Adress) necessary for this Match block to be applied',
-        'config_class_name' => 'Sshd::MatchCondition'
+        'type' => 'node'
       },
       'Settings',
       {
-        'type' => 'node',
+        'config_class_name' => 'Sshd::MatchElement',
         'description' => 'Defines the sshd_config parameters that will override general settings when all defined User, Group, Host and Address patterns match.',
-        'config_class_name' => 'Sshd::MatchElement'
+        'type' => 'node'
       }
-    ]
+    ],
+    'license' => 'LGPL2',
+    'name' => 'Sshd::MatchBlock'
   }
 ]
 ;
