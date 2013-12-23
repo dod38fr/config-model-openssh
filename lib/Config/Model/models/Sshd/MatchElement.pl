@@ -107,6 +107,17 @@ successful completion of a single authentication method is sufficient.",
         'upstream_default' => 'yes',
         'value_type' => 'enum'
       },
+      'AuthorizedKeysFile2',
+      {
+        'cargo' => {
+          'type' => 'leaf',
+          'value_type' => 'uniline'
+        },
+        'description' => 'Specifies the file that contains the public keys that can be used for user authentication. AuthorizedKeysFile may contain tokens of the form %T which are substituted during connection setup.',
+        'experience' => 'advanced',
+        'status' => 'deprecated',
+        'type' => 'list'
+      },
       'AuthorizedKeysFile',
       {
         'cargo' => {
