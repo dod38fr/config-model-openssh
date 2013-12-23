@@ -1,7 +1,7 @@
 # -*- cperl -*-
 
 use ExtUtils::testlib;
-use Test::More tests => 21;
+use Test::More tests => 26;
 use Config::Model ;
 use Config::Model::BackendMgr; # required for tests
 use Log::Log4perl qw(:easy) ;

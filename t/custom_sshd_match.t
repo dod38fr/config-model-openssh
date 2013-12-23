@@ -2,6 +2,7 @@
 
 use ExtUtils::testlib;
 use Test::More tests => 5;
+use Test::Differences;
 use Config::Model ;
 use Log::Log4perl qw(:easy) ;
 use File::Path ;
@@ -104,8 +105,8 @@ print "Second $testdir dump:\n",$dump2 if $trace ;
 my @mod = split /\n/,$dump ;
 unshift @mod, 'HostbasedAuthentication=yes', 'Port=2222';
 splice @mod,2,0,'Subsystem:ddftp=/home/dd/bin/ddftp';
-splice @mod,13,1,'    Group="pres.*"','    Host="elysee.*" -';
-is_deeply([split /\n/,$dump2],\@mod, "check if both dumps are consistent") ;
+splice @mod,12,1,'    Group="pres.*"','    Host="elysee.*" -';
+eq_or_diff([split /\n/,$dump2],\@mod, "check if both dumps are consistent") ;
 
 
 __DATA__
