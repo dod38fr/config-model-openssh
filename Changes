@@ -1,5 +1,19 @@
 {{$NEXT}}
 
+1.231 2013-12-23
+
+  * Added parameters supported by OpenSsh 6.4
+    (i.e. IgnoreUnknown ForwardX11Timeout GatewayPorts
+	GSSAPIKeyExchange GSSAPIClientIdentity GSSAPIServerIdentity
+	GSSAPIDelegateCredentials GSSAPIRenewalForcesRekey GSSAPITrustDns
+	IPQoS KexAlgorithms PKCS11Provider AllowAgentForwarding
+	AuthenticationMethods AuthorizedKeysCommand
+	AuthorizedKeysCommandUser AuthorizedPrincipalsFile ChrootDirectory
+	GSSAPIStoreCredentialsOnRekey HostCertificate HostKeyAgent
+	MaxSessions PermitBlacklistedKeys PubkeyAuthentication RekeyLimit
+	RevokedKeys RhostsRSAAuthentication TrustedUserCAKeys
+	VersionAddendum)
+
 1.230 2013-08-27
 
     This new release now works on MacOS X. It does take into account
