@@ -63,13 +63,13 @@ publickey,keyboard-interactive\" would require the user to complete
 public key authentication, followed by either password or keyboard
 interactive authentication. Only methods that are next in one or more
 lists are offered at each stage, so for this example, it would not be
-possible to attempt password or key\x{2010} board-interactive authentication
+possible to attempt password or keyboard-interactive authentication
 before public key.
 
 For keyboard interactive authentication it is also possible to
 restrict authentication to a specific device by appending a colon
 followed by the device identifier \"bsdauth\", \"pam\", or \"skey\",
-depending on the server configuration. For exam\x{2010} ple,
+depending on the server configuration. For example,
 \"keyboard-interactive:bsdauth\" would restrict keyboard interactive
 authentication to the \"bsdauth\" device.
 

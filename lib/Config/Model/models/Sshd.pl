@@ -86,13 +86,13 @@ publickey,keyboard-interactive\" would require the user to complete
 public key authentication, followed by either password or keyboard
 interactive authentication. Only methods that are next in one or more
 lists are offered at each stage, so for this example, it would not be
-possible to attempt password or key\x{2010} board-interactive authentication
+possible to attempt password or keyboard-interactive authentication
 before public key.
 
 For keyboard interactive authentication it is also possible to
 restrict authentication to a specific device by appending a colon
 followed by the device identifier \"bsdauth\", \"pam\", or \"skey\",
-depending on the server configuration. For exam\x{2010} ple,
+depending on the server configuration. For example,
 \"keyboard-interactive:bsdauth\" would restrict keyboard interactive
 authentication to the \"bsdauth\" device.
 
@@ -498,7 +498,7 @@ return @good == @v ? 1 : 0;
 "throughput", "reliability", or a numeric value.'
           }
         },
-        'description' => "Specifies the IPv4 type-of-service or DSCP class for the connection. Accepted values are \"af11\", \"af12\", \"af13\", \"af21\", \"af22\", \"af23\", \"af31\", \"af32\", \"af33\", \"af41\", \"af42\", \"af43\", \"cs0\", \"cs1\", \"cs2\", \"cs3\", \"cs4\", \"cs5\", \"cs6\", \"cs7\", \"ef\", \"lowdelay\", \"throughput\", \"reliability\", or a numeric value. This option may take one or two arguments, separated by whitespace. If one argument is specified, it is used as the packet class unconditionally. If two values are speci\x{2010} fied, the first is automatically selected for interactive sessions and the second for non-interactive sessions. The default is \"lowdelay\" for interactive sessions and \"throughput\" for non-interactive sessions.",
+        'description' => "Specifies the IPv4 type-of-service or DSCP class for the connection. Accepted values are \"af11\", \"af12\", \"af13\", \"af21\", \"af22\", \"af23\", \"af31\", \"af32\", \"af33\", \"af41\", \"af42\", \"af43\", \"cs0\", \"cs1\", \"cs2\", \"cs3\", \"cs4\", \"cs5\", \"cs6\", \"cs7\", \"ef\", \"lowdelay\", \"throughput\", \"reliability\", or a numeric value. This option may take one or two arguments, separated by whitespace. If one argument is specified, it is used as the packet class unconditionally. If two values are specified, the first is automatically selected for interactive sessions and the second for non-interactive sessions. The default is \"lowdelay\" for interactive sessions and \"throughput\" for non-interactive sessions.",
         'summary' => 'IPv4 type-of-service or DSCP class for the connection.',
         'type' => 'leaf',
         'upstream_default' => 'lowdelay throughput',
