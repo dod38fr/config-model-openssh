@@ -52,14 +52,14 @@ inside a Match block of a sshd configuration.',
       },
       'AuthenticationMethods',
       {
-        'description' => "Specifies the authentication methods that must be successfully
+        'description' => 'Specifies the authentication methods that must be successfully
 completed for a user to be granted access. This option must be
 followed by one or more comma-separated lists of authentication method
 names. Successful authentication requires completion of every method
 in at least one of these lists.
 
-For example, an argument of \"publickey,password
-publickey,keyboard-interactive\" would require the user to complete
+For example, an argument of "publickey,password
+publickey,keyboard-interactive" would require the user to complete
 public key authentication, followed by either password or keyboard
 interactive authentication. Only methods that are next in one or more
 lists are offered at each stage, so for this example, it would not be
@@ -68,16 +68,16 @@ before public key.
 
 For keyboard interactive authentication it is also possible to
 restrict authentication to a specific device by appending a colon
-followed by the device identifier \"bsdauth\", \"pam\", or \"skey\",
+followed by the device identifier "bsdauth", "pam", or "skey",
 depending on the server configuration. For example,
-\"keyboard-interactive:bsdauth\" would restrict keyboard interactive
-authentication to the \"bsdauth\" device.
+"keyboard-interactive:bsdauth" would restrict keyboard interactive
+authentication to the "bsdauth" device.
 
 This option is only available for SSH protocol 2 and will yield a
 fatal error if enabled if protocol 1 is also enabled. Note that each
 authentication method listed should also be explicitly enabled in the
 configuration. The default is not to require multiple authentication;
-successful completion of a single authentication method is sufficient.",
+successful completion of a single authentication method is sufficient.',
         'summary' => 'authentication methods that must be successfully completed for a user to be granted access',
         'type' => 'leaf',
         'value_type' => 'uniline'

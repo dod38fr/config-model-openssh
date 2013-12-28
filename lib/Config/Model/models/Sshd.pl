@@ -75,14 +75,14 @@ validate /etc/ssh/sshd_config
       },
       'AuthenticationMethods',
       {
-        'description' => "Specifies the authentication methods that must be successfully
+        'description' => 'Specifies the authentication methods that must be successfully
 completed for a user to be granted access. This option must be
 followed by one or more comma-separated lists of authentication method
 names. Successful authentication requires completion of every method
 in at least one of these lists.
 
-For example, an argument of \"publickey,password
-publickey,keyboard-interactive\" would require the user to complete
+For example, an argument of "publickey,password
+publickey,keyboard-interactive" would require the user to complete
 public key authentication, followed by either password or keyboard
 interactive authentication. Only methods that are next in one or more
 lists are offered at each stage, so for this example, it would not be
@@ -91,16 +91,16 @@ before public key.
 
 For keyboard interactive authentication it is also possible to
 restrict authentication to a specific device by appending a colon
-followed by the device identifier \"bsdauth\", \"pam\", or \"skey\",
+followed by the device identifier "bsdauth", "pam", or "skey",
 depending on the server configuration. For example,
-\"keyboard-interactive:bsdauth\" would restrict keyboard interactive
-authentication to the \"bsdauth\" device.
+"keyboard-interactive:bsdauth" would restrict keyboard interactive
+authentication to the "bsdauth" device.
 
 This option is only available for SSH protocol 2 and will yield a
 fatal error if enabled if protocol 1 is also enabled. Note that each
 authentication method listed should also be explicitly enabled in the
 configuration. The default is not to require multiple authentication;
-successful completion of a single authentication method is sufficient.",
+successful completion of a single authentication method is sufficient.',
         'summary' => 'authentication methods that must be successfully completed for a user to be granted access',
         'type' => 'leaf',
         'value_type' => 'uniline'
@@ -498,7 +498,7 @@ return @good == @v ? 1 : 0;
 "throughput", "reliability", or a numeric value.'
           }
         },
-        'description' => "Specifies the IPv4 type-of-service or DSCP class for the connection. Accepted values are \"af11\", \"af12\", \"af13\", \"af21\", \"af22\", \"af23\", \"af31\", \"af32\", \"af33\", \"af41\", \"af42\", \"af43\", \"cs0\", \"cs1\", \"cs2\", \"cs3\", \"cs4\", \"cs5\", \"cs6\", \"cs7\", \"ef\", \"lowdelay\", \"throughput\", \"reliability\", or a numeric value. This option may take one or two arguments, separated by whitespace. If one argument is specified, it is used as the packet class unconditionally. If two values are specified, the first is automatically selected for interactive sessions and the second for non-interactive sessions. The default is \"lowdelay\" for interactive sessions and \"throughput\" for non-interactive sessions.",
+        'description' => 'Specifies the IPv4 type-of-service or DSCP class for the connection. Accepted values are "af11", "af12", "af13", "af21", "af22", "af23", "af31", "af32", "af33", "af41", "af42", "af43", "cs0", "cs1", "cs2", "cs3", "cs4", "cs5", "cs6", "cs7", "ef", "lowdelay", "throughput", "reliability", or a numeric value. This option may take one or two arguments, separated by whitespace. If one argument is specified, it is used as the packet class unconditionally. If two values are specified, the first is automatically selected for interactive sessions and the second for non-interactive sessions. The default is "lowdelay" for interactive sessions and "throughput" for non-interactive sessions.',
         'summary' => 'IPv4 type-of-service or DSCP class for the connection.',
         'type' => 'leaf',
         'upstream_default' => 'lowdelay throughput',
