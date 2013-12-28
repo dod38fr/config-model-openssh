@@ -14,7 +14,7 @@ parameters to apply to the matched items.',
       'Condition',
       {
         'config_class_name' => 'Sshd::MatchCondition',
-        'description' => 'Specify the condition (User, Group, Host, Adress) necessary for this Match block to be applied',
+        'description' => 'Specify the condition (User, Group, Host, Address) necessary for this Match block to be applied',
         'type' => 'node'
       },
       'Settings',
