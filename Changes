@@ -1,5 +1,10 @@
 {{$NEXT}}
 
+1.232 2013-12-29
+
+  * Ssh::GSSAPI* params: set upstream_default to 0 (instead of default)
+  * fixed typo in Sshd::MatchCondition  description (tx gregoa)
+
 1.231 2013-12-23
 
   * Added parameters supported by OpenSsh 6.4
