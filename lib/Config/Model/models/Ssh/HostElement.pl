@@ -846,6 +846,20 @@ See also VERIFYING HOST KEYS in ssh(1).',
         'type' => 'leaf',
         'upstream_default' => '/usr/X11R6/bin/xauth',
         'value_type' => 'uniline'
+      },
+      'UseRsh',
+      {
+        'description' => 'This parameter is now ignored by Ssh',
+        'status' => 'deprecated',
+        'type' => 'leaf',
+        'value_type' => 'uniline'
+      },
+      'FallBackToRsh',
+      {
+        'description' => 'This parameter is now ignored by Ssh',
+        'status' => 'deprecated',
+        'type' => 'leaf',
+        'value_type' => 'uniline'
       }
     ],
     'license' => 'LGPL2',
