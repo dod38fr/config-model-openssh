@@ -1,5 +1,6 @@
 package Config::Model::Backend::OpenSsh ;
 
+use 5.10.1;
 use Mouse ;
 extends "Config::Model::Backend::Any" ;
 
@@ -60,7 +61,7 @@ sub read {
             my ( $regexp, $sub ) = @dispatch[ $i++, $i++ ];
             if ( $k =~ $regexp and $self->can($sub)) {
                 $logger->trace("read_ssh_file: dispatch calls $sub");
-                $self->$sub( $config_root, $k, \@v, $comment );
+                $self->$sub( $config_root, $k, \@v, $comment, $args{check} );
                 last;
             }
 
@@ -91,12 +92,23 @@ sub ssh_write {
 }
 
 sub assign {
-    my ($self,$root, $raw_key,$arg,$comment) = @_ ;
+    my ($self,$root, $raw_key,$arg,$comment, $check) = @_ ;
     $logger->debug("assign: $raw_key @$arg # $comment");
 
 
     # keys are case insensitive, try to find a match
     my $key = $self->current_node->find_element ($raw_key, case => 'any') ;
+
+    if (not defined $key) {
+        if ($check eq 'yes') {
+            # drop if -force is not set
+            die "Error: unknown parameter: '$raw_key'. Use -force option to drop this parameter\n";
+        }
+        else {
+            say "Dropping parameter '$raw_key'" ;
+        }
+        return;
+    }
 
     my $elt = $self->current_node->fetch_element($key) ;
     my $type = $elt->get_type;
