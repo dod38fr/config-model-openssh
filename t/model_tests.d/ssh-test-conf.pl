@@ -7,16 +7,20 @@ Config::Model::BackendMgr::_set_test_home($home_for_test) ;
 
 $model_to_test = "Ssh" ;
 
-@tests = (
-    {
-      name => 'basic',
-      setup => {
+my @setup = (
+    setup => {
         'system_ssh_config' => {
             'darwin' => '/etc/ssh_config',
             'default' => '/etc/ssh/ssh_config',
         },
         'user_ssh_config' => "$home_for_test/.ssh/config"
-      },
+   }
+);
+
+@tests = (
+    {
+      name => 'basic',
+      @setup,
       check => [
         'Host:"*" Port'    => {qw/mode layered value 22/},
         'Host:"*" Port'    => '1022',
@@ -38,6 +42,13 @@ $model_to_test = "Ssh" ;
         'Host:"foo.*,*.bar"' => "foo bar big\ncomment",
      }
     },
+    {
+        name => 'legacy',
+        @setup,
+        load_check => 'no',
+        load_warnings => [ (qr/deprecated/) x 2 , ],
+
+    }
 );
 
 1;
