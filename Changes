@@ -1,5 +1,11 @@
 {{$NEXT}}
 
+1.233 2014-02-13
+
+    * Ssh backends: send a clear error message when unknown 
+      parameters are found (RT 92639)
+    * Ssh: added deprecated UseRSh and FallBackToRsh (RT 92639)
+
 1.232 2013-12-29
 
   * Ssh::GSSAPI* params: set upstream_default to 0 (instead of default)
