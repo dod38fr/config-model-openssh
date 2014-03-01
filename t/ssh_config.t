@@ -187,6 +187,9 @@ SKIP: {
     # fix is pending
     my $expect = $Config::Model::VERSION > 2.046 ? 0 : 1 ;
     is($user_inst->has_error,$expect,"check error count after fix") ;
+
+    # check if config has warnings
+    is($user_inst->has_warning,0,"check if warnings are left");
 }
 
 done_testing;
