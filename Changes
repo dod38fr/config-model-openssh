@@ -1,5 +1,11 @@
 {{$NEXT}}
 
+1.234 2014-03-01
+
+    * fixed skipped test count in ssh_config.t to enable cpanm
+      installation (RT 93314)
+    * test $inst->has_warning (requires Config::Model 2.050)
+
 1.233 2014-02-13
 
     * Ssh backends: send a clear error message when unknown 
