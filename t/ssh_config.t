@@ -155,7 +155,7 @@ SKIP: {
     print $dump if $trace ;
 
     like($dump,qr/Host:"foo\.\*,\*\.bar"/,"check root Host pattern") ;
-    like($dump,qr/Host:mine.bar/,"check user Host pattern") ;
+    like($dump,qr/Host:"?mine.bar"?/,"check user Host pattern") ;
 
     #require Tk::ObjScanner; Tk::ObjScanner::scan_object($user_cfg) ;
     $user_inst->write_back() ;
