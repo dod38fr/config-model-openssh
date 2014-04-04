@@ -1,5 +1,10 @@
 {{$NEXT}}
 
+1.235 2014-04-04
+
+    * tweak test to be compatible with Config::Model >= or < 2.052
+    * fix man pages abstract section (for Pod::Weaver)
+
 1.234 2014-03-01
 
     * fixed skipped test count in ssh_config.t to enable cpanm
