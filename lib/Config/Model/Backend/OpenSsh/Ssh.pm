@@ -118,11 +118,9 @@ sub write_forward {
 
 no Mouse;
 
+# ABSTRACT: Backend for ssh configuration files
+
 __END__
-
-=head1 NAME
-
-Config::Model::Backend::OpenSsh::Ssh - Backend for ssh configuration files
 
 =head1 SYNOPSIS
 

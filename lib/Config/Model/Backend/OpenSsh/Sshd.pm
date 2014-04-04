@@ -147,9 +147,9 @@ no Mouse;
 
 1;
 
-=head1 NAME
+# ABSTRACT: Backend for sshd configuration files
 
-Config::Model::Backend::OpenSsh::sshd - Backend for sshd configuration files
+__END__
 
 =head1 SYNOPSIS
 

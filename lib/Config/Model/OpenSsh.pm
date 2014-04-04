@@ -2,9 +2,9 @@ package Config::Model::OpenSsh ;
 
 1;
 
-=head1 NAME
+# ABSTRACT: OpenSSH config editor
 
-Config::Model::OpenSsh - OpenSSH config editor
+__END__
 
 =head1 SYNOPSIS
 
@@ -52,7 +52,7 @@ To edit F</etc/ssh/ssh_config>, run (as root):
 
 To edit F<~/.ssh/config>, run as a normal user:
 
- # cme edit ssh
+ $ cme edit ssh
 
 =head1 user interfaces
 

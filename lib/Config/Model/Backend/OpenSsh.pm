@@ -221,9 +221,9 @@ no Mouse;
 
 1;
 
-=head1 NAME
+# ABSTRACT: Common backend methods for Ssh and Sshd backends
 
-Config::Model::Backend::OpenSsh - Common backend methods for Ssh and Sshd backends
+__END__
 
 =head1 SYNOPSIS
 
