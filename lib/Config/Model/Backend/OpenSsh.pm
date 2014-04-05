@@ -235,10 +235,6 @@ L<Config::Model::Backend::OpenSsh::Sshd>.
 Methods used by both L<Config::Model::Backend::OpenSsh::Ssh> and
 L<Config::Model::Backend::OpenSsh::Sshd>. 
 
-=head1 AUTHOR
-
-Dominique Dumont, (ddumont at cpan dot org)
-
 =head1 SEE ALSO
 
 L<cme>, L<Config::Model>, L<Config::Model::OpenSsh>

@@ -74,11 +74,6 @@ A Shell like interface with option C<cme edit ssh -ui shell>.
 
 =back
 
-
-=head1 AUTHOR
-
-Dominique Dumont, (ddumont at cpan dot org)
-
 =head1 SEE ALSO
 
 L<cme>, L<Config::Model>,

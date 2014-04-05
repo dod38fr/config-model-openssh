@@ -152,10 +152,6 @@ C<ssh_root> configuration tree.
 Write F<ssh_config> in C<config_dir> from the data stored in  
 C<ssh_root> configuration tree.
 
-=head1 AUTHOR
-
-Dominique Dumont, (ddumont at cpan dot org)
-
 =head1 SEE ALSO
 
 L<cme>, L<Config::Model>, L<Config::Model::OpenSsh>

@@ -181,10 +181,6 @@ C<sshd_root> configuration tree.
 Write F<sshd_config> in C<config_dir> from the data stored in  
 C<sshd_root> configuration tree.
 
-=head1 AUTHOR
-
-Dominique Dumont, (ddumont at cpan dot org)
-
 =head1 SEE ALSO
 
 L<cme>, L<Config::Model>,
