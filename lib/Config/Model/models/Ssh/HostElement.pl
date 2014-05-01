@@ -398,7 +398,13 @@ See the X11 SECURITY extension specification for full details on the restriction
       {
         'cargo' => {
           'type' => 'leaf',
-          'value_type' => 'uniline'
+          'value_type' => 'uniline',
+          'warn_if_match' => {
+            '\\.pub$' => {
+              'fix' => 's/\\.pub$//;',
+              'msg' => 'identity file should be the private key '
+            }
+          }
         },
         'description' => 'Specifies a file from which the user\'s RSA or DSA authentication identity is read. The default is ~/.ssh/identity for protocol version 1, and ~/.ssh/id_rsa and ~/.ssh/id_dsa for protocol version 2. Additionally, any identities represented by the authentication agent will be used for authentication.
 
