@@ -9,13 +9,8 @@ use File::Path ;
 use English;
 use Test::Differences ;
 use Test::Warn ;
-use EV;
-use AnyEvent;
-
 
 use warnings;
-#no warnings qw(once);
-
 use strict;
 
 my $arg = shift || '';

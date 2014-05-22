@@ -6,8 +6,6 @@ use Config::Model ;
 use Log::Log4perl qw(:easy) ;
 use File::Path ;
 use File::Copy ;
-use EV;
-use AnyEvent;
 
 use warnings;
 no warnings qw(once);
