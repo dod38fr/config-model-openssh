@@ -1,5 +1,13 @@
 {{$NEXT}}
 
+1.236 2014-05-22
+
+    * removed experience parameters from OpenSsh model 
+      with config-model-edit
+    * removed build time dependency on AnyEvent
+    * warn and propose a fix when public key is used as 
+      IdendityFile
+
 1.235 2014-04-04
 
     * tweak test to be compatible with Config::Model >= or < 2.052
