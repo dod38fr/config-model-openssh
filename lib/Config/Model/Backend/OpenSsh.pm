@@ -1,6 +1,9 @@
 package Config::Model::Backend::OpenSsh ;
 
 use 5.10.1;
+
+use Config::Model 2.050;
+
 use Mouse ;
 extends "Config::Model::Backend::Any" ;
 
@@ -13,7 +16,7 @@ has 'current_node'  => (
 
 use Carp ;
 use IO::File ;
-use Log::Log4perl;
+use Log::Log4perl 1.11;
 use File::Copy ;
 use File::Path ;
 
