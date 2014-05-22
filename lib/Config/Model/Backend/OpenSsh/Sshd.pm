@@ -107,7 +107,7 @@ sub write_match_block {
     my $match_line ;
     my $match_body ;
 
-    foreach my $name ($match_elt->get_element_name(for => 'master') ) {
+    foreach my $name ($match_elt->get_element_name() ) {
 	my $elt = $match_elt->fetch_element($name) ;
 
 	if ($name eq 'Settings') {
@@ -134,7 +134,7 @@ sub write_match_condition {
 
     my $result = '' ;
 
-    foreach my $name ($cond_elt->get_element_name(for => 'master') ) {
+    foreach my $name ($cond_elt->get_element_name() ) {
 	my $elt = $cond_elt->fetch_element($name) ;
 	my $v = $elt->fetch($mode) ;
 	$result .= " $name $v" if defined $v;

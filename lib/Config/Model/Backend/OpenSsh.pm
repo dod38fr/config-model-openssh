@@ -170,7 +170,7 @@ sub write_node_content {
     my $result = '' ;
     my $match  = '' ;
 
-    foreach my $name ($node->get_element_name(for => 'master') ) {
+    foreach my $name ($node->get_element_name() ) {
 	next unless $node->is_element_defined($name) ;
 	my $elt = $node->fetch_element($name) ;
 	my $type = $elt->get_type;

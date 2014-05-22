@@ -102,7 +102,7 @@ sub write_forward {
     my $sep = $v6 ? '/' : ':';
 
     my $line = '';
-    foreach my $name ($forward_elt->get_element_name(for => 'master') ) {
+    foreach my $name ($forward_elt->get_element_name() ) {
 	next if $name eq 'ipv6' ;
 	my $elt = $forward_elt->fetch_element($name) ;
 	my $v = $elt->fetch($mode) ;
