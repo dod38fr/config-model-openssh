@@ -26,7 +26,6 @@ validate /etc/ssh/sshd_config
           'value_type' => 'uniline'
         },
         'description' => 'Specifies what environment variables sent by the client will be copied into the session\'s environ(7).',
-        'experience' => 'advanced',
         'type' => 'list'
       },
       'AddressFamily',
@@ -37,7 +36,6 @@ validate /etc/ssh/sshd_config
           'inet6'
         ],
         'description' => 'Specifies which address family should be used by sshd(8).',
-        'experience' => 'advanced',
         'type' => 'leaf',
         'upstream_default' => 'any',
         'value_type' => 'enum'
@@ -60,7 +58,6 @@ validate /etc/ssh/sshd_config
           'value_type' => 'uniline'
         },
         'description' => 'Login is allowed only for users whose primary group or supplementary group list matches one of the patterns. Only group names are valid; a numerical group ID is not recognized. By default, login is allowed for all groups. The allow/deny directives are processed in the following order: DenyUsers, AllowUsers, DenyGroups, and finally AllowGroups.',
-        'experience' => 'advanced',
         'type' => 'list'
       },
       'AllowUsers',
@@ -137,7 +134,6 @@ successful completion of a single authentication method is sufficient.',
           'value_type' => 'uniline'
         },
         'description' => 'Specifies the file that contains the public keys that can be used for user authentication. AuthorizedKeysFile may contain tokens of the form %T which are substituted during connection setup.',
-        'experience' => 'advanced',
         'status' => 'deprecated',
         'type' => 'list'
       },
@@ -148,7 +144,6 @@ successful completion of a single authentication method is sufficient.',
           'value_type' => 'uniline'
         },
         'description' => 'Specifies the file that contains the public keys that can be used for user authentication. The format is described in the AUTHORIZED_KEYS FILE FORMAT section of L<sshd(8)>. AuthorizedKeysFile may contain tokens of the form %T which are substituted during connection setup. The following tokens are defined: %% is replaced by a literal \'%\', %h is replaced by the home directory of the user being authenticated, and %u is replaced by the username of that user. After expansion, AuthorizedKeysFile is taken to be an absolute path or one relative to the user\'s home directory. Multiple files may be listed, separated by whitespace. The default is ".ssh/authorized_keys .ssh/authorized_keys2".',
-        'experience' => 'advanced',
         'migrate_values_from' => '- AuthorizedKeysFile2',
         'type' => 'list'
       },
@@ -245,7 +240,6 @@ The default is not to chroot(2).',
           'cast128-cbc'
         ],
         'description' => 'Specifies the ciphers allowed for protocol version 2. By default, all ciphers are allowed.',
-        'experience' => 'master',
         'type' => 'check_list',
         'upstream_default_list' => [
           '3des-cbc',
@@ -267,7 +261,6 @@ The default is not to chroot(2).',
         'description' => 'Sets the number of client alive messages which may be sent without sshd(8) receiving any messages back from the client. If this threshold is reached while client alive messages are being sent, sshd will disconnect the client, terminating the session.  It is important to note that the use of client alive messages is very different from TCPKeepAlive. The client alive messages are sent through the encrypted channel and therefore will not be spoofable. The TCP keepalive option enabled by TCPKeepAlive is spoofable. The client alive mechanism is valuable when the client or server depend on knowing when a connection has become inactive.
 
 The default value is 3. If ClientAliveInterval is set to 15, and ClientAliveCountMax is left at the default, unresponsive SSH clients will be disconnected after approximately 45 seconds. This option applies to protocol version 2 only.',
-        'experience' => 'advanced',
         'min' => '1',
         'type' => 'leaf',
         'upstream_default' => '3',
@@ -275,7 +268,6 @@ The default value is 3. If ClientAliveInterval is set to 15, and ClientAliveCoun
       },
       'ClientAliveInterval',
       {
-        'experience' => 'advanced',
         'min' => '1',
         'type' => 'leaf',
         'value_type' => 'integer'
@@ -288,7 +280,6 @@ The default value is 3. If ClientAliveInterval is set to 15, and ClientAliveCoun
           'no'
         ],
         'description' => 'Specifies whether compression is allowed, or delayed until the user has authenticated successfully.',
-        'experience' => 'advanced',
         'type' => 'leaf',
         'upstream_default' => 'delayed',
         'value_type' => 'enum'
@@ -300,7 +291,6 @@ The default value is 3. If ClientAliveInterval is set to 15, and ClientAliveCoun
           'value_type' => 'uniline'
         },
         'description' => 'This keyword can be followed by a list of group name patterns, separated by spaces.  Login is disallowed for users whose primary group or supplementary group list matches one of the patterns. Only group names are valid; a numerical group ID is not recognized. By default, login is allowed for all groups.  The allow/deny directives are processed in the following order: DenyUsers, AllowUsers, DenyGroups, and finally AllowGroups.',
-        'experience' => 'advanced',
         'type' => 'list'
       },
       'DenyUSers',
@@ -310,13 +300,11 @@ The default value is 3. If ClientAliveInterval is set to 15, and ClientAliveCoun
           'value_type' => 'uniline'
         },
         'description' => 'This keyword can be followed by a list of user name patterns, separated by spaces.  Login is disallowed for user names that match one of the patterns. Only user names are valid; a numerical user ID is not recognized. By default, login is allowed for all users. If the pattern takes the form USER@HOST then USER and HOST are separately checked, restricting logins to particular users from particular hosts. The allow/deny directives are processed in the following order: DenyUsers, AllowUsers, DenyGroups, and finally AllowGroups.',
-        'experience' => 'advanced',
         'type' => 'list'
       },
       'ForceCommand',
       {
         'description' => 'Forces the execution of the command specified by ForceCommand, ignoring any command supplied by the client. The command is invoked by using the user\'s login shell with the -c option. This applies to shell, command, or subsystem execution. It is most useful inside a Match block. The command originally supplied by the client is available in the SSH_ORIGINAL_COMMAND environment variable.',
-        'experience' => 'advanced',
         'type' => 'leaf',
         'value_type' => 'uniline'
       },
@@ -328,7 +316,6 @@ The default value is 3. If ClientAliveInterval is set to 15, and ClientAliveCoun
           'no'
         ],
         'description' => 'Specifies whether remote hosts are allowed to connect to ports forwarded for the client. By default, sshd(8) binds remote port forwardings to the loopback address. This prevents other remote hosts from connecting to forwarded ports. GatewayPorts can be used to specify that sshd should allow remote port forwardings to bind to non-loopback addresses, thus allowing other hosts to connect.',
-        'experience' => 'advanced',
         'help' => {
           'clientspecified' => 'allow the client to select the address to which the forwarding is bound',
           'no' => 'No port forwarding
@@ -346,7 +333,6 @@ The default value is 3. If ClientAliveInterval is set to 15, and ClientAliveCoun
           'yes'
         ],
         'description' => 'Specifies whether user authentication based on GSSAPI is allowed. Note that this option applies to protocol version 2 only.',
-        'experience' => 'master',
         'type' => 'leaf',
         'upstream_default' => 'no',
         'value_type' => 'enum'
@@ -358,7 +344,6 @@ The default value is 3. If ClientAliveInterval is set to 15, and ClientAliveCoun
           'yes'
         ],
         'description' => 'Specifies whether key exchange based on GSSAPI is allowed. GSSAPI key exchange doesn\'t rely on ssh keys to verify host identity. Note that this option applies to protocol version 2 only.',
-        'experience' => 'master',
         'type' => 'leaf',
         'upstream_default' => 'no',
         'value_type' => 'enum'
@@ -370,7 +355,6 @@ The default value is 3. If ClientAliveInterval is set to 15, and ClientAliveCoun
           'yes'
         ],
         'description' => 'Specifies whether to automatically destroy the user\'s credentials cache on logout. Note that this option applies to protocol version 2 only.',
-        'experience' => 'master',
         'type' => 'leaf',
         'upstream_default' => 'no',
         'value_type' => 'enum'
@@ -382,7 +366,6 @@ The default value is 3. If ClientAliveInterval is set to 15, and ClientAliveCoun
           'yes'
         ],
         'description' => 'Determines whether to be strict about the identity of the GSSAPI acceptor a client authenticates against.This facility is provided to assist with operation on multi homed machines. Note that this option applies only to protocol version 2 GSSAPI connections, and setting it to "no" may only work with recent Kerberos GSSAPI libraries.',
-        'experience' => 'master',
         'help' => {
           'no' => 'the client may authenticate against any service key stored in the machine\'s default store',
           'yes' => 'the client must authenticate against the host service on the current hostname.'
@@ -409,7 +392,6 @@ The default value is 3. If ClientAliveInterval is set to 15, and ClientAliveCoun
           'yes'
         ],
         'description' => 'Specifies whether rhosts or /etc/hosts.equiv authentication together with successful public key client host authentication is allowed (host-based authentication). This option is similar to RhostsRSAAuthentication and applies to protocol version 2 only.',
-        'experience' => 'advanced',
         'type' => 'leaf',
         'upstream_default' => 'no',
         'value_type' => 'enum'
@@ -421,7 +403,6 @@ The default value is 3. If ClientAliveInterval is set to 15, and ClientAliveCoun
           'yes'
         ],
         'description' => 'Specifies whether or not the server will attempt to perform a reverse name lookup when matching the name in the ~/.shosts, ~/.rhosts, and /etc/hosts.equiv files during HostbasedAuthentication.',
-        'experience' => 'master',
         'help' => {
           'no' => 'sshd(8) attempts to resolve the name from the TCP connection itself.',
           'yes' => 'sshd(8) uses the name supplied by the client'
@@ -443,7 +424,6 @@ The default value is 3. If ClientAliveInterval is set to 15, and ClientAliveCoun
           'value_type' => 'uniline'
         },
         'description' => 'Specifies a file containing a private host key used by SSH. The default is /etc/ssh/ssh_host_key for protocol version 1, and /etc/ssh/ssh_host_rsa_key and /etc/ssh/ssh_host_dsa_key for protocol version 2. Note that sshd(8) will refuse to use a file if it is group/world-accessible.  It is possible to have multiple host key files. "rsa1" keys are used for version 1 and "dsa" or "rsa" are used for version 2 of the SSH protocol.',
-        'experience' => 'advanced',
         'type' => 'list'
       },
       'HostKeyAgent',
@@ -459,7 +439,6 @@ The default value is 3. If ClientAliveInterval is set to 15, and ClientAliveCoun
           'yes'
         ],
         'description' => 'Specifies that .rhosts and .shosts files will not be used in RhostsRSAAuthentication or HostbasedAuthentication. /etc/hosts.equiv and /etc/ssh/shosts.equiv are still used. ',
-        'experience' => 'advanced',
         'type' => 'leaf',
         'upstream_default' => 'yes',
         'value_type' => 'enum'
@@ -471,7 +450,6 @@ The default value is 3. If ClientAliveInterval is set to 15, and ClientAliveCoun
           'yes'
         ],
         'description' => 'Specifies whether sshd(8) should ignore the user\'s ~/.ssh/known_hosts during RhostsRSAAuthentication or HostbasedAuthentication.',
-        'experience' => 'advanced',
         'type' => 'leaf',
         'upstream_default' => 'no',
         'value_type' => 'enum'
@@ -511,7 +489,6 @@ return @good == @v ? 1 : 0;
           'yes'
         ],
         'description' => 'No doc found in sshd documentation',
-        'experience' => 'master',
         'type' => 'leaf',
         'upstream_default' => 'no',
         'value_type' => 'enum'
@@ -523,7 +500,6 @@ return @good == @v ? 1 : 0;
           'yes'
         ],
         'description' => 'Specifies whether the password provided by the user for PasswordAuthentication will be validated through the Kerberos KDC. To use this option, the server needs a Kerberos servtab which allows the verification of the KDC\'s identity. The default is "no".',
-        'experience' => 'master',
         'type' => 'leaf',
         'upstream_default' => 'no',
         'value_type' => 'enum'
@@ -535,7 +511,6 @@ return @good == @v ? 1 : 0;
           'yes'
         ],
         'description' => 'If AFS is active and the user has a Kerberos 5 TGT, attempt to acquire an AFS token before accessing the user\'s home directory.',
-        'experience' => 'master',
         'type' => 'leaf',
         'upstream_default' => 'no',
         'value_type' => 'enum'
@@ -547,7 +522,6 @@ return @good == @v ? 1 : 0;
           'yes'
         ],
         'description' => 'If password authentication through Kerberos fails then the password will be validated via any additional local mechanism such as /etc/passwd.',
-        'experience' => 'master',
         'type' => 'leaf',
         'upstream_default' => 'yes',
         'value_type' => 'enum'
@@ -559,7 +533,6 @@ return @good == @v ? 1 : 0;
           'yes'
         ],
         'description' => 'Specifies whether to automatically destroy the user\'s ticket cache file on logout.',
-        'experience' => 'master',
         'type' => 'leaf',
         'upstream_default' => 'yes',
         'value_type' => 'enum'
@@ -590,7 +563,6 @@ return @good == @v ? 1 : 0;
       'KeyRegenerationInterval',
       {
         'description' => 'In protocol version 1, the ephemeral server key is automatically regenerated after this many seconds (if it has been used). The purpose of regeneration is to prevent decrypting captured sessions by later breaking into the machine and stealing the keys. The key is never stored anywhere. If the value is 0, the key is never regenerated. The default is 3600 (seconds).',
-        'experience' => 'master',
         'type' => 'leaf',
         'upstream_default' => '3600',
         'value_type' => 'integer'
@@ -598,7 +570,6 @@ return @good == @v ? 1 : 0;
       'Port',
       {
         'description' => 'Specifies the port number that sshd(8) listens on. The default is 22. Multiple options of this type are permitted. See also ListenAddress.',
-        'experience' => 'advanced',
         'type' => 'leaf',
         'upstream_default' => '22',
         'value_type' => 'integer'
@@ -616,13 +587,11 @@ return @good == @v ? 1 : 0;
   [host|IPv6_addr]:port
 
 If port is not specified, sshd will listen on the address and all prior Port options specified. The default is to listen on all local addresses.  Multiple ListenAddress options are permitted. Additionally, any Port options must precede this option for non-port qualified addresses.',
-        'experience' => 'advanced',
         'type' => 'list'
       },
       'LoginGraceTime',
       {
         'description' => 'The server disconnects after this time if the user has not successfully logged in. If the value is 0, there is no time limit. The default is 120 seconds.',
-        'experience' => 'advanced',
         'type' => 'leaf',
         'upstream_default' => '120',
         'value_type' => 'integer'
@@ -662,7 +631,6 @@ If port is not specified, sshd will listen on the address and all prior Port opt
           'umac-64@openssh.com'
         ],
         'description' => 'Specifies the available MAC (message authentication code) algorithms. The MAC algorithm is used in protocol version 2 for data integrity protection.',
-        'experience' => 'master',
         'type' => 'check_list'
       },
       'MaxAuthTries',
@@ -730,7 +698,6 @@ Alternatively, random early drop can be enabled by specifying the three colon se
           'value_type' => 'uniline'
         },
         'description' => 'Specifies the destinations to which TCP port forwarding is permitted. The forwarding specification must be one of the following forms: "host:port" or "IPv4_addr:port" or "[IPv6_addr]:port". An argument of "any" can be used to remove all restrictions and permit any forwarding requests. By default all port forwarding requests are permitted.',
-        'experience' => 'advanced',
         'type' => 'list'
       },
       'PermitRootLogin',
@@ -761,7 +728,6 @@ Alternatively, random early drop can be enabled by specifying the three colon se
           'no'
         ],
         'description' => 'Specifies whether tun(4) device forwarding is allowed. The argument must be "yes", "point-to-point" (layer 3), "ethernet" (layer 2), or "no".  Specifying "yes" permits both "point-to-point" and "ethernet".',
-        'experience' => 'advanced',
         'help' => {
           'yes' => 'permits both "point-to-point" and "ethernet"'
         },
@@ -776,7 +742,6 @@ Alternatively, random early drop can be enabled by specifying the three colon se
           'yes'
         ],
         'description' => 'Specifies whether ~/.ssh/environment and environment= options in ~/.ssh/authorized_keys are processed by sshd(8). The default is "no". Enabling environment processing may enable users to bypass access restrictions in some configurations using mechanisms such as LD_PRELOAD.',
-        'experience' => 'advanced',
         'type' => 'leaf',
         'upstream_default' => 'no',
         'value_type' => 'enum'
@@ -784,7 +749,6 @@ Alternatively, random early drop can be enabled by specifying the three colon se
       'PidFile',
       {
         'description' => 'Specifies the file that contains the process ID of the SSH daemon.',
-        'experience' => 'master',
         'type' => 'leaf',
         'upstream_default' => '/var/run/sshd.pid',
         'value_type' => 'uniline'
@@ -831,7 +795,6 @@ Alternatively, random early drop can be enabled by specifying the three colon se
           'yes'
         ],
         'description' => 'Specifies whether public key authentication is allowed.  The default is "yes". Note that this option applies to protocol version 2 only.',
-        'experience' => 'master',
         'type' => 'leaf',
         'upstream_default' => 'yes',
         'value_type' => 'enum'
@@ -874,7 +837,6 @@ LISTS section in ssh-keygen(1).',
           'yes'
         ],
         'description' => 'Specifies whether rhosts or /etc/hosts.equiv authentication together with successful RSA host authentication is allowed.  The default is "no". This option applies to protocol version 1 only.',
-        'experience' => 'master',
         'type' => 'leaf',
         'upstream_default' => 'no',
         'value_type' => 'enum'
@@ -886,7 +848,6 @@ LISTS section in ssh-keygen(1).',
           'yes'
         ],
         'description' => 'Specifies whether pure RSA authentication is allowed. This option applies to protocol version 1 only.',
-        'experience' => 'master',
         'type' => 'leaf',
         'upstream_default' => 'yes',
         'value_type' => 'enum'
@@ -894,7 +855,6 @@ LISTS section in ssh-keygen(1).',
       'ServerKeyBits',
       {
         'description' => 'Defines the number of bits in the ephemeral protocol version 1 server key. The minimum value is 512, and the default is 768.',
-        'experience' => 'master',
         'min' => '512',
         'type' => 'leaf',
         'upstream_default' => '768',
@@ -908,7 +868,6 @@ LISTS section in ssh-keygen(1).',
         ],
         'description' => 'Specifies whether sshd(8) should check file modes and ownership of the user\'s files and home directory before accepting login.  This is normally desirable because novices sometimes accidentally leave their directory or files world-writable.  The default is "yes".
 ',
-        'experience' => 'advanced',
         'type' => 'leaf',
         'upstream_default' => 'yes',
         'value_type' => 'enum'
@@ -921,7 +880,6 @@ LISTS section in ssh-keygen(1).',
           'value_type' => 'uniline'
         },
         'description' => 'Configures an external subsystem (e.g. file transfer daemon). Keys of the hash should be a subsystem name and hash value a command (with optional arguments) to execute upon subsystem request. The command sftp-server(8) implements the "sftp" file transfer subsystem.  By default no subsystems are defined. Note that this option applies to protocol version 2 only.',
-        'experience' => 'advanced',
         'index_type' => 'string',
         'type' => 'hash'
       },
@@ -1048,7 +1006,6 @@ If UsePAM is enabled, you will not be able to run sshd(8) as a non-root user.  T
       'XAuthLocation',
       {
         'description' => 'Specifies the full pathname of the xauth(1) program.',
-        'experience' => 'advanced',
         'type' => 'leaf',
         'upstream_default' => '/usr/bin/X11/xauth',
         'value_type' => 'uniline'
@@ -1056,7 +1013,6 @@ If UsePAM is enabled, you will not be able to run sshd(8) as a non-root user.  T
       'X11DisplayOffset',
       {
         'description' => 'Specifies the first display number available for sshd(8)\'s X11 forwarding. This prevents sshd from interfering with real X11 servers.',
-        'experience' => 'advanced',
         'type' => 'leaf',
         'upstream_default' => '10',
         'value_type' => 'integer'
@@ -1091,7 +1047,6 @@ If UsePAM is enabled, you will not be able to run sshd(8) as a non-root user.  T
           'type' => 'node'
         },
         'description' => 'Specifies a match block. The criteria User, Group Host and Address can contain patterns. When all these criteria are satisfied (i.e. all patterns match the incoming connection), the parameters set in the block element will override the general settings.',
-        'experience' => 'advanced',
         'type' => 'list'
       }
     ],

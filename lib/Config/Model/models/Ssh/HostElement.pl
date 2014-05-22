@@ -17,7 +17,6 @@ inside a Host directive of a ssh configuration.',
           'inet6'
         ],
         'description' => 'Specifies which address family to use when connecting.',
-        'experience' => 'advanced',
         'type' => 'leaf',
         'upstream_default' => 'any',
         'value_type' => 'enum'
@@ -32,7 +31,6 @@ inside a Host directive of a ssh configuration.',
       'BindAddress',
       {
         'description' => 'Use the specified address on the local machine as the source address of the connection. Only useful on systems with more than one address. Note that this option does not work if UsePrivilegedPort is set to \'yes\'.',
-        'experience' => 'advanced',
         'type' => 'leaf',
         'value_type' => 'uniline'
       },
@@ -58,7 +56,6 @@ inside a Host directive of a ssh configuration.',
           'des'
         ],
         'description' => 'Specifies the cipher to use for encrypting the session in protocol version 1. "des" is only supported in the ssh(1) client for interoperability with legacy protocol 1 implementations that do not support the 3des cipher. Its use is strongly discouraged due to cryptographic weaknesses.',
-        'experience' => 'advanced',
         'type' => 'leaf',
         'upstream_default' => '3des',
         'value_type' => 'enum'
@@ -80,7 +77,6 @@ inside a Host directive of a ssh configuration.',
           'aes256-ctr'
         ],
         'description' => 'Specifies the ciphers allowed for protocol version 2 in order of preference. By default, all ciphers are allowed. User cipher list will override system list',
-        'experience' => 'master',
         'ordered' => '1',
         'type' => 'check_list',
         'upstream_default_list' => [
@@ -101,7 +97,6 @@ inside a Host directive of a ssh configuration.',
       'ClearAllForwardings',
       {
         'description' => 'Specifies that all local, remote, and dynamic port forwardings specified in the configuration files or on the command line be cleared. This option is primarily useful when used from the ssh(1) command line to clear port forwardings set in configuration files, and is automatically set by scp(1) and sftp(1).',
-        'experience' => 'advanced',
         'type' => 'leaf',
         'upstream_default' => '0',
         'value_type' => 'boolean'
@@ -115,7 +110,6 @@ inside a Host directive of a ssh configuration.',
       },
       'CompressionLevel',
       {
-        'experience' => 'advanced',
         'level' => 'hidden',
         'max' => '9',
         'min' => '1',
@@ -137,7 +131,6 @@ inside a Host directive of a ssh configuration.',
       'ConnectionAttempts',
       {
         'description' => 'Specifies the number of tries (one per second) to make before exiting. The argument must be an integer. This may be useful in scripts if the connection sometimes fails.',
-        'experience' => 'advanced',
         'min' => '1',
         'type' => 'leaf',
         'upstream_default' => '1',
@@ -147,7 +140,6 @@ inside a Host directive of a ssh configuration.',
       {
         'description' => 'Specifies the timeout (in seconds) used when connecting to the SSH server, instead of using the default system TCP timeout. This value is used only when the target is down or really unreachable, not when it refuses the connection.
 ',
-        'experience' => 'advanced',
         'type' => 'leaf',
         'value_type' => 'integer'
       },
@@ -200,7 +192,6 @@ The argument must be [bind_address:]port. IPv6 addresses can be specified by enc
 
 Currently the SOCKS4 and SOCKS5 protocols are supported, and ssh(1) will act as a SOCKS server. Multiple forwardings may be specified, and additional forwardings can be given on the command line. Only the superuser can forward privileged ports.
 ',
-        'experience' => 'advanced',
         'type' => 'list'
       },
       'EscapeChar',
@@ -214,7 +205,6 @@ Currently the SOCKS4 and SOCKS5 protocols are supported, and ssh(1) will act as 
       'ExitOnForwardFailure',
       {
         'description' => 'Specifies whether ssh(1) should terminate the connection if it cannot set up all requested dynamic, tunnel, local, and remote port forwardings.',
-        'experience' => 'advanced',
         'type' => 'leaf',
         'upstream_default' => '0',
         'value_type' => 'boolean'
@@ -262,7 +252,6 @@ See the X11 SECURITY extension specification for full details on the restriction
       'GatewayPorts',
       {
         'description' => 'Specifies whether remote hosts are allowed to connect to local forwarded ports. By default, ssh(1) binds local port forwardings to the loopback address. This prevents other remote hosts from connecting to forwarded ports. GatewayPorts can be used to specify that ssh should bind local port forwardings to the wildcard address, thus allowing remote hosts to connect to forwarded ports. ',
-        'experience' => 'advanced',
         'type' => 'leaf',
         'upstream_default' => '0',
         'value_type' => 'boolean'
@@ -277,7 +266,6 @@ See the X11 SECURITY extension specification for full details on the restriction
       'GSSAPIAuthentication',
       {
         'description' => 'Specifies whether user authentication based on GSSAPI is allowed. Note that this option applies to protocol version 2 only.',
-        'experience' => 'master',
         'type' => 'leaf',
         'upstream_default' => '0',
         'value_type' => 'boolean'
@@ -308,7 +296,6 @@ See the X11 SECURITY extension specification for full details on the restriction
       'GSSAPIDelegateCredentials',
       {
         'description' => 'Forward (delegate) credentials to the server. Note that this option applies to protocol version 2 connections using GSSAPI.',
-        'experience' => 'master',
         'type' => 'leaf',
         'upstream_default' => '0',
         'value_type' => 'boolean',
@@ -343,7 +330,6 @@ See the X11 SECURITY extension specification for full details on the restriction
       {
         'description' => 'Indicates that ssh(1) should hash host names and addresses when they are added to ~/.ssh/known_hosts. These hashed names may be used normally by ssh(1) and sshd(8), but they do not reveal identifying information should the file\'s contents be disclosed. Note that existing names and addresses in known hosts files will not be converted automatically, but may be manually hashed using ssh-keygen(1).
 ',
-        'experience' => 'advanced',
         'type' => 'leaf',
         'upstream_default' => '0',
         'value_type' => 'boolean'
@@ -352,7 +338,6 @@ See the X11 SECURITY extension specification for full details on the restriction
       {
         'description' => 'Specifies whether to try rhosts based authentication with public key authentication. This option applies to protocol version 2 only and is similar to RhostsRSAAuthentication.
 ',
-        'experience' => 'advanced',
         'type' => 'leaf',
         'upstream_default' => '0',
         'value_type' => 'boolean'
@@ -364,7 +349,6 @@ See the X11 SECURITY extension specification for full details on the restriction
           'ssh-dss'
         ],
         'description' => 'Specifies the protocol version 2 host key algorithms that the client wants to use in order of preference.',
-        'experience' => 'master',
         'ordered' => '1',
         'type' => 'check_list',
         'upstream_default_list' => [
@@ -375,21 +359,18 @@ See the X11 SECURITY extension specification for full details on the restriction
       'HostKeyAlias',
       {
         'description' => 'Specifies an alias that should be used instead of the real host name when looking up or saving the host key in the host key database files. This option is useful for tunneling SSH connections or for multiple servers running on a single host.',
-        'experience' => 'advanced',
         'type' => 'leaf',
         'value_type' => 'uniline'
       },
       'HostName',
       {
         'description' => 'Specifies the real host name to log into. This can be used to specify nicknames or abbreviations for hosts. The default is the name given on the command line. Numeric IP addresses are also permitted (both on the command line and in HostName specifications).',
-        'experience' => 'advanced',
         'type' => 'leaf',
         'value_type' => 'uniline'
       },
       'IdentitiesOnly',
       {
         'description' => 'Specifies that ssh(1) should only use the authentication identity files configured in the ssh_config files, even if ssh-agent(1) offers more identities. This option is intended for situations where ssh-agent offers many different identities.',
-        'experience' => 'advanced',
         'type' => 'leaf',
         'upstream_default' => '0',
         'value_type' => 'boolean'
@@ -412,7 +393,6 @@ The file name may use the tilde syntax to refer to a user\'s home directory or o
 
 It is possible to have multiple identity files specified in con figuration files; all these identities will be tried in sequence.
 ',
-        'experience' => 'advanced',
         'type' => 'list'
       },
       'IPQoS',
@@ -458,7 +438,6 @@ return @good == @v ? 1 : 0;
           'value_type' => 'uniline'
         },
         'description' => 'Specifies the list of methods to use in keyboard-interactive authentication.  Multiple method names must be comma-separated. The default is to use the server specified list. The methods available vary depending on what the server supports. For an OpenSSH server, it may be zero or more of: \'bsdauth\', \'pam\', and \'skey\'.',
-        'experience' => 'master',
         'type' => 'list'
       },
       'KexAlgorithms',
@@ -501,7 +480,6 @@ By default, the local port is bound in accordance with the GatewayPorts setting.
 Example:
    LocalForward 20000 192.168.0.66:80
 ',
-        'experience' => 'advanced',
         'summary' => 'Local port forwarding',
         'type' => 'list'
       },
@@ -535,7 +513,6 @@ Example:
           'hmac-md5-96'
         ],
         'description' => 'Specifies the MAC (message authentication code) algorithms in order of preference. The MAC algorithm is used in protocol version 2 for data integrity protection.',
-        'experience' => 'master',
         'ordered' => '1',
         'type' => 'check_list',
         'upstream_default_list' => [
@@ -550,7 +527,6 @@ Example:
       'NoHostAuthenticationForLocalhost',
       {
         'description' => 'This option can be used if the home directory is shared across machines. In this case localhost will refer to a different machine on each of the machines and the user will get many warn ings about changed host keys. However, this option disables host authentication for localhost. The default is to check the host key for localhost.',
-        'experience' => 'advanced',
         'type' => 'leaf',
         'upstream_default' => '0',
         'value_type' => 'boolean'
@@ -558,7 +534,6 @@ Example:
       'NumberOfPasswordPrompts',
       {
         'description' => 'Specifies the number of password prompts before giving up.',
-        'experience' => 'advanced',
         'type' => 'leaf',
         'upstream_default' => '3',
         'value_type' => 'integer'
@@ -573,7 +548,6 @@ Example:
       'PermitLocalCommand',
       {
         'description' => 'Allow local command execution via the LocalCommand option or using the !command escape sequence in ssh(1).',
-        'experience' => 'advanced',
         'type' => 'leaf',
         'upstream_default' => '0',
         'value_type' => 'boolean'
@@ -581,7 +555,6 @@ Example:
       'LocalCommand',
       {
         'description' => 'Specifies a command to execute on the local machine after successfully connecting to the server. The command string extends to the end of the line, and is executed with the user\'s shell. The following escape character substitutions will be performed: \'%d\' (local user\'s home directory), \'%h\' (remote host name), \'%l\' (local host name), \'%n\' (host name as provided on the command line), \'%p\' (remote port), \'%r\' (remote user name) or \'%u\' (local user name). This directive is ignored unless PermitLocalCommand has been enabled.',
-        'experience' => 'advanced',
         'type' => 'leaf',
         'value_type' => 'uniline'
       },
@@ -594,7 +567,6 @@ Example:
       'Port',
       {
         'description' => 'Specifies the port number to connect on the remote host.',
-        'experience' => 'advanced',
         'type' => 'leaf',
         'upstream_default' => '22',
         'value_type' => 'integer'
@@ -609,7 +581,6 @@ Example:
           'password'
         ],
         'description' => 'Specifies the order in which the client should try protocol 2 authentication methods.  This allows a client to prefer one method (e.g. keyboard-interactive) over another method (e.g. password).',
-        'experience' => 'advanced',
         'ordered' => '1',
         'type' => 'check_list',
         'upstream_default_list' => [
@@ -641,14 +612,12 @@ Example:
 This directive is useful in conjunction with nc(1) and its proxy support. For example, the following directive would connect via an HTTP proxy at 192.0.2.0:
 
     ProxyCommand /usr/bin/nc -X connect -x 192.0.2.0:8080 %h %p',
-        'experience' => 'advanced',
         'type' => 'leaf',
         'value_type' => 'uniline'
       },
       'PubkeyAuthentication',
       {
         'description' => 'Specifies whether to try public key authentication. This option applies to protocol version 2 only.',
-        'experience' => 'advanced',
         'type' => 'leaf',
         'upstream_default' => '1',
         'value_type' => 'boolean'
@@ -656,7 +625,6 @@ This directive is useful in conjunction with nc(1) and its proxy support. For ex
       'RekeyLimit',
       {
         'description' => 'Specifies the maximum amount of data that may be transmitted before the session key is renegotiated.  The argument is the number of bytes, with an optional suffix of \'K\', \'M\', or \'G\' to indicate Kilobytes, Megabytes, or Gigabytes, respectively.  The default is between \'1G\' and \'4G\', depending on the cipher.  This option applies to protocol version 2 only.',
-        'experience' => 'advanced',
         'type' => 'leaf',
         'value_type' => 'uniline'
       },
@@ -669,7 +637,6 @@ This directive is useful in conjunction with nc(1) and its proxy support. For ex
         'description' => 'Specifies that a TCP port on the remote machine be forwarded over the secure channel to the specified host and port from the local machine. Multiple forwardings may be specified, and additional forwardings can be given on the command line. Only the superuser can forward privileged ports.
 
 If the bind_address is not specified, the default is to only bind to loopback addresses. If the bind_address is \'*\' or an empty string, then the forwarding is requested to listen on all inter faces. Specifying a remote bind_address will only succeed if the server\'s GatewayPorts option is enabled (see sshd_config(5)).',
-        'experience' => 'advanced',
         'level' => 'important',
         'summary' => 'remote port forward to local',
         'type' => 'list'
@@ -702,7 +669,6 @@ If the bind_address is not specified, the default is to only bind to loopback ad
       'RSAAuthentication',
       {
         'description' => 'Specifies whether to try RSA authentication. RSA authentication will only be attempted if the identity file exists, or an authentication agent is running. Note that this option applies to protocol version 1 only.',
-        'experience' => 'advanced',
         'type' => 'leaf',
         'upstream_default' => '1',
         'value_type' => 'boolean'
@@ -748,7 +714,6 @@ The default value is 3. If, for example, ServerAliveInterval is set to 15 and Se
       'SmartcardDevice',
       {
         'description' => 'Specifies which smartcard device to use.  The argument to this keyword is the device ssh(1) should use to communicate with a smartcard used for storing the user\'s private RSA key.  By default, no device is specified and smartcard support is not activated.',
-        'experience' => 'advanced',
         'type' => 'leaf',
         'value_type' => 'uniline'
       },
@@ -791,7 +756,6 @@ To disable TCP keepalive messages, the value should be set to "no".',
         'description' => 'Specifies the tun(4) devices to open on the client (local_tun) and the server (remote_tun).
 
              The argument must be local_tun[:remote_tun].  The devices may be specified by numerical ID or the keyword "any", which uses the next available tunnel device.  If remote_tun is not specified, it defaults to "any".  The default is "any:any".',
-        'experience' => 'advanced',
         'type' => 'leaf',
         'upstream_default' => 'any:any',
         'value_type' => 'uniline'
@@ -799,7 +763,6 @@ To disable TCP keepalive messages, the value should be set to "no".',
       'UseBlacklistedKeys',
       {
         'description' => 'Specifies whether ssh(1) should use keys recorded in its blacklist of known-compromised keys (see ssh-vulnkey(1)) for authentication.  If "yes", then attempts to use compromised keys for authentication will be logged but accepted.  It is strongly recommended that this be used only to install new authorized keys on the remote system, and even then only with the utmost care.  If "no", then attempts to use compromised keys for authentication will be prevented.  The default is "no".',
-        'experience' => 'advanced',
         'type' => 'leaf',
         'upstream_default' => '0',
         'value_type' => 'boolean'
@@ -807,7 +770,6 @@ To disable TCP keepalive messages, the value should be set to "no".',
       'UsePrivilegedPort',
       {
         'description' => 'Specifies whether to use a privileged port for outgoing connections.  The argument must be "yes" or "no".  The default is "no". If set to "yes", ssh(1) must be setuid root.  Note that this option must be set to "yes" for RhostsRSAAuthentication with older servers.',
-        'experience' => 'advanced',
         'type' => 'leaf',
         'upstream_default' => '0',
         'value_type' => 'boolean'
@@ -834,7 +796,6 @@ To disable TCP keepalive messages, the value should be set to "no".',
         ],
         'description' => 'Specifies whether to verify the remote key using DNS and SSHFP resource records.  If this option is set to "yes", the client will implicitly trust keys that match a secure fingerprint from DNS.  Insecure fingerprints will be handled as if this option was set to "ask".  If this option is set to "ask", information on fingerprint match will be displayed, but the user will still need to confirm new host keys according to the StrictHostKeyChecking option.  The argument must be "yes", "no", or "ask".  The default is "no".  Note that this option applies to protocol version 2 only. 
 See also VERIFYING HOST KEYS in ssh(1).',
-        'experience' => 'advanced',
         'type' => 'leaf',
         'upstream_default' => 'no',
         'value_type' => 'enum'

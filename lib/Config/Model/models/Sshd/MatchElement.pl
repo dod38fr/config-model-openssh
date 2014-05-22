@@ -16,7 +16,6 @@ inside a Match block of a sshd configuration.',
           'value_type' => 'uniline'
         },
         'description' => 'Specifies what environment variables sent by the client will be copied into the session\'s environ(7).',
-        'experience' => 'advanced',
         'type' => 'list'
       },
       'AllowAgentForwarding',
@@ -37,7 +36,6 @@ inside a Match block of a sshd configuration.',
           'value_type' => 'uniline'
         },
         'description' => 'Login is allowed only for users whose primary group or supplementary group list matches one of the patterns. Only group names are valid; a numerical group ID is not recognized. By default, login is allowed for all groups. The allow/deny directives are processed in the following order: DenyUsers, AllowUsers, DenyGroups, and finally AllowGroups.',
-        'experience' => 'advanced',
         'type' => 'list'
       },
       'AllowUsers',
@@ -114,7 +112,6 @@ successful completion of a single authentication method is sufficient.',
           'value_type' => 'uniline'
         },
         'description' => 'Specifies the file that contains the public keys that can be used for user authentication. AuthorizedKeysFile may contain tokens of the form %T which are substituted during connection setup.',
-        'experience' => 'advanced',
         'status' => 'deprecated',
         'type' => 'list'
       },
@@ -125,7 +122,6 @@ successful completion of a single authentication method is sufficient.',
           'value_type' => 'uniline'
         },
         'description' => 'Specifies the file that contains the public keys that can be used for user authentication. The format is described in the AUTHORIZED_KEYS FILE FORMAT section of L<sshd(8)>. AuthorizedKeysFile may contain tokens of the form %T which are substituted during connection setup. The following tokens are defined: %% is replaced by a literal \'%\', %h is replaced by the home directory of the user being authenticated, and %u is replaced by the username of that user. After expansion, AuthorizedKeysFile is taken to be an absolute path or one relative to the user\'s home directory. Multiple files may be listed, separated by whitespace. The default is ".ssh/authorized_keys .ssh/authorized_keys2".',
-        'experience' => 'advanced',
         'migrate_values_from' => '- AuthorizedKeysFile2',
         'type' => 'list'
       },
@@ -201,7 +197,6 @@ The default is not to chroot(2).',
           'value_type' => 'uniline'
         },
         'description' => 'This keyword can be followed by a list of group name patterns, separated by spaces.  Login is disallowed for users whose primary group or supplementary group list matches one of the patterns. Only group names are valid; a numerical group ID is not recognized. By default, login is allowed for all groups.  The allow/deny directives are processed in the following order: DenyUsers, AllowUsers, DenyGroups, and finally AllowGroups.',
-        'experience' => 'advanced',
         'type' => 'list'
       },
       'DenyUSers',
@@ -211,13 +206,11 @@ The default is not to chroot(2).',
           'value_type' => 'uniline'
         },
         'description' => 'This keyword can be followed by a list of user name patterns, separated by spaces.  Login is disallowed for user names that match one of the patterns. Only user names are valid; a numerical user ID is not recognized. By default, login is allowed for all users. If the pattern takes the form USER@HOST then USER and HOST are separately checked, restricting logins to particular users from particular hosts. The allow/deny directives are processed in the following order: DenyUsers, AllowUsers, DenyGroups, and finally AllowGroups.',
-        'experience' => 'advanced',
         'type' => 'list'
       },
       'ForceCommand',
       {
         'description' => 'Forces the execution of the command specified by ForceCommand, ignoring any command supplied by the client. The command is invoked by using the user\'s login shell with the -c option. This applies to shell, command, or subsystem execution. It is most useful inside a Match block. The command originally supplied by the client is available in the SSH_ORIGINAL_COMMAND environment variable.',
-        'experience' => 'advanced',
         'type' => 'leaf',
         'value_type' => 'uniline'
       },
@@ -229,7 +222,6 @@ The default is not to chroot(2).',
           'no'
         ],
         'description' => 'Specifies whether remote hosts are allowed to connect to ports forwarded for the client. By default, sshd(8) binds remote port forwardings to the loopback address. This prevents other remote hosts from connecting to forwarded ports. GatewayPorts can be used to specify that sshd should allow remote port forwardings to bind to non-loopback addresses, thus allowing other hosts to connect.',
-        'experience' => 'advanced',
         'help' => {
           'clientspecified' => 'allow the client to select the address to which the forwarding is bound',
           'no' => 'No port forwarding
@@ -247,7 +239,6 @@ The default is not to chroot(2).',
           'yes'
         ],
         'description' => 'Specifies whether user authentication based on GSSAPI is allowed. Note that this option applies to protocol version 2 only.',
-        'experience' => 'master',
         'type' => 'leaf',
         'upstream_default' => 'no',
         'value_type' => 'enum'
@@ -259,7 +250,6 @@ The default is not to chroot(2).',
           'yes'
         ],
         'description' => 'Specifies whether rhosts or /etc/hosts.equiv authentication together with successful public key client host authentication is allowed (host-based authentication). This option is similar to RhostsRSAAuthentication and applies to protocol version 2 only.',
-        'experience' => 'advanced',
         'type' => 'leaf',
         'upstream_default' => 'no',
         'value_type' => 'enum'
@@ -271,7 +261,6 @@ The default is not to chroot(2).',
           'yes'
         ],
         'description' => 'Specifies whether or not the server will attempt to perform a reverse name lookup when matching the name in the ~/.shosts, ~/.rhosts, and /etc/hosts.equiv files during HostbasedAuthentication.',
-        'experience' => 'master',
         'help' => {
           'no' => 'sshd(8) attempts to resolve the name from the TCP connection itself.',
           'yes' => 'sshd(8) uses the name supplied by the client'
@@ -287,7 +276,6 @@ The default is not to chroot(2).',
           'yes'
         ],
         'description' => 'No doc found in sshd documentation',
-        'experience' => 'master',
         'type' => 'leaf',
         'upstream_default' => 'no',
         'value_type' => 'enum'
@@ -299,7 +287,6 @@ The default is not to chroot(2).',
           'yes'
         ],
         'description' => 'Specifies whether the password provided by the user for PasswordAuthentication will be validated through the Kerberos KDC. To use this option, the server needs a Kerberos servtab which allows the verification of the KDC\'s identity. The default is "no".',
-        'experience' => 'master',
         'type' => 'leaf',
         'upstream_default' => 'no',
         'value_type' => 'enum'
@@ -350,7 +337,6 @@ The default is not to chroot(2).',
           'value_type' => 'uniline'
         },
         'description' => 'Specifies the destinations to which TCP port forwarding is permitted. The forwarding specification must be one of the following forms: "host:port" or "IPv4_addr:port" or "[IPv6_addr]:port". An argument of "any" can be used to remove all restrictions and permit any forwarding requests. By default all port forwarding requests are permitted.',
-        'experience' => 'advanced',
         'type' => 'list'
       },
       'PermitRootLogin',
@@ -381,7 +367,6 @@ The default is not to chroot(2).',
           'no'
         ],
         'description' => 'Specifies whether tun(4) device forwarding is allowed. The argument must be "yes", "point-to-point" (layer 3), "ethernet" (layer 2), or "no".  Specifying "yes" permits both "point-to-point" and "ethernet".',
-        'experience' => 'advanced',
         'help' => {
           'yes' => 'permits both "point-to-point" and "ethernet"'
         },
@@ -396,7 +381,6 @@ The default is not to chroot(2).',
           'yes'
         ],
         'description' => 'Specifies whether public key authentication is allowed.  The default is "yes". Note that this option applies to protocol version 2 only.',
-        'experience' => 'master',
         'type' => 'leaf',
         'upstream_default' => 'yes',
         'value_type' => 'enum'
@@ -426,7 +410,6 @@ protocol version 2 only.',
           'yes'
         ],
         'description' => 'Specifies whether rhosts or /etc/hosts.equiv authentication together with successful RSA host authentication is allowed.  The default is "no". This option applies to protocol version 1 only.',
-        'experience' => 'master',
         'type' => 'leaf',
         'upstream_default' => 'no',
         'value_type' => 'enum'
@@ -438,7 +421,6 @@ protocol version 2 only.',
           'yes'
         ],
         'description' => 'Specifies whether pure RSA authentication is allowed. This option applies to protocol version 1 only.',
-        'experience' => 'master',
         'type' => 'leaf',
         'upstream_default' => 'yes',
         'value_type' => 'enum'
@@ -446,7 +428,6 @@ protocol version 2 only.',
       'X11DisplayOffset',
       {
         'description' => 'Specifies the first display number available for sshd(8)\'s X11 forwarding. This prevents sshd from interfering with real X11 servers.',
-        'experience' => 'advanced',
         'type' => 'leaf',
         'upstream_default' => '10',
         'value_type' => 'integer'
