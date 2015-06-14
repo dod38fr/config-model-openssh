@@ -75,9 +75,21 @@ For more information, see:
 
 =over
 
-=item https://github.com/dod38fr/config-model/wiki
+=item *
 
-=item L<config-model-users at lists.sourceforge.net|https://lists.sourceforge.net/lists/listinfo/config-model-users>
+L<Managing ssh configuration with cme|https://github.com/dod38fr/config-model/wiki/Managing-ssh-configuration-with-cme> wiki page
+
+=item *
+
+L<Using cme|https://github.com/dod38fr/config-model/wiki/Using-cme> wiki page
+
+=item *
+
+L<Config::Model wiki|https://github.com/dod38fr/config-model/wiki>
+
+=item *
+
+L<the user mailing list|https://lists.sourceforge.net/lists/listinfo/config-model-users>
 
 =back
 
