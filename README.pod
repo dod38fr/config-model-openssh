@@ -85,11 +85,11 @@ L<Using cme|https://github.com/dod38fr/config-model/wiki/Using-cme> wiki page
 
 =item *
 
-L<Config::Model wiki|https://github.com/dod38fr/config-model/wiki>
+L<config-model wiki|https://github.com/dod38fr/config-model/wiki>
 
 =item *
 
-L<the user mailing list|https://lists.sourceforge.net/lists/listinfo/config-model-users>
+L<config-model user mailing list|https://lists.sourceforge.net/lists/listinfo/config-model-users>
 
 =back
 
