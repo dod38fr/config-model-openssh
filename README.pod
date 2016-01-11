@@ -19,11 +19,11 @@ This module provides a graphical configuration editor for:
 
 As root,type:
 
- sudo aptitude install libconfig-model-openssh-perl
+ sudo apt install cme libconfig-model-openssh-perl
 
 To get the GUI, you should also do:
 
- sudo aptitude install libconfig-model-tkui-perl
+ sudo apt install libconfig-model-tkui-perl
 
 =head2 On Mac or Windows
 
@@ -41,7 +41,7 @@ Run PPM
 
 =item *
 
-Select and install C<config-model-openssh> and C<config-model-tkui>
+Select and install C<app-cme>, C<config-model-openssh> and C<config-model-tkui>
 
 =back
 
@@ -49,6 +49,7 @@ Select and install C<config-model-openssh> and C<config-model-tkui>
 
 You can also install these modules from CPAN:
 
+ cpanm App::Cme
  cpanm Config::Model::OpenSsh
  cpanm Config::Model::TkUI
 
@@ -103,7 +104,7 @@ Then, make sure that L<Config::Model> is installed.
 
 On debian or ubuntu, do:
 
- sudo aptitude build-dep libconfig-model-openssh-perl
+ sudo apt-get build-dep libconfig-model-openssh-perl
 
 Then run:
 
@@ -115,19 +116,15 @@ If you want to install this software without packaging, you can also run:
 
 =head1 Update OpenSSH model
 
-To update the model, the easiest way is to use the following command:
+To update the model, the easiest way is to use the following command in the git repo:
 
-   $ config-model-edit -model Ssh
+   $ cme meta edit
 
-or
-
-   $ config-model-edit -model Sshd
-
-This command is provided by L<Config::Model::Itself>.
+This command requires L<Config::Model::Itself>.
 
 On  debian or ubuntu, do:
 
-	sudo aptitude install libconfig-model-itself-perl
+	sudo apt install libconfig-model-itself-perl
 
 Then you can explore the configuration elements in the GUI.
 
