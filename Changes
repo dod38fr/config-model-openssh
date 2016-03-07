@@ -1,5 +1,14 @@
 {{$NEXT}}
 
+1.237 2016-03-07
+
+    * Fix tests broken by Config::Model 2.080 changes (RT #112736)
+    * Build.PL: avoid dependency on cme to build doc
+    * dist.ini:
+      * updated to use github's bug tracker
+      - removed build dependency on Tk
+    * updated README.pod to use cme meta edit
+
 1.236 2014-05-22
 
     * removed experience parameters from OpenSsh model 
