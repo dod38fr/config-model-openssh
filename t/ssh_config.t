@@ -93,8 +93,6 @@ $root_cfg->init ;
 
 my $ciphers = $root_cfg->grab('Host:"*" Ciphers') ;
 
-# require Tk::ObjScanner; Tk::ObjScanner::scan_object($ciphers) ;
-
 eq_or_diff( [ $ciphers->get_checked_list ],
         [ qw/aes192-cbc aes128-cbc 3des-cbc blowfish-cbc aes256-cbc/],
         "check cipher list");
@@ -152,7 +150,6 @@ SKIP: {
     like($dump,qr/Host:"foo\.\*,\*\.bar"/,"check root Host pattern") ;
     like($dump,qr/Host:"?mine.bar"?/,"check user Host pattern") ;
 
-    #require Tk::ObjScanner; Tk::ObjScanner::scan_object($user_cfg) ;
     $user_inst->write_back() ;
     my $joe_file = $wr_dir.$joe_home.'/.ssh/config' ;
     ok(1,"wrote user .ssh/config data in $joe_file") ;
@@ -171,9 +168,12 @@ SKIP: {
     eq_or_diff(\@joe_written,\@joe_orig,"check user .ssh/config files after modif") ;
 
     # run test on tricky element
-    warning_like {$user_inst->load('Host:"*" IPQoS="foo bar baz"') ;} qr/skipping value/ ," too many fields warning";
-    warning_like {$user_inst->load('Host:"*" IPQoS="foo"') ;}
-        qr/skipping/ ,"bad fields warning";
+    warning_like {
+        $user_inst->load( check => 'skip', step => 'Host:"*" IPQoS="foo bar baz"') ;
+    } qr/skipping value/ ,"too many fields warning";
+    warning_like {
+        $user_inst->load( check => 'skip', step => 'Host:"*" IPQoS="foo"') ;
+    } qr/skipping/ ,"bad fields warning";
     ok($user_inst->has_error,"check errors count") ;
     like($user_inst->error_messages,qr/"af11"/,"check error message") ;
 
