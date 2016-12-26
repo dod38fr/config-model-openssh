@@ -81,7 +81,7 @@ More details are given in L<Managing ssh configuration with cme|https://github.c
 
 =head1 Build from git repository
 
-See L<README-build-from-git.md>.
+See L<README-build-from-git|https://github.com/dod38fr/config-model-openssh/blob/master/README-build-from-git.md>.
 
 =head1 More information
 
