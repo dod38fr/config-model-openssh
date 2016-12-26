@@ -1,3 +1,10 @@
+=begin html
+
+<a href="https://travis-ci.org/dod38fr/config-model-openssh"> <img
+   src="https://travis-ci.org/dod38fr/config-model-openssh.svg?branch=master">
+   </a>
+
+=end html
 
 =head1 Config::Model::OpenSsh - OpenSSH graphical configuration editor
 
