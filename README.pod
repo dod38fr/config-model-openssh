@@ -70,6 +70,12 @@ Or to edit C</etc/ssh/ssh_config>, run as root:
 
  $ sudo cme edit system-ssh
 
+More details are given in L<Managing ssh configuration with cme|https://github.com/dod38fr/config-model/wiki/Managing-ssh-configuration-with-cme> wiki page.
+
+=head1 Build from git repository
+
+See L<README-build-from-git.md>.
+
 =head1 More information
 
 For more information, see:
