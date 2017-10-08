@@ -1053,16 +1053,14 @@ If UsePAM is enabled, you will not be able to run sshd(8) as a non-root user.  T
     ],
     'license' => 'LGPL2',
     'name' => 'Sshd',
-    'read_config' => [
-      {
-        'backend' => 'OpenSsh::Sshd',
-        'config_dir' => '/etc/ssh',
-        'file' => 'sshd_config',
-        'os_config_dir' => {
-          'darwin' => '/etc'
-        }
+    'rw_config' => {
+      'backend' => 'OpenSsh::Sshd',
+      'config_dir' => '/etc/ssh',
+      'file' => 'sshd_config',
+      'os_config_dir' => {
+        'darwin' => '/etc'
       }
-    ]
+    }
   }
 ]
 ;

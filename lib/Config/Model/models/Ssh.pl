@@ -43,21 +43,19 @@ validate ~/.ssh/config.
     'include_after' => 'Host',
     'license' => 'LGPL2',
     'name' => 'Ssh',
-    'read_config' => [
-      {
-        'auto_create' => '1',
-        'backend' => 'OpenSsh::Ssh',
-        'config_dir' => '~/.ssh',
-        'default_layer' => {
-          'config_dir' => '/etc/ssh',
-          'file' => 'ssh_config',
-          'os_config_dir' => {
-            'darwin' => '/etc'
-          }
-        },
-        'file' => 'config'
-      }
-    ]
+    'rw_config' => {
+      'auto_create' => '1',
+      'backend' => 'OpenSsh::Ssh',
+      'config_dir' => '~/.ssh',
+      'default_layer' => {
+        'config_dir' => '/etc/ssh',
+        'file' => 'ssh_config',
+        'os_config_dir' => {
+          'darwin' => '/etc'
+        }
+      },
+      'file' => 'config'
+    }
   }
 ]
 ;
