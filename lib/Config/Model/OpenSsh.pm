@@ -1,5 +1,7 @@
 package Config::Model::OpenSsh ;
 
+use Config::Model 2.111;
+
 1;
 
 # ABSTRACT: OpenSSH config editor
