@@ -966,7 +966,8 @@ ssh-keygen(1).',
           'no',
           'yes'
         ],
-        'description' => 'Specifies whether login(1) is used for interactive login sessions.  The default is "no". Note that login(1) is never used for remote command execution.  Note also, that if this is enabled, X11Forwarding will be disabled because login(1) does not know how to handle xauth(1) cookies. If UsePrivilegeSeparation is specified, it will be disabled after authentication',
+        'description' => 'Deprecated in August 2016, removed in 2017',
+        'status' => 'deprecated',
         'type' => 'leaf',
         'upstream_default' => 'no',
         'value_type' => 'enum'
