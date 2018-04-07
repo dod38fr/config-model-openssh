@@ -30,8 +30,6 @@ my @dispatch = (
     qr/\w/                     => 'assign',
 );
 
-sub suffix {return '';}
-
 sub read {
     my $self = shift ;
     my %args = @_ ;
