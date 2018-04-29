@@ -50,10 +50,10 @@ my $build = $class->new
    dist_author   => "Dominique Dumont (ddumont at cpan dot org)",
    dist_abstract => "OpenSsh configuration files graphical editor",
    appli_files   => \%appli_files ,
- 
+
 ##{ $plugin->get_prereqs ##}
 
-   add_to_cleanup => [qw/wr_test/] ,
+   add_to_cleanup => [qw/wr_root/] ,
   );
 
 
