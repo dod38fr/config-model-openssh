@@ -50,8 +50,7 @@ my @setup = (
         name => 'legacy',
         @setup,
         load_check    => 'no',
-        load_warnings => [ (qr/deprecated/) x 2, ],
-
+        load4perl_load_warnings => [ 'User', ( warn => qr/deprecated/) x 2, ],
     }
 );
 
