@@ -2,7 +2,7 @@ package Config::Model::Backend::OpenSsh ;
 
 use 5.10.1;
 
-use Config::Model 2.050;
+use Config::Model 2.123;
 
 use Mouse ;
 extends "Config::Model::Backend::Any" ;
@@ -38,13 +38,7 @@ sub read {
 
     $logger->info("loading config file ".$args{file_path});
 
-    my $fh = $args{io_handle} ;
-    if (not defined $fh) {
-        $logger->warn("cannot read $args{file_path}");
-        return 0;
-    }
-
-    my @lines = $fh->getlines ;
+    my @lines = $args{file_path}->lines_utf8 ;
     # try to get global comments (comments before a blank line)
     $self->read_global_comments(\@lines,'#') ;
 
@@ -69,7 +63,6 @@ sub read {
             warn __PACKAGE__, " unknown keyword: $k" if $i >= @dispatch;
         }
     }
-    $fh->close;
     return 1;
 }
 
@@ -82,12 +75,11 @@ sub ssh_write {
 
     $logger->info("writing config file $args{file_path}");
 
-    my $ioh = $args{io_handle} || croak __PACKAGE__," ssh_write: undefined io_handle";;
-    $self->write_global_comment($ioh,'#') ;
+    my $result = $self->write_global_comment('#') ;
 
-    my $result = $self->write_node_content($config_root,$args{ssh_mode});
+    $result .= $self->write_node_content($config_root,$args{ssh_mode});
 
-    $ioh->print ($result);
+    $args{file_path}->spew_utf8($result);
 
     return 1;
 }
@@ -141,7 +133,7 @@ sub assign {
 sub write_line {
     my ($self, $k, $v, $note) = @_ ;
     return '' unless length($v) ;
-    return $self->write_data_and_comments( undef, '#',sprintf("%-20s %s",$k,$v),$note) ;
+    return $self->write_data_and_comments('#',sprintf("%-20s %s",$k,$v),$note) ;
 }
 
 sub write_list {
@@ -199,7 +191,7 @@ sub write_node_content {
 	    $result .= $self->write_line($name,$v,$note);
 	}
 	elsif ($type eq 'list') { 
-	    $result .= $self->write_data_and_comments(undef,'#', undef, $note) ; 
+	    $result .= $self->write_data_and_comments('#', undef, $note) ;
 	    $result .= $list_as_one_line{$name} ? $self->write_list_in_one_line($name,$mode,$elt)
                     :                             $self->write_list($name,$mode,$elt) ;
 	}
