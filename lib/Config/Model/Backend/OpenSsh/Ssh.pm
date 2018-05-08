@@ -44,11 +44,13 @@ sub forward {
     $logger->info("ssh: load $key '".join("','", @$args)."' ". ( $v6 ? 'IPv6' : 'IPv4'));
 
     # cleanup possible square brackets used for IPv6
-    foreach (@$args) {s/[\[\]]+//g;}
+    foreach (@$args) {
+        s/[\[\]]+//g;
+    }
 
     # reverse enable to assign string to port even if no bind_adress
     # is specified
-    my $re = $v6 ? qr!/! : qr!:! ; 
+    my $re = $v6 ? qr!/! : qr!:! ;
     my ($port,$bind_adr ) = reverse split $re,$args->[0] ;
     my ($host,$host_port) = split $re,$args->[1] ;
 
@@ -64,7 +66,7 @@ sub forward {
     $load_str .= "bind_address=$bind_adr " if defined $bind_adr ;
     $load_str .= "port=$port host=$host hostport=$host_port";
 
-    $logger->debug("load string $load_str") ; 
+    $logger->debug("load string $load_str") ;
     $self->current_node -> load($load_str) ;
 }
 
@@ -76,17 +78,17 @@ sub write_all_host_block {
     my $result = '' ;
 
     foreach my $pattern ( $host_elt->fetch_all_indexes) {
-	my $block_elt = $host_elt->fetch_with_id($pattern) ;
+        my $block_elt = $host_elt->fetch_with_id($pattern) ;
         $logger->debug("write_all_host_block on ".$block_elt->location." mode $mode");
-	my $block_data = $self->write_node_content($block_elt,'custom') ;
+        my $block_data = $self->write_node_content($block_elt,'custom') ;
 
-	# write data only if custom pattern or custom data is found this
-	# is necessary to avoid writing data from /etc/ssh/ssh_config that
-	# were entered as 'preset' data
-	if ($block_data) {
-	    $result .= $self->write_line(Host => $pattern, $block_elt->annotation);
-	    $result .= "$block_data\n" ;
-	}
+        # write data only if custom pattern or custom data is found this
+        # is necessary to avoid writing data from /etc/ssh/ssh_config that
+        # were entered as 'preset' data
+        if ($block_data) {
+            $result .= $self->write_line(Host => $pattern, $block_elt->annotation);
+            $result .= "$block_data\n" ;
+        }
     }
     return $result ;
 }
@@ -103,17 +105,19 @@ sub write_forward {
 
     my $line = '';
     foreach my $name ($forward_elt->get_element_name() ) {
-	next if $name eq 'ipv6' ;
-	my $elt = $forward_elt->fetch_element($name) ;
-	my $v = $elt->fetch($mode) ;
-	next unless length($v);
-	$line .=  $name =~ /bind|host$/ ? "$v$sep"
-	       :  $name eq 'port'       ? "$v "
-	       :                           $v ;
+        next if $name eq 'ipv6' ;
+        my $elt = $forward_elt->fetch_element($name) ;
+        my $v = $elt->fetch($mode) ;
+        next unless length($v);
+        $line
+            .=  $name =~ /bind|host$/ ? "$v$sep"
+            :   $name eq 'port'       ? "$v "
+            :                            $v ;
     }
 
     return $self->write_line($forward_elt->element_name,$line,$forward_elt->annotation) ;
 }
+
 1;
 
 no Mouse;
@@ -137,19 +141,19 @@ These details are not needed for the basic usages explained in L<Config::Model::
 
 =head1 Methods
 
-These read/write functions are part of C<OpenSsh::Ssh> read/write backend. 
-They are 
-declared in Ssh configuration model and are called back when needed to read the 
+These read/write functions are part of C<OpenSsh::Ssh> read/write backend.
+They are
+declared in Ssh configuration model and are called back when needed to read the
 configuration file and write it back.
 
 =head2 read (object => <ssh_root>, config_dir => ...)
 
-Read F<ssh_config> in C<config_dir> and load the data in the 
+Read F<ssh_config> in C<config_dir> and load the data in the
 C<ssh_root> configuration tree.
 
 =head2 write (object => <ssh_root>, config_dir => ...)
 
-Write F<ssh_config> in C<config_dir> from the data stored in  
+Write F<ssh_config> in C<config_dir> from the data stored in
 C<ssh_root> configuration tree.
 
 =head1 SEE ALSO
