@@ -110,14 +110,14 @@ sub assign {
     $elt->annotation($comment) if $comment and $type ne 'hash';
 
     if ($type eq 'leaf') {
-        $elt->store( join(' ',@$arg) ) ;
+        $elt->store( value => join(' ',@$arg), check => $check ) ;
     }
     elsif ($type eq 'list') {
-        $elt->push ( @$arg ) ;
+        $elt->push_x ( values => $arg, check => $check ) ;
     }
     elsif ($type eq 'hash') {
         my $hv = $elt->fetch_with_id($arg->[0]);
-        $hv->store( $arg->[1] );
+        $hv->store( value => $arg->[1], check => $check );
         $hv->annotation($comment) if $comment;
     }
     elsif ($type eq 'check_list') {
