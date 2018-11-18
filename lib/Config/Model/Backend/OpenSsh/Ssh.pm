@@ -32,12 +32,11 @@ sub host {
 }
 
 sub forward {
-    my ($self,$root,$key,$args,$comment)  = @_;
+    my ($self, $root, $key, $args, $comment)  = @_;
     $logger->debug("forward: $key @$args # $comment");
     $self->current_node = $root unless defined $self->current_node ;
 
     my $elt_name = $key =~ /local/i ? 'Localforward' : 'RemoteForward' ;
-    my $size = $self->current_node->fetch_element($key)->fetch_size;
 
     my $v6 = ($args->[1] =~ m![/\[\]]!) ? 1 : 0;
 
@@ -54,20 +53,20 @@ sub forward {
     my ($port,$bind_adr ) = reverse split $re,$args->[0] ;
     my ($host,$host_port) = split $re,$args->[1] ;
 
-    my $load_str = '';
-    $load_str .= "GatewayPorts=1 " if $bind_adr ;
-    my $note = $comment || '' ;
-    $note =~ s/"/\\"/g;
-    $note = qq!#"$note"! if $note ;
-    $load_str .= "$key:$size$note ";
+    my $fw_list = $self->current_node->fetch_element($key);
+    my $size = $fw_list->fetch_size;
+    # this creates a new node in the list
+    my $fw_obj = $fw_list->fetch_with_id($size);
 
-    $load_str .= 'ipv6=1 ' if $v6 ;
+    # $fw_obj->store_element_value( GatewayPorts => 1 ) if $bind_adr ;
+    $fw_obj->annotation($comment) if $comment;
 
-    $load_str .= "bind_address=$bind_adr " if defined $bind_adr ;
-    $load_str .= "port=$port host=$host hostport=$host_port";
+    $fw_obj->store_element_value( ipv6 => 1) if $v6 ;
 
-    $logger->debug("load string $load_str") ;
-    $self->current_node -> load($load_str) ;
+    $fw_obj->store_element_value( bind_address => $bind_adr) if defined $bind_adr ;
+    $fw_obj->store_element_value( port => $port );
+    $fw_obj->store_element_value( host => $host );
+    $fw_obj->store_element_value( hostport => $host_port );
 }
 
 sub write_all_host_block {
