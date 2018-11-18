@@ -11,9 +11,8 @@ use File::Path ;
 
 my $logger = Log::Log4perl::get_logger("Backend::OpenSsh");
 
-
 sub match {
-    my ($self,$root, $key, $pairs,$comment) = @_ ;
+    my ($self, $root, $key, $pairs, $comment, $check) = @_ ;
     $logger->debug("match: @$pairs # $comment");
     my $list_obj = $root->fetch_element('Match');
 
@@ -25,7 +24,10 @@ sub match {
     while (@$pairs) {
         my $criteria = shift @$pairs;
         my $pattern  = shift @$pairs;
-        $block_obj->load(qq!Condition $criteria="$pattern"!);
+        $block_obj->load(
+            steps => qq!Condition $criteria="$pattern"!,
+            check => $check,
+        );
     }
 
     $self->current_node( $block_obj->fetch_element('Settings') );
