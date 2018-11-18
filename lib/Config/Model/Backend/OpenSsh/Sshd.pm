@@ -113,29 +113,9 @@ None
 
 =head1 DESCRIPTION
 
-This calls provides a backend to read and write sshd client configuration files.
+This class provides a backend to read and write sshd client configuration files.
 
-=head1 STOP
-
-The documentation provides on the reader and writer of OpenSsh configuration files.
-These details are not needed for the basic usages explained in L<Config::Model::OpenSsh>.
-
-=head1 Methods
-
-These read/write functions are part of C<OpenSsh::Sshd> read/write backend.
-They are
-declared in sshd configuration model and are called back when needed to read the
-configuration file and write it back.
-
-=head2 read (object => <sshd_root>, config_dir => ...)
-
-Read F<sshd_config> in C<config_dir> and load the data in the
-C<sshd_root> configuration tree.
-
-=head2 write (object => <sshd_root>, config_dir => ...)
-
-Write F<sshd_config> in C<config_dir> from the data stored in
-C<sshd_root> configuration tree.
+This class is a plugin for L<Config::Model::BackendMgr>.
 
 =head1 SEE ALSO
 
