@@ -11,51 +11,6 @@ use File::Path ;
 
 my $logger = Log::Log4perl::get_logger("Backend::OpenSsh");
 
-sub _host {
-    my ($self,$root,$patterns,$comment)  = @_;
-    $logger->debug("host: pattern @$patterns # $comment");
-    my $hash_obj = $root->fetch_element('Host');
-
-    $logger->info("ssh: load host patterns '".join("','", @$patterns)."'");
-
-    $self->current_node = $hash_obj->fetch_with_id("@$patterns");
-}
-
-sub _forward {
-    my ($self,$root,$key,$args,$comment)  = @_;
-    $logger->debug("forward: $key @$args # $comment");
-    $self->current_node($root) unless defined $self->current_node ;
-
-    my $elt_name = $key =~ /local/i ? 'Localforward' : 'RemoteForward' ;
-    my $size = $self->current_node->fetch_element($key)->fetch_size;
-
-    $logger->info("ssh: load $key '".join("','", @$args)."'");
-
-    my $v6 = ($args->[1] =~ m![/\[\]]!) ? 1 : 0;
-
-    # cleanup possible square brackets used for IPv6
-    foreach (@$args) {
-        s/[\[\]]+//g;
-    }
-
-    # reverse enable to assign string to port even if no bind_adress
-    # is specified
-    my $re = $v6 ? qr!/! : qr!:! ;
-    my ($port,$bind_adr ) = reverse split $re,$args->[0] ;
-    my ($host,$host_port) = split $re,$args->[1] ;
-
-    my $load_str = '';
-    $load_str .= "GatewayPorts=1 " if $bind_adr ;
-
-    $load_str .= "$key:$size ";
-
-    $load_str .= 'ipv6=1 ' if $v6 ;
-
-    $load_str .= "bind_address=$bind_adr " if defined $bind_adr ;
-    $load_str .= "port=$port host=$host hostport=$host_port";
-
-    $self->current_node -> load($load_str) ;
-}
 
 sub match {
     my ($self,$root, $key, $pairs,$comment) = @_ ;
