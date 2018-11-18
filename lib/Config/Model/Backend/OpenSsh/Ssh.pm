@@ -32,7 +32,7 @@ sub host {
 }
 
 sub forward {
-    my ($self, $root, $key, $args, $comment)  = @_;
+    my ($self, $root, $key, $args, $comment, $check)  = @_;
     $logger->debug("forward: $key @$args # $comment");
     $self->current_node = $root unless defined $self->current_node ;
 
@@ -63,10 +63,12 @@ sub forward {
 
     $fw_obj->store_element_value( ipv6 => 1) if $v6 ;
 
-    $fw_obj->store_element_value( bind_address => $bind_adr) if defined $bind_adr ;
-    $fw_obj->store_element_value( port => $port );
-    $fw_obj->store_element_value( host => $host );
-    $fw_obj->store_element_value( hostport => $host_port );
+    $fw_obj->store_element_value( check => $check, name => 'bind_address', value => $bind_adr)
+        if defined $bind_adr ;
+    $fw_obj->store_element_value( check => $check, name => 'port', value => $port );
+    $fw_obj->store_element_value( check => $check, name => 'host', value => $host );
+    $fw_obj->store_element_value( check => $check, name => 'hostport', value => $host_port );
+
 }
 
 sub write_all_host_block {
