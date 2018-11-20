@@ -28,7 +28,6 @@ This command will add a C<Host Foo> section in C<~/.ssh/config>:
 This code snippet will remove the C<Host Foo> section added above:
 
  use Config::Model ;
- use Log::Log4perl qw(:easy) ;
  my $model = Config::Model -> new ( ) ;
  my $inst = $model->instance (root_class_name => 'Ssh');
  $inst -> config_root ->load("Host~Foo") ;
