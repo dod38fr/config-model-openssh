@@ -2,7 +2,7 @@ package Config::Model::Backend::OpenSsh ;
 
 use 5.10.1;
 
-use Config::Model 2.123;
+use Config::Model 2.127;
 
 use Mouse ;
 extends "Config::Model::Backend::Any" ;
@@ -121,8 +121,8 @@ sub assign {
         $hv->annotation($comment) if $comment;
     }
     elsif ($type eq 'check_list') {
-        my @check = split /,/,$arg->[0] ;
-        $elt->set_checked_list (@check) ;
+        my @check = split /\s*,\s*/,$arg->[0] ;
+        $elt->set_checked_list (\@check, check => 'skip') ;
     }
     else {
         die "OpenSsh::assign did not expect $type for $key\n";
