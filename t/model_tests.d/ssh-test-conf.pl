@@ -60,6 +60,14 @@ my @setup = (
         load => 'Host:"foo.*,*.bar" LocalForward:0 port=20022',
         log4perl_load_warnings => [ [ 'User', warn => qr/value '20022\+' does not match regexp/ ] ],
     },
+    {
+       name => 'bad-pref-auth',
+       @setup,
+       load_check    => 'skip',
+       log4perl_load_warnings => [
+           [ 'User', ( warn => qr/Unknown check_list item/) , ]
+       ],
+    },
 );
 
 1;
