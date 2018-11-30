@@ -1,5 +1,16 @@
 {{$NEXT}}
 
+1.240 2018-11-30
+
+   Fix behavior of 'cme -force' so user can load ssh config files
+   containing errors:
+    * allow force load when Match block contain bad data
+    * propagate 'check' when setting check_list parameter
+      (require Config::Model 2.127)
+
+   Model update:
+    * PortForward parameter: port must be alphanumeric
+
 1.239 2018-05-08
 
     * OpenSsh backend: fix backend (broke with Config::Model 2.123,
