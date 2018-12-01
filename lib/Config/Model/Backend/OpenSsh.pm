@@ -2,7 +2,7 @@ package Config::Model::Backend::OpenSsh ;
 
 use 5.10.1;
 
-use Config::Model 2.127;
+use Config::Model 2.128;
 
 use Mouse ;
 extends "Config::Model::Backend::Any" ;
