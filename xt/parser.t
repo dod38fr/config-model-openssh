@@ -10,7 +10,7 @@ use Test::Differences;
 use Path::Tiny;
 use experimental qw/postderef signatures/ ;
 
-my $html = path('xt/ssh.html')->slurp;
+my $html = path('xt/ssh_config.html')->slurp;
 
 my $data = parse_html_man_page($html);
 
