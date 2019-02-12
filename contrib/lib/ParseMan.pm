@@ -83,7 +83,12 @@ sub setup_choice {
 
 my %override = (
     # description is too complex to parse
+    EscapeChar => 'type=leaf value_type=uniline',
     ControlPersist => 'type=leaf value_type=uniline',
+    IPQoS => 'type=leaf value_type=uniline',
+    # Debian specific: 300 is default when BatchMode is set
+    ServerAliveInterval => 'type=leaf value_type=integer',
+    StrictHostKeyChecking => 'type=leaf value_type=enum choice=yes,accept-new,no,off,ask upstream_default=ask',
 );
 
 sub create_load_data ($name, @desc) {
@@ -102,7 +107,7 @@ sub create_load_data ($name, @desc) {
     my ($set_choice, $get_choices) = setup_choice();
 
     # handle "The argument must be B<yes>, B<no> (the default) or B<ask>."
-    if ($desc =~ /(?:argument|option)s? (?:are|must be)([^.]+)\./i) {
+    if ($desc =~ /(?:argument|option)s? (?:to this keyword )?(?:are|\w+ be)([^.]+)\./i) {
         my $str = $1;
         $set_choice->( $str =~ /B<([\w]+)>/g );
     }
@@ -111,17 +116,28 @@ sub create_load_data ($name, @desc) {
         $set_choice->(@values);
     }
 
+    if (my @values = ($desc =~ /The possible values are:([^.]+)\./gi)) {
+        my $str = $1;
+        $set_choice->( $str =~ /([A-Z\d]+)/g );
+    }
+
     my @choices = $get_choices->();
     if (@choices == 1 and $choices[0] eq 'no') {
         # assume the other choice is 'yes'
         push @choices, 'yes';
     }
+    if (@choices == 1 and $choices[0] eq 'yes') {
+        push @choices, 'no';
+    }
 
-    if ($desc =~ /Specif\w+ (\w+ ){0,2}(number|timeout)/) {
+    if ($desc =~ /(Specif\w+|Sets?) (\w+ ){0,2}(number|timeout)/) {
         $value_type = 'integer';
-        if ($desc =~ /The default(?: is|,) (\d+)/) {
+        if ($desc =~ /The default(?: value)?(?: is|,) (\d+)/) {
             push @load_extra, "upstream_default=$1";
         }
+    }
+    elsif (@choices == 1) {
+        die "Parser error: Cannot create an enum with only once choice ($name)\n";
     }
     elsif (@choices == 2 and grep { /^yes|no$/ } @choices) {
         $value_type = 'boolean';
@@ -132,11 +148,16 @@ sub create_load_data ($name, @desc) {
         push @load_extra, 'choice='.join(',',@choices);
     }
 
-    if ($desc =~ /The default(?: is|,) B<(\w+)>/ or $desc =~ /B<([\w]+)> \(the default\)/) {
+    if ($desc =~ /The default(?: is|,) B<(\w+)>/ or
+            $desc =~ /The default(?: is|,) ([A-Z]{3,}\d?)\b/ or
+            $desc =~ /B<([\w]+)> \(the default\)/) {
         push @load_extra, "upstream_default=$1";
     }
 
     $value_type //= 'uniline';
+
+    # TODO:
+    # CanonicalDomains depends on CanonicalizeHostname -> order problem, use move on model
 
     push @load, 'type=leaf', "value_type=$value_type";
 

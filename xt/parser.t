@@ -26,22 +26,38 @@ subtest "man page transformation" => sub {
 };
 
 subtest "test generation of model string" => sub {
-    my @unilines = qw/Host Match ControlPersist DynamicForward GlobalKnownHostsFile/;
+    my @unilines = qw/Host Match ControlPersist DynamicForward GlobalKnownHostsFile GSSAPIClientIdentity IdentityAgent IPQoS LocalForward/;
+    my $boolean = sub {
+        return "type=leaf value_type=boolean write_as=no,yes upstream_default=$_[0]";
+    };
+    my $enum = sub ($set,$def = undef) {
+        my $str = "type=leaf value_type=enum choice=$set";
+        $str .= " upstream_default=$def" if defined $def;
+        return $str;
+    };
 
     my %expected_load = (
-        AddKeysToAgent => 'type=leaf value_type=enum choice=yes,confirm,ask,no upstream_default=no',
-        AddressFamily => 'type=leaf value_type=enum choice=any,inet,inet6 upstream_default=any',
-        BatchMode => 'type=leaf value_type=boolean write_as=no,yes upstream_default=no',
-        CanonicalizeFallbackLocal => 'type=leaf value_type=boolean write_as=no,yes upstream_default=yes',
-        CanonicalizeHostname => 'type=leaf value_type=enum choice=no,yes,always upstream_default=no',
+        AddKeysToAgent => $enum->('yes,confirm,ask,no', 'no'),
+        AddressFamily => $enum->('any,inet,inet6', 'any'),
+        BatchMode => $boolean->('no'),
+        CanonicalizeFallbackLocal => $boolean->('yes'),
+        CanonicalizeHostname => $enum->('no,yes,always', 'no'),
         CanonicalizeMaxDots => 'type=leaf value_type=integer upstream_default=1',
-        CheckHostIP => 'type=leaf value_type=boolean write_as=no,yes upstream_default=yes',
+        CheckHostIP => $boolean->('yes'),
         ConnectionAttempts => 'type=leaf value_type=integer upstream_default=1',
         ConnectTimeout => 'type=leaf value_type=integer',
-        ControlMaster => 'type=leaf value_type=enum choice=auto,autoask,yes,no,ask upstream_default=no',
-        ExitOnForwardFailure => 'type=leaf value_type=boolean write_as=no,yes upstream_default=no',
+        ControlMaster => $enum->('auto,autoask,yes,no,ask', 'no'),
+        ExitOnForwardFailure => $boolean->('no'),
         ForwardX11Timeout => 'type=leaf value_type=integer',
-        GSSAPIAuthentication => 'type=leaf value_type=boolean write_as=no,yes upstream_default=no',
+        GSSAPIAuthentication => $boolean->('no'),
+        GSSAPITrustDns => $boolean->('no'),
+        IdentitiesOnly => $boolean->('no'),
+        NumberOfPasswordPrompts => 'type=leaf value_type=integer upstream_default=3',
+        RequestTTY => $enum->('no,yes,force,auto'),
+        ServerAliveCountMax => 'type=leaf value_type=integer upstream_default=3',
+        ServerAliveInterval => 'type=leaf value_type=integer',
+        LogLevel => $enum->('QUIET,FATAL,ERROR,INFO,VERBOSE,DEBUG,DEBUG1,DEBUG2,DEBUG3', 'INFO'),
+        SyslogFacility => $enum->('DAEMON,USER,AUTH,'.join(',', map { "LOCAL$_" } (0..7)), 'USER'),
     );
 
     foreach my $p (@unilines) {
@@ -50,12 +66,14 @@ subtest "test generation of model string" => sub {
 
     foreach my $param ($data->{element_list}->@*) {
         my @desc = $data->{element_data}{$param}->@*;
+        my $load = create_load_data($param => @desc);
 
         # check only some of the parameters
         if (defined  $expected_load{$param}) {
-            my $load = create_load_data($param => @desc);
             note("test failed with @desc") unless $load eq $expected_load{$param};
             is($load, $expected_load{$param}, "check generated load string of $param");
         }
     }
-}
+};
+
+done_testing;
