@@ -15,7 +15,7 @@ use XML::Twig;
 
 use Exporter 'import';
 
-our @EXPORT = qw(parse_html_man_page create_load_data);
+our @EXPORT = qw(parse_html_man_page create_load_data create_class_boilerplate);
 
 
 sub parse_html_man_page ($html_man_page) {
@@ -162,6 +162,21 @@ sub create_load_data ($name, @desc) {
     push @load, 'type=leaf', "value_type=$value_type";
 
     return join(' ',@load, @load_extra);
+}
+
+my ($ssh_version) = (`ssh -V 2>&1` =~ /OpenSSH_([\w\.]+)/);
+
+sub create_class_boilerplate ($meta_root, $ssh_system,  $config_class) {
+    my $desc_text="This configuration class was generated from $ssh_system documentation.\n"
+        ."by L<parse-man.pl|https://github.com/dod38fr/config-model-openssh/contrib/parse-man.pl>\n";
+
+    my $steps = "class:$config_class class_description";
+    $meta_root->grab(step => $steps, autoadd => 1)->store($desc_text);
+
+    $meta_root->load( steps => [
+        qq!class:$config_class generated_by="parse-man.pl from $ssh_system  $ssh_version doc"!,
+        qq!accept:".*" type=leaf value_type=uniline warn="Unknown parameter"!,
+    ]);
 }
 
 1;
