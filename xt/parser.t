@@ -10,6 +10,8 @@ use Test::Differences;
 use Path::Tiny;
 use experimental qw/postderef signatures/ ;
 
+use XXX;
+
 my $html = path('xt/ssh_config.html')->slurp;
 
 my $data = parse_html_man_page($html);
@@ -26,7 +28,7 @@ subtest "man page transformation" => sub {
 };
 
 subtest "test generation of model string" => sub {
-    my @unilines = qw/Host Match ControlPersist DynamicForward GlobalKnownHostsFile GSSAPIClientIdentity IdentityAgent IPQoS LocalForward/;
+    my @unilines = qw/Host Match ControlPersist DynamicForward GlobalKnownHostsFile GSSAPIClientIdentity IdentityAgent IPQoS/;
     my $boolean = sub {
         return "type=leaf value_type=boolean write_as=no,yes upstream_default=$_[0]";
     };
@@ -56,6 +58,8 @@ subtest "test generation of model string" => sub {
         RequestTTY => $enum->('no,yes,force,auto'),
         ServerAliveCountMax => 'type=leaf value_type=integer upstream_default=3',
         ServerAliveInterval => 'type=leaf value_type=integer',
+        LocalForward => 'type=node config_class_name="Ssh::PortForward"',
+        RemoteForward => 'type=node config_class_name="Ssh::PortForward"',
         LogLevel => $enum->('QUIET,FATAL,ERROR,INFO,VERBOSE,DEBUG,DEBUG1,DEBUG2,DEBUG3', 'INFO'),
         SyslogFacility => $enum->('DAEMON,USER,AUTH,'.join(',', map { "LOCAL$_" } (0..7)), 'USER'),
     );
