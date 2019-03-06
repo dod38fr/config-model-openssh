@@ -92,6 +92,10 @@ my %override = (
 );
 
 sub create_load_data ($name, @desc) {
+    if ($name =~ /^(Local|Remote)Forward$/) {
+        return 'type=node config_class_name="Ssh::PortForward"';
+    }
+
     my @log;
     my $bold_name = shift @desc; # drop '<b>Keyword</b>'
     my $desc = join('', @desc);
