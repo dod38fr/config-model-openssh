@@ -70,6 +70,14 @@ load_yaml_model($meta_root,"Ssh::PortForward");
 say "Creating ssh model...";
 create_ssh_model($meta_root);
 
+$ssh_model->load( << 'EOCDS' );
+element:IdentityFile
+  cargo
+     warn_if_match:"\.pub$"
+       msg="identity file should be the private key file"
+       fix=s/\.pub$//; - - -
+EOCDS
+
 # This class include Ssh model and must be loaded after Ssh model is
 # created
 load_yaml_model($meta_root,"SystemSsh");
