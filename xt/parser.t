@@ -70,7 +70,7 @@ subtest "test generation of model string" => sub {
 
     foreach my $param ($data->{element_list}->@*) {
         my @desc = $data->{element_data}{$param}->@*;
-        my $load = create_load_data($param => @desc);
+        my $load = create_load_data(ssh => $param => @desc);
 
         # check only some of the parameters
         if (defined  $expected_load{$param}) {

@@ -82,16 +82,19 @@ sub setup_choice {
 }
 
 my %override = (
-    # description is too complex to parse
-    EscapeChar => 'type=leaf value_type=uniline',
-    ControlPersist => 'type=leaf value_type=uniline',
-    IPQoS => 'type=leaf value_type=uniline',
-    # Debian specific: 300 is default when BatchMode is set
-    ServerAliveInterval => 'type=leaf value_type=integer',
-    StrictHostKeyChecking => 'type=leaf value_type=enum choice=yes,accept-new,no,off,ask upstream_default=ask',
+    ssh => {
+        # description is too complex to parse
+        EscapeChar => 'type=leaf value_type=uniline',
+        ControlPersist => 'type=leaf value_type=uniline',
+        IPQoS => 'type=leaf value_type=uniline',
+        # Debian specific: 300 is default when BatchMode is set
+        ServerAliveInterval => 'type=leaf value_type=integer',
+        StrictHostKeyChecking => 'type=leaf value_type=enum choice=yes,accept-new,no,off,ask upstream_default=ask',
+        KbdInteractiveDevices => 'type=list cargo type=leaf value_type=uniline',
+    },
 );
 
-sub create_load_data ($name, @desc) {
+sub create_load_data ($ssh_system, $name, @desc) {
     if ($name =~ /^(Local|Remote)Forward$/) {
         return 'type=node config_class_name="Ssh::PortForward"';
     }
@@ -100,7 +103,7 @@ sub create_load_data ($name, @desc) {
     my $bold_name = shift @desc; # drop '<b>Keyword</b>'
     my $desc = join('', @desc);
 
-    return $override{$name} if $override{$name};
+    return $override{$ssh_system}{$name} if $override{$ssh_system}{$name};
 
     # trim description (which is not saved in this sub) to simplify
     # the regexp below

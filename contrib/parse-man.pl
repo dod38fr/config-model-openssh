@@ -40,7 +40,7 @@ sub create_ssh_model ($meta_root) {
 
     foreach my $element ($data->{element_list}->@*) {
         my @desc = $data->{element_data}{$element}->@*;
-        my $load_string = create_load_data($element, @desc);
+        my $load_string = create_load_data(ssh => $element, @desc);
         my $target = $element =~ /^Host|Match$/ ? 'Ssh' : 'Ssh::HostElement';
         my $obj = $meta_root->grab(qq!class:$target element:"$element"!);
         $obj->load($load_string);
