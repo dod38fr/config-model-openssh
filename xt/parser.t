@@ -55,6 +55,7 @@ subtest "test generation of model string" => sub {
         GSSAPIAuthentication => $boolean->('no'),
         GSSAPITrustDns => $boolean->('no'),
         IdentitiesOnly => $boolean->('no'),
+        IdentityFile => 'type=list cargo type=leaf value_type=uniline',
         NumberOfPasswordPrompts => 'type=leaf value_type=integer upstream_default=3',
         RequestTTY => $enum->('no,yes,force,auto'),
         ServerAliveCountMax => 'type=leaf value_type=integer upstream_default=3',

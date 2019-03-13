@@ -86,6 +86,7 @@ my %override = (
         # description is too complex to parse
         EscapeChar => 'type=leaf value_type=uniline',
         ControlPersist => 'type=leaf value_type=uniline',
+        IdentityFile => 'type=list cargo type=leaf value_type=uniline',
         IPQoS => 'type=leaf value_type=uniline',
         # Debian specific: 300 is default when BatchMode is set
         ServerAliveInterval => 'type=leaf value_type=integer',
