@@ -109,7 +109,6 @@ sub create_load_data ($ssh_system, $name, @desc) {
     # the regexp below
     $desc =~ s/[\s\n]+/ /g;
     my ($default, %choice_hash, $value_type);
-    my @load ;
     my @load_extra;
     my ($set_choice, $get_choices) = setup_choice();
 
@@ -163,6 +162,10 @@ sub create_load_data ($ssh_system, $name, @desc) {
 
     $value_type //= 'uniline';
 
+    my @load ;
+    if ($desc =~ /multiple \w+ may be specified/i) {
+        @load = ('type=list', 'cargo');
+    }
     # TODO:
     # CanonicalDomains depends on CanonicalizeHostname -> order problem, use move on model
 
