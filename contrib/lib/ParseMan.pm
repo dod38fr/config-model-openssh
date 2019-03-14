@@ -87,7 +87,7 @@ my %override = (
         EscapeChar => 'type=leaf value_type=uniline',
         ControlPersist => 'type=leaf value_type=uniline',
         IdentityFile => 'type=list cargo type=leaf value_type=uniline',
-        IPQoS => 'type=leaf value_type=uniline',
+        IPQoS => 'type=leaf value_type=uniline upstream_default="af21 cs1"',
         # Debian specific: 300 is default when BatchMode is set
         ServerAliveInterval => 'type=leaf value_type=integer',
         StrictHostKeyChecking => 'type=leaf value_type=enum choice=yes,accept-new,no,off,ask upstream_default=ask',
