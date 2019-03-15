@@ -70,8 +70,9 @@ load_yaml_model($meta_root,"Ssh::PortForward");
 say "Creating ssh model...";
 create_ssh_model($meta_root);
 
-$ssh_model->load( << 'EOCDS' );
-element:IdentityFile
+$meta_root->load( << 'EOCDS' );
+class:Ssh::HostElement
+ element:IdentityFile
   cargo
      warn_if_match:"\.pub$"
        msg="identity file should be the private key file"
