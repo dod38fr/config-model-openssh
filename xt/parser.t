@@ -65,6 +65,7 @@ subtest "test generation of model string" => sub {
         RemoteForward => 'type=node config_class_name="Ssh::PortForward"',
         LogLevel => $enum->('QUIET,FATAL,ERROR,INFO,VERBOSE,DEBUG,DEBUG1,DEBUG2,DEBUG3', 'INFO'),
         SyslogFacility => $enum->('DAEMON,USER,AUTH,'.join(',', map { "LOCAL$_" } (0..7)), 'USER'),
+        VerifyHostKeyDNS => $enum->('yes,ask,no', 'no'),
         XAuthLocation => 'type=leaf value_type=uniline upstream_default=/usr/bin/xauth',
     );
 

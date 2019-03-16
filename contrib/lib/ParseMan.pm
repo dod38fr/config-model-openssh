@@ -119,7 +119,7 @@ sub create_load_data ($ssh_system, $name, @desc) {
         $set_choice->( $str =~ /B<([\w]+)>/g );
     }
 
-    if (my @values = ($desc =~ /(?:(?:if|when|with) (?:(?:$bold_name|the option) (?:is )?)?set to|A value of|setting this to|The default(?: is|,)) B<(\w+)>/gi)) {
+    if (my @values = ($desc =~ /(?:(?:if|when|with) (?:(?:$bold_name|th(?:e|is) option) (?:is )?)?set to|A value of|setting this to|The default(?: is|,)) B<(\w+)>/gi)) {
         $set_choice->(@values);
     }
 
