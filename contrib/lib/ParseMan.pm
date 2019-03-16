@@ -155,7 +155,7 @@ sub create_load_data ($ssh_system, $name, @desc) {
         push @load_extra, 'choice='.join(',',@choices);
     }
 
-    if ($desc =~ /The default(?: is|,) B<(\w+)>/ or
+    if ($desc =~ m!The default(?: is|,) [BI]<([\w/]+)>! or
             $desc =~ /The default(?: is|,) ([A-Z]{3,}\d?)\b/ or
             $desc =~ /B<([\w]+)> \(the default\)/) {
         push @load_extra, "upstream_default=$1";
