@@ -63,6 +63,7 @@ subtest "test generation of model string" => sub {
         ServerAliveInterval => 'type=leaf value_type=integer',
         LocalForward => 'type=node config_class_name="Ssh::PortForward"',
         RemoteForward => 'type=node config_class_name="Ssh::PortForward"',
+        Tunnel => $enum->('yes,point-to-point,ethernet,no','no'),
         TunnelDevice => 'type=leaf value_type=uniline upstream_default=any:any',
         LogLevel => $enum->('QUIET,FATAL,ERROR,INFO,VERBOSE,DEBUG,DEBUG1,DEBUG2,DEBUG3', 'INFO'),
         SyslogFacility => $enum->('DAEMON,USER,AUTH,'.join(',', map { "LOCAL$_" } (0..7)), 'USER'),

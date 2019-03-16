@@ -116,7 +116,7 @@ sub create_load_data ($ssh_system, $name, @desc) {
     # handle "The argument must be B<yes>, B<no> (the default) or B<ask>."
     if ($desc =~ /(?:argument|option)s? (?:to this keyword )?(?:are|\w+ be)([^.]+)\./i) {
         my $str = $1;
-        $set_choice->( $str =~ /B<([\w]+)>/g );
+        $set_choice->( $str =~ /B<([\w-]+)>/g );
     }
 
     if (my @values = ($desc =~ /(?:(?:if|when|with) (?:(?:$bold_name|th(?:e|is) option) (?:is )?)?set to|A value of|setting this to|The default(?: is|,)) B<(\w+)>/gi)) {
