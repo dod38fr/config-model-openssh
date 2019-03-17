@@ -28,7 +28,7 @@ subtest "man page transformation" => sub {
 };
 
 subtest "test generation of model string" => sub {
-    my @unilines = qw/Host Match ControlPersist GlobalKnownHostsFile GSSAPIClientIdentity IdentityAgent/;
+    my @unilines = qw/Host Match ControlPersist GSSAPIClientIdentity IdentityAgent/;
     my $boolean = sub {
         return "type=leaf value_type=boolean write_as=no,yes upstream_default=$_[0]";
     };
@@ -52,6 +52,7 @@ subtest "test generation of model string" => sub {
         DynamicForward => 'type=list cargo type=leaf value_type=uniline',
         ExitOnForwardFailure => $boolean->('no'),
         ForwardX11Timeout => 'type=leaf value_type=integer',
+        GlobalKnownHostsFile => 'type=leaf value_type=uniline upstream_default=/etc/ssh/ssh_known_hosts',
         GSSAPIAuthentication => $boolean->('no'),
         GSSAPITrustDns => $boolean->('no'),
         IdentitiesOnly => $boolean->('no'),
