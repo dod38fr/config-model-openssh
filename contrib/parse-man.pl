@@ -72,25 +72,24 @@ create_ssh_model($meta_root);
 
 $meta_root->load( << 'EOCDS' );
 class:Ssh::HostElement
- element:IdentityFile
-  cargo
-     warn_if_match:"\.pub$"
-       msg="identity file should be the private key file"
-       fix=s/\.pub$//; - - -
- element:IPQoS
-  assert:1_or_2
-    code="return 1 unless defined $_; my @v = (/(\w+)/g); return (@v < 3) ? 1 : 0; "
-    msg="value must not have more than 2 fields." -
-  assert:accepted_values
-    code="return 1 unless defined $_;
-          my @v = (/(\S+)/g);
-          my @good = grep {/^(af[1-4][1-3]|cs[0-7]|ef|lowdelay|throughput|reliability|none|\d+)/} @v ;
-          return @good == @v ? 1 : 0;
-          "
-    msg="value must be 1 or 2 occurences of: \"af11\", \"af12\", \"af13\", \"af21\", \"af22\",
-\"af23\", \"af31\", \"af32\", \"af33\", \"af41\", \"af42\", \"af43\", \"cs0\", \"cs1\",
-\"cs2\", \"cs3\", \"cs4\", \"cs5\", \"cs6\", \"cs7\", \"ef\", \"lowdelay\",
-\"throughput\", \"reliability\", \"none\" or a numeric value." -
+  element:IdentityFile
+    cargo
+      warn_if_match:"\.pub$"
+        msg="identity file should be the private key file"
+        fix=s/\.pub$//; - - -
+  element:IPQoS
+    assert:1_or_2
+      code="return 1 unless defined $_; my @v = (/(\w+)/g); return (@v < 3) ? 1 : 0; "
+      msg="value must not have more than 2 fields." -
+    assert:accepted_values
+      code="return 1 unless defined $_;
+            my @v = (/(\S+)/g);
+            my @good = grep {/^(af[1-4][1-3]|cs[0-7]|ef|lowdelay|throughput|reliability|none|\d+)/} @v ;
+            return @good == @v ? 1 : 0; "
+      msg="value must be 1 or 2 occurences of: 'af11', 'af12', 'af13', 'af21', 'af22',
+'af23', 'af31', 'af32', 'af33', 'af41', 'af42', 'af43', 'cs0', 'cs1',
+'cs2', 'cs3', 'cs4', 'cs5', 'cs6', 'cs7', 'ef', 'lowdelay',
+'throughput', 'reliability', 'none' or a numeric value." -
 EOCDS
 
 # This class include Ssh model and must be loaded after Ssh model is
