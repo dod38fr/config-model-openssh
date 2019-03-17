@@ -88,8 +88,6 @@ my %override = (
         ControlPersist => 'type=leaf value_type=uniline',
         IdentityFile => 'type=list cargo type=leaf value_type=uniline',
         IPQoS => 'type=leaf value_type=uniline upstream_default="af21 cs1"',
-        # Debian specific: 300 is default when BatchMode is set
-        ServerAliveInterval => 'type=leaf value_type=integer',
         StrictHostKeyChecking => 'type=leaf value_type=enum choice=yes,accept-new,no,off,ask upstream_default=ask',
         KbdInteractiveDevices => 'type=list cargo type=leaf value_type=uniline',
     },
@@ -137,7 +135,7 @@ sub create_load_data ($ssh_system, $name, @desc) {
         push @choices, 'no';
     }
 
-    if ($desc =~ /(Specif\w+|Sets?) (\w+ ){0,2}(number|timeout)/) {
+    if ($desc =~ /(Specif\w+|Sets?) (a|the) (maximum )?(number|timeout)/) {
         $value_type = 'integer';
         if ($desc =~ /The default(?: value)?(?: is|,) (\d+)/) {
             push @load_extra, "upstream_default=$1";

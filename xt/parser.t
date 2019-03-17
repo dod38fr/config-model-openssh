@@ -61,7 +61,7 @@ subtest "test generation of model string" => sub {
         NumberOfPasswordPrompts => 'type=leaf value_type=integer upstream_default=3',
         RequestTTY => $enum->('no,yes,force,auto'),
         ServerAliveCountMax => 'type=leaf value_type=integer upstream_default=3',
-        ServerAliveInterval => 'type=leaf value_type=integer',
+        ServerAliveInterval => 'type=leaf value_type=integer upstream_default=0',
         LocalForward => 'type=node config_class_name="Ssh::PortForward"',
         RemoteForward => 'type=node config_class_name="Ssh::PortForward"',
         Tunnel => $enum->('yes,point-to-point,ethernet,no','no'),
