@@ -90,6 +90,16 @@ class:Ssh::HostElement
 'af23', 'af31', 'af32', 'af33', 'af41', 'af42', 'af43', 'cs0', 'cs1',
 'cs2', 'cs3', 'cs4', 'cs5', 'cs6', 'cs7', 'ef', 'lowdelay',
 'throughput', 'reliability', 'none' or a numeric value." -
+  element:UseRsh
+    type=leaf
+    value_type=uniline
+    status=deprecated
+    description="This parameter is now ignored by Ssh" -
+  element:FallBackToRsh
+    type=leaf
+    value_type=uniline
+    status=deprecated
+    description="This parameter is now ignored by Ssh" - -
 EOCDS
 
 # This class include Ssh model and must be loaded after Ssh model is
