@@ -91,6 +91,13 @@ my %override = (
         StrictHostKeyChecking => 'type=leaf value_type=enum choice=yes,accept-new,no,off,ask upstream_default=ask',
         KbdInteractiveDevices => 'type=list cargo type=leaf value_type=uniline',
     },
+    sshd => {
+        AuthenticationMethods => 'type=leaf value_type=uniline',
+        AuthorizedKeysFile => 'type=leaf value_type=uniline upstream_default=".ssh/authorized_keys .ssh/authorized_keys2"',
+        AuthorizedPrincipalsFile => 'type=leaf value_type=uniline upstream_default="none"',
+        ChrootDirectory => 'type=leaf value_type=uniline upstream_default="none"',
+        ForceCommand => 'type=leaf value_type=uniline upstream_default="none"',
+    }
 );
 
 sub create_load_data ($ssh_system, $name, @desc) {
@@ -117,7 +124,7 @@ sub create_load_data ($ssh_system, $name, @desc) {
         $set_choice->( $str =~ /B<([\w-]+)>/g );
     }
 
-    if (my @values = ($desc =~ /(?:(?:if|when|with) (?:(?:$bold_name|th(?:e|is) option) (?:is )?)?set to|A value of|setting this to|The default(?: is|,)) B<(\w+)>/gi)) {
+    if (my @values = ($desc =~ /(?:(?:if|when|with) (?:(?:$bold_name|th(?:e|is) option) (?:is )?)?set to|A value of|setting this to|The default(?: is|,)|Accepted values are) B<(\w+)>/gi)) {
         $set_choice->(@values);
     }
 
@@ -142,7 +149,8 @@ sub create_load_data ($ssh_system, $name, @desc) {
         }
     }
     elsif (@choices == 1) {
-        die "Parser error: Cannot create an enum with only once choice ($name)\n";
+        die "Parser error: Cannot create an enum with only once choice ($name): @choices\n",
+            "Description is:\n $desc\n";
     }
     elsif (@choices == 2 and grep { /^yes|no$/ } @choices) {
         $value_type = 'boolean';
