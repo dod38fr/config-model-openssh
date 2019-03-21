@@ -82,12 +82,14 @@ sub setup_choice {
 }
 
 my %override = (
+    all => {
+        IPQoS => 'type=leaf value_type=uniline upstream_default="af21 cs1"',
+    },
     ssh => {
         # description is too complex to parse
         EscapeChar => 'type=leaf value_type=uniline',
         ControlPersist => 'type=leaf value_type=uniline',
         IdentityFile => 'type=list cargo type=leaf value_type=uniline',
-        IPQoS => 'type=leaf value_type=uniline upstream_default="af21 cs1"',
         StrictHostKeyChecking => 'type=leaf value_type=enum choice=yes,accept-new,no,off,ask upstream_default=ask',
         KbdInteractiveDevices => 'type=list cargo type=leaf value_type=uniline',
     },
@@ -110,6 +112,7 @@ sub create_load_data ($ssh_system, $name, @desc) {
     my $desc = join('', @desc);
 
     return $override{$ssh_system}{$name} if $override{$ssh_system}{$name};
+    return $override{'all'}{$name} if $override{'all'}{$name};
 
     # trim description (which is not saved in this sub) to simplify
     # the regexp below
