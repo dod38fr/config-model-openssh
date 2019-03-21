@@ -95,7 +95,7 @@ my %override = (
     },
     sshd => {
         AuthenticationMethods => 'type=leaf value_type=uniline',
-        AuthorizedKeysFile => 'type=leaf value_type=uniline upstream_default=".ssh/authorized_keys .ssh/authorized_keys2"',
+        AuthorizedKeysFile => 'type=leaf value_type=uniline',
         AuthorizedPrincipalsFile => 'type=leaf value_type=uniline upstream_default="none"',
         ChrootDirectory => 'type=leaf value_type=uniline upstream_default="none"',
         ForceCommand => 'type=leaf value_type=uniline upstream_default="none"',
