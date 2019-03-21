@@ -21,7 +21,7 @@ subtest "man page transformation" => sub {
 };
 
 subtest "test generation of model string" => sub {
-    my @unilines = qw/AcceptEnv AllowGroups AuthorizedKeysCommand/;
+    my @unilines = qw/AcceptEnv AuthorizedKeysFile AuthorizedKeysCommand/;
     my $boolean = sub {
         return "type=leaf value_type=boolean write_as=no,yes upstream_default=$_[0]";
     };
@@ -35,7 +35,8 @@ subtest "test generation of model string" => sub {
         # AddKeysToAgent => $enum->('yes,confirm,ask,no', 'no'),
         AddressFamily => $enum->('any,inet,inet6', 'any'),
         AllowStreamLocalForwarding => $enum->('yes,all,no,local,remote','yes'),
-        AuthorizedKeysFile => 'type=leaf value_type=uniline upstream_default=".ssh/authorized_keys .ssh/authorized_keys2"',
+        AllowGroups => 'type=list cargo type=leaf value_type=uniline',
+        AllowUsers => 'type=list cargo type=leaf value_type=uniline',
     );
 
     foreach my $p (@unilines) {
