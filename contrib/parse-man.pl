@@ -102,6 +102,9 @@ create_ssh_model($meta_root);
 
 say "loading ssh model addendum";
 $meta_root->load_data(LoadFile('contrib/ssh-fixup.yaml'));
+$meta_root
+    ->grab("class:Ssh::HostElement element:IPQoS")
+    ->load_data(LoadFile('contrib/fixup-element-ipqos.yml'));
 
 # This class include Ssh model and must be loaded after Ssh model is
 # created
