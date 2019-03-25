@@ -120,10 +120,6 @@ create_sshd_model($meta_root);
 
 say "loading sshd model addendum";
 
-$meta_root
-    ->grab("class:Sshd::MatchElement element:IPQoS")
-    ->load_data(LoadFile('contrib/fixup-element-ipqos.yml'));
-
 # requires Sshd::MatchElement
 load_yaml_model($meta_root,"Sshd::MatchBlock");
 
@@ -144,6 +140,9 @@ $sshd->load(
     'element:AuthorizedKeysFile migrate_from '
         . 'formula="$old" variables:old="- AuthorizedKeysFile2"'
     );
+$meta_root
+    ->grab("class:Sshd::MatchElement element:IPQoS")
+    ->load_data(LoadFile('contrib/fixup-element-ipqos.yml'));
 
 say "Saving ssh and sshd models...";
 $rw_obj->write_all;
