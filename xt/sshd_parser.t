@@ -37,6 +37,7 @@ subtest "test generation of model string" => sub {
         AllowStreamLocalForwarding => $enum->('yes,all,no,local,remote','yes'),
         AllowGroups => 'type=list cargo type=leaf value_type=uniline',
         AllowUsers => 'type=list cargo type=leaf value_type=uniline',
+        X11Forwarding => $boolean->('no'),
     );
 
     foreach my $p (@unilines) {
