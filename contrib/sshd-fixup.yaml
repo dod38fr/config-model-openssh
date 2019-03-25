@@ -1,0 +1,43 @@
+---
+class:
+  __order:
+    - Sshd
+    - Sshd::MatchElement
+  Sshd:
+    include:
+      - Sshd::MatchElement
+    rw_config:
+      backend: OpenSsh::Sshd
+      config_dir: /etc/ssh
+      file: sshd_config
+      os_config_dir:
+        darwin: /etc
+    element:
+      Match:
+        type: list
+        cargo:
+          type: node
+          config_class_name: Sshd::MatchBlock
+  Sshd::MatchElement:
+    element:
+      __order:
+        - AuthorizedKeysFile2
+        - AuthorizedKeysFile
+        - Protocol
+        - RSAAuthentication
+        - RhostsRSAAuthentication
+      AuthorizedKeysFile2: &deprecated
+        description: This parameter is now ignored by Ssh
+        status: deprecated
+        type: leaf
+        value_type: uniline
+      AuthorizedKeysFile:
+        migrate_from:
+          formula: "$old"
+          variables:
+            old: "- AuthorizedKeysFile2"
+      # deprecated with Ssh protocol V1
+      Protocol: *deprecated
+      RSAAuthentication: *deprecated
+      RhostsRSAAuthentication: *deprecated
+        

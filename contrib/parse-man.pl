@@ -123,23 +123,7 @@ say "loading sshd model addendum";
 # requires Sshd::MatchElement
 load_yaml_model($meta_root,"Sshd::MatchBlock");
 
-# deprecated parameters
-my $sshd = $meta_root->grab("class:Sshd::MatchElement");
-$sshd->load(
-    'element:AuthorizedKeysFile2
-      type=leaf
-      value_type=uniline
-      status=deprecated
-      description="Specifies the file that contains the public keys
-          that can be used for user authentication. AuthorizedKeysFile
-           may contain tokens of the form %T which are substituted
-           during connection setup."
-'
-);
-$sshd->load(
-    'element:AuthorizedKeysFile migrate_from '
-        . 'formula="$old" variables:old="- AuthorizedKeysFile2"'
-    );
+$meta_root->load_data(LoadFile('contrib/sshd-fixup.yaml'));
 $meta_root
     ->grab("class:Sshd::MatchElement element:IPQoS")
     ->load_data(LoadFile('contrib/fixup-element-ipqos.yml'));
