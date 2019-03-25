@@ -51,7 +51,7 @@ sub parse_html_man_page ($html_man_page) {
 
     my $twig = XML::Twig->new (
         twig_handlers => {
-            'html/body/p[@style="margin-top: 1em"]/[string(b)=~ /^[A-Z]+[a-z]/]'
+            'html/body/p[@style="margin-top: 1em"]/[string(b)=~ /^[A-Z]+\w/]'
                 => $ssh_param,
             # try to stop at the section after the parameter list
             'html/body/p[@style="margin-top: 1em"]/[string(b)=~ /^[A-Z\s]+$/]'
@@ -99,6 +99,7 @@ my %override = (
         AuthorizedPrincipalsFile => 'type=leaf value_type=uniline upstream_default="none"',
         ChrootDirectory => 'type=leaf value_type=uniline upstream_default="none"',
         ForceCommand => 'type=leaf value_type=uniline upstream_default="none"',
+        VersionAddendum => 'type=leaf value_type=uniline',
     }
 );
 
