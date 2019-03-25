@@ -1,8 +1,25 @@
 ---
 class:
+  __order:
+    - Ssh::HostElement
+    - Ssh
+  Ssh:
+    include:
+      - Ssh::HostElement
+    include_after: Host
+    rw_config:
+      auto_create: 1
+      backend: OpenSsh::Ssh
+      config_dir: ~/.ssh
+      file: config
+      default_layer:
+        config_dir: /etc/ssh
+        file: ssh_config
+        os_config_dir:
+          darwin: /etc
   Ssh::HostElement:
     element:
-      __element_order:
+      __order:
         - IdentityFile
         - IPQoS
         - UseRsh
@@ -13,13 +30,9 @@ class:
             \.pub$:
               fix: s/\.pub$//;
               msg: 'identity file should be the private key '
-      UseRsh:
+      UseRsh: &deprecated
         description: This parameter is now ignored by Ssh
         status: deprecated
         type: leaf
         value_type: uniline
-      FallBackToRsh:
-        description: This parameter is now ignored by Ssh
-        status: deprecated
-        type: leaf
-        value_type: uniline
+      FallBackToRsh: *deprecated
