@@ -196,6 +196,7 @@ sub create_class_boilerplate ($meta_root, $ssh_system,  $config_class) {
 
     $meta_root->load( steps => [
         qq!class:$config_class generated_by="parse-man.pl from $ssh_system  $ssh_version doc"!,
+        qq!license=LGPL2!,
         qq!accept:".*" type=leaf value_type=uniline!,
         qq!summary="boilerplate parameter that may hide a typo"!,
         qq!warn="Unknown parameter. Please make sure there\'s no typo and contact the author"!,
