@@ -99,6 +99,8 @@ my %override = (
         AuthorizedPrincipalsFile => 'type=leaf value_type=uniline upstream_default="none"',
         ChrootDirectory => 'type=leaf value_type=uniline upstream_default="none"',
         ForceCommand => 'type=leaf value_type=uniline upstream_default="none"',
+        Subsystem => 'type=hash index_type=string '
+            . 'cargo type=leaf value_type=uniline mandatory=1 - - ',
         VersionAddendum => 'type=leaf value_type=uniline',
     }
 );
