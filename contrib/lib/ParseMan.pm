@@ -81,6 +81,8 @@ sub setup_choice {
     );
 }
 
+my $ssh_host = 'type=hash index_type=string cargo type=node '
+    .'config_class_name=Ssh::HostElement';
 my %override = (
     all => {
         IPQoS => 'type=leaf value_type=uniline upstream_default="af21 cs1"',
@@ -89,7 +91,9 @@ my %override = (
         # description is too complex to parse
         EscapeChar => 'type=leaf value_type=uniline',
         ControlPersist => 'type=leaf value_type=uniline',
+        Host => $ssh_host,
         IdentityFile => 'type=list cargo type=leaf value_type=uniline',
+        Match => $ssh_host,
         StrictHostKeyChecking => 'type=leaf value_type=enum choice=yes,accept-new,no,off,ask upstream_default=ask',
         KbdInteractiveDevices => 'type=list cargo type=leaf value_type=uniline',
     },

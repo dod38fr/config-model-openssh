@@ -28,7 +28,7 @@ subtest "man page transformation" => sub {
 };
 
 subtest "test generation of model string" => sub {
-    my @unilines = qw/Host Match ControlPersist GSSAPIClientIdentity IdentityAgent/;
+    my @unilines = qw/ControlPersist GSSAPIClientIdentity IdentityAgent/;
     my $boolean = sub {
         return "type=leaf value_type=boolean write_as=no,yes upstream_default=$_[0]";
     };
@@ -55,9 +55,11 @@ subtest "test generation of model string" => sub {
         GlobalKnownHostsFile => 'type=leaf value_type=uniline upstream_default=/etc/ssh/ssh_known_hosts',
         GSSAPIAuthentication => $boolean->('no'),
         GSSAPITrustDns => $boolean->('no'),
+        Host => 'type=hash index_type=string cargo type=node config_class_name=Ssh::HostElement',
         IdentitiesOnly => $boolean->('no'),
         IdentityFile => 'type=list cargo type=leaf value_type=uniline',
         IPQoS => 'type=leaf value_type=uniline upstream_default="af21 cs1"',
+        Match => 'type=hash index_type=string cargo type=node config_class_name=Ssh::HostElement',
         NumberOfPasswordPrompts => 'type=leaf value_type=integer upstream_default=3',
         RequestTTY => $enum->('no,yes,force,auto'),
         ServerAliveCountMax => 'type=leaf value_type=integer upstream_default=3',
