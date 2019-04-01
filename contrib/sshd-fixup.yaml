@@ -26,6 +26,8 @@ class:
         - Protocol
         - RSAAuthentication
         - RhostsRSAAuthentication
+        - UsePrivilegeSeparation
+        - KeyRegenerationInterval
       AuthorizedKeysFile2: &deprecated
         description: This parameter is now ignored by Ssh
         status: deprecated
@@ -40,4 +42,5 @@ class:
       Protocol: *deprecated
       RSAAuthentication: *deprecated
       RhostsRSAAuthentication: *deprecated
-        
+      UsePrivilegeSeparation: *deprecated
+      KeyRegenerationInterval: *deprecated
