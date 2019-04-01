@@ -181,9 +181,6 @@ sub write_node_content {
         }
         elsif ($type eq 'leaf') {
             my $v = $elt->fetch($mode) ;
-            if (defined $v and $elt->value_type eq 'boolean') {
-                $v = $v == 1 ? 'yes':'no' ;
-            }
             $result .= $self->write_line($name,$v,$note);
         }
         elsif ($type eq 'check_list') {
