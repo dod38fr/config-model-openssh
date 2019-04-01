@@ -41,8 +41,6 @@ my $root = $inst -> config_root ;
 my $dump =  $root->dump_tree ();
 print "First $wr_dir1 dump:\n",$dump if $trace ;
 
-#like($dump,qr/Match:0/, "check Match section") if $testdir =~ /match/;
-
 $root -> load("Port=2222") ;
 
 my $new_dump = $root->dump_tree();
