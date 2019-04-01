@@ -101,6 +101,7 @@ my %override = (
         ForceCommand => 'type=leaf value_type=uniline upstream_default="none"',
         Subsystem => 'type=hash index_type=string '
             . 'cargo type=leaf value_type=uniline mandatory=1 - - ',
+        MaxStartups => 'type=leaf value_type=uniline upstream_default=10',
         VersionAddendum => 'type=leaf value_type=uniline',
     }
 );
