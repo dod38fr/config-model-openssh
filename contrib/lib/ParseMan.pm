@@ -83,6 +83,7 @@ sub setup_choice {
 
 my $ssh_host = 'type=hash index_type=string cargo type=node '
     .'config_class_name=Ssh::HostElement';
+my $ssh_forward = 'type=list cargo type=node config_class_name="Ssh::PortForward"';
 my %override = (
     all => {
         IPQoS => 'type=leaf value_type=uniline upstream_default="af21 cs1"',
@@ -93,9 +94,11 @@ my %override = (
         ControlPersist => 'type=leaf value_type=uniline',
         Host => $ssh_host,
         IdentityFile => 'type=list cargo type=leaf value_type=uniline',
+        LocalForward => $ssh_forward,
         Match => $ssh_host,
         StrictHostKeyChecking => 'type=leaf value_type=enum choice=yes,accept-new,no,off,ask upstream_default=ask',
         KbdInteractiveDevices => 'type=list cargo type=leaf value_type=uniline',
+        RemoteForward => $ssh_forward,
     },
     sshd => {
         AuthenticationMethods => 'type=leaf value_type=uniline',
@@ -111,11 +114,6 @@ my %override = (
 );
 
 sub create_load_data ($ssh_system, $name, @desc) {
-    if ($name =~ /^(Local|Remote)Forward$/) {
-        return 'type=node config_class_name="Ssh::PortForward"';
-    }
-
-    my @log;
     my $bold_name = shift @desc; # drop '<b>Keyword</b>'
     my $desc = join('', @desc);
 
