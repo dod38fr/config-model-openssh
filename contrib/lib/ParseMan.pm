@@ -179,7 +179,7 @@ sub create_load_data ($ssh_system, $name, @desc) {
     $value_type //= 'uniline';
 
     my @load ;
-    if ($desc =~ /multiple \w+ may be specified|keyword can be followed by a list of/i) {
+    if ($desc =~ /multiple (\w+ ){1,2}may be (specified|separated)|keyword can be followed by a list of/i) {
         @load = ('type=list', 'cargo');
     }
     # TODO:

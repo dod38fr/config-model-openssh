@@ -62,6 +62,7 @@ subtest "test generation of model string" => sub {
         Match => 'type=hash index_type=string cargo type=node config_class_name=Ssh::HostElement',
         NumberOfPasswordPrompts => 'type=leaf value_type=integer upstream_default=3',
         RequestTTY => $enum->('no,yes,force,auto'),
+        SendEnv =>  'type=list cargo type=leaf value_type=uniline',
         ServerAliveCountMax => 'type=leaf value_type=integer upstream_default=3',
         ServerAliveInterval => 'type=leaf value_type=integer upstream_default=0',
         LocalForward => 'type=list cargo type=node config_class_name="Ssh::PortForward"',

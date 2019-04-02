@@ -21,7 +21,7 @@ subtest "man page transformation" => sub {
 };
 
 subtest "test generation of model string" => sub {
-    my @unilines = qw/AcceptEnv AuthorizedKeysFile AuthorizedKeysCommand/;
+    my @unilines = qw/AuthorizedKeysFile AuthorizedKeysCommand/;
     my $boolean = sub {
         return "type=leaf value_type=boolean write_as=no,yes upstream_default=$_[0]";
     };
