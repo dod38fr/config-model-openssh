@@ -13,7 +13,7 @@ to specify port forwarding in a ssh configuration.',
       {
         'description' => 'Specify if the forward is specified iwth IPv6 or IPv4',
         'type' => 'leaf',
-        'value_type' => 'boolean'
+        'value_type' => 'boolean', write_as => ['no','yes']
       },
       'bind_address',
       {

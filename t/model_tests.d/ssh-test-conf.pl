@@ -37,7 +37,7 @@ my @setup = (
             #'Host:"foo\.\*,\*\.bar"' => '',
             'Host:picosgw LocalForward:0 port' => 20022,
             'Host:picosgw LocalForward:0 host' => '10.3.244.4',
-            'Host:picosgw LocalForward:1 ipv6' => 1,
+            'Host:picosgw LocalForward:1 ipv6' => 'yes',
             'Host:picosgw LocalForward:1 port' => 22080,
             'Host:picosgw LocalForward:1 host' => '2001:0db8:85a3:0000:0000:8a2e:0370:7334',
         ],

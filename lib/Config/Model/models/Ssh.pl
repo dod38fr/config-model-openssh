@@ -16,7 +16,7 @@ validate ~/.ssh/config.
 ',
         'type' => 'leaf',
         'upstream_default' => '0',
-        'value_type' => 'boolean'
+        'value_type' => 'boolean', write_as => ['no','yes']
       },
       'Host',
       {

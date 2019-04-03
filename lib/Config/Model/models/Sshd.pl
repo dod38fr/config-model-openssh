@@ -45,7 +45,7 @@ validate /etc/ssh/sshd_config
         'description' => 'Specifies whether L<ssh-agent(1)> forwarding is permitted.  Note that disabling agent forwarding does not improve security unless users are also denied shell access, as they can always install their own forwarders.',
         'type' => 'leaf',
         'upstream_default' => '1',
-        'value_type' => 'boolean',
+        'value_type' => 'boolean', write_as => ['no','yes'],
         'write_as' => [
           'no',
           'yes'
@@ -379,7 +379,7 @@ The default value is 3. If ClientAliveInterval is set to 15, and ClientAliveCoun
         'description' => 'Controls whether the user\'s GSSAPI credentials should be updated following a successful connection rekeying. This option can be used to accepted renewed or updated credentials from a compatible client.',
         'type' => 'leaf',
         'upstream_default' => '0',
-        'value_type' => 'boolean',
+        'value_type' => 'boolean', write_as => ['no','yes'],
         'write_as' => [
           'no',
           'yes'
@@ -671,7 +671,7 @@ Alternatively, random early drop can be enabled by specifying the three colon se
       {
         'description' => 'Specifies whether sshd(8) should allow keys recorded in its blacklist of known-compromised keys (see L<ssh-vulnkey(1)>). If "yes", then attempts to authenticate with compromised keys will be logged but accepted. If "no", then attempts to authenticate with compromised keys will be rejected.',
         'type' => 'leaf',
-        'value_type' => 'boolean',
+        'value_type' => 'boolean', write_as => ['no','yes'],
         'write_as' => [
           'no',
           'yes'

@@ -69,7 +69,7 @@ like($dump,qr/SendEnv#"  PermitLocalCommand no"/,"check SendEnv comment");
 like($dump,qr/Host:"foo\.\*,\*\.bar"/, "check Host pattern") ;
 like($dump,qr/LocalForward:0\s+port=20022/, "check user LocalForward port") ;
 like($dump,qr/host=10.3.244.4/, "check user LocalForward host") ;
-like($dump,qr/LocalForward:1#"IPv6 example"\s+ipv6=1/, "check user LocalForward ipv6") ;
+like($dump,qr/LocalForward:1#"IPv6 example"\s+ipv6=yes/, "check user LocalForward ipv6") ;
 like($dump,qr/port=22080/, "check user LocalForward port ipv6") ;
 like($dump,qr/host=2001:0db8:85a3:0000:0000:8a2e:0370:7334/, 
      "check user LocalForward host ipv6") ;

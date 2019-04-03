@@ -23,7 +23,7 @@ inside a Match block of a sshd configuration.',
         'description' => 'Specifies whether L<ssh-agent(1)> forwarding is permitted.  Note that disabling agent forwarding does not improve security unless users are also denied shell access, as they can always install their own forwarders.',
         'type' => 'leaf',
         'upstream_default' => '1',
-        'value_type' => 'boolean',
+        'value_type' => 'boolean', write_as => ['no','yes'],
         'write_as' => [
           'no',
           'yes'

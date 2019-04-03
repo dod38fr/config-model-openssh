@@ -26,7 +26,7 @@ inside a Host directive of a ssh configuration.',
         'description' => 'If set to \'yes\', passphrase/password querying will be disabled. In addition, the ServerAliveInterval option will be set to 300 seconds by default. This option is useful in scripts and other batch jobs where no user is present to supply the password, and where it is desirable to detect a broken network swiftly. ',
         'type' => 'leaf',
         'upstream_default' => '0',
-        'value_type' => 'boolean'
+        'value_type' => 'boolean', write_as => ['no','yes']
       },
       'BindAddress',
       {
@@ -39,14 +39,14 @@ inside a Host directive of a ssh configuration.',
         'description' => 'Specifies whether to use challenge-response authentication.',
         'type' => 'leaf',
         'upstream_default' => '1',
-        'value_type' => 'boolean'
+        'value_type' => 'boolean', write_as => ['no','yes']
       },
       'CheckHostIP',
       {
         'description' => 'If enabled, ssh(1) will additionally check the host IP address in the known_hosts file. This allows ssh to detect if a host key changed due to DNS spoofing. If disbled, the check will not be executed.',
         'type' => 'leaf',
         'upstream_default' => '1',
-        'value_type' => 'boolean'
+        'value_type' => 'boolean', write_as => ['no','yes']
       },
       'Cipher',
       {
@@ -105,14 +105,14 @@ C<ssh -Q cipher>",
         'description' => 'Specifies that all local, remote, and dynamic port forwardings specified in the configuration files or on the command line be cleared. This option is primarily useful when used from the ssh(1) command line to clear port forwardings set in configuration files, and is automatically set by scp(1) and sftp(1).',
         'type' => 'leaf',
         'upstream_default' => '0',
-        'value_type' => 'boolean'
+        'value_type' => 'boolean', write_as => ['no','yes']
       },
       'Compression',
       {
         'description' => 'Specifies whether to use compression.',
         'type' => 'leaf',
         'upstream_default' => '0',
-        'value_type' => 'boolean'
+        'value_type' => 'boolean', write_as => ['no','yes']
       },
       'CompressionLevel',
       {
@@ -127,7 +127,7 @@ C<ssh -Q cipher>",
             'compression' => '- Compression'
           },
           'rules' => [
-            '$compression == 1',
+            '$compression eq "yes"',
             {
               'level' => 'normal'
             }
@@ -213,7 +213,7 @@ Currently the SOCKS4 and SOCKS5 protocols are supported, and ssh(1) will act as 
         'description' => 'Specifies whether ssh(1) should terminate the connection if it cannot set up all requested dynamic, tunnel, local, and remote port forwardings.',
         'type' => 'leaf',
         'upstream_default' => '0',
-        'value_type' => 'boolean'
+        'value_type' => 'boolean', write_as => ['no','yes']
       },
       'ForwardAgent',
       {
@@ -223,7 +223,7 @@ Agent forwarding should be enabled with caution.  Users with the ability to bypa
 ',
         'type' => 'leaf',
         'upstream_default' => '0',
-        'value_type' => 'boolean'
+        'value_type' => 'boolean', write_as => ['no','yes']
       },
       'ForwardX11',
       {
@@ -234,7 +234,7 @@ X11 forwarding should be enabled with caution.  Users with the ability to bypass
         'level' => 'important',
         'type' => 'leaf',
         'upstream_default' => '0',
-        'value_type' => 'boolean'
+        'value_type' => 'boolean', write_as => ['no','yes']
       },
       'ForwardX11Timeout',
       {
@@ -253,14 +253,14 @@ See the X11 SECURITY extension specification for full details on the restriction
 ',
         'type' => 'leaf',
         'upstream_default' => '0',
-        'value_type' => 'boolean'
+        'value_type' => 'boolean', write_as => ['no','yes']
       },
       'GatewayPorts',
       {
         'description' => 'Specifies whether remote hosts are allowed to connect to local forwarded ports. By default, ssh(1) binds local port forwardings to the loopback address. This prevents other remote hosts from connecting to forwarded ports. GatewayPorts can be used to specify that ssh should bind local port forwardings to the wildcard address, thus allowing remote hosts to connect to forwarded ports. ',
         'type' => 'leaf',
         'upstream_default' => '0',
-        'value_type' => 'boolean'
+        'value_type' => 'boolean', write_as => ['no','yes']
       },
       'GlobalKnownHostsFile',
       {
@@ -274,14 +274,14 @@ See the X11 SECURITY extension specification for full details on the restriction
         'description' => 'Specifies whether user authentication based on GSSAPI is allowed. Note that this option applies to protocol version 2 only.',
         'type' => 'leaf',
         'upstream_default' => '0',
-        'value_type' => 'boolean'
+        'value_type' => 'boolean', write_as => ['no','yes']
       },
       'GSSAPIKeyExchange',
       {
         'description' => 'Specifies whether key exchange based on GSSAPI may be used. When using GSSAPI key exchange the server need not have a host key. Note that this option applies to protocol version 2 only.',
         'type' => 'leaf',
         'upstream_default' => '0',
-        'value_type' => 'boolean',
+        'value_type' => 'boolean', write_as => ['no','yes'],
         'write_as' => [
           'no',
           'yes'
@@ -304,7 +304,7 @@ See the X11 SECURITY extension specification for full details on the restriction
         'description' => 'Forward (delegate) credentials to the server. Note that this option applies to protocol version 2 connections using GSSAPI.',
         'type' => 'leaf',
         'upstream_default' => '0',
-        'value_type' => 'boolean',
+        'value_type' => 'boolean', write_as => ['no','yes'],
         'write_as' => [
           'no',
           'yes'
@@ -315,7 +315,7 @@ See the X11 SECURITY extension specification for full details on the restriction
         'description' => 'If set to "yes" then renewal of the client\'s GSSAPI credentials will force the rekeying of the ssh connection. With a compatible server, this can delegate the renewed credentials to a session on the server.',
         'type' => 'leaf',
         'upstream_default' => '0',
-        'value_type' => 'boolean',
+        'value_type' => 'boolean', write_as => ['no','yes'],
         'write_as' => [
           'no',
           'yes'
@@ -326,7 +326,7 @@ See the X11 SECURITY extension specification for full details on the restriction
         'description' => 'Set to "yes" to indicate that the DNS is trusted to securely canonicalize the name of the host being connected to. If "no", the hostname entered on the command line will be passed untouched to the GSSAPI library. This option only applies to protocol version 2 connections using GSSAPI.',
         'type' => 'leaf',
         'upstream_default' => '0',
-        'value_type' => 'boolean',
+        'value_type' => 'boolean', write_as => ['no','yes'],
         'write_as' => [
           'no',
           'yes'
@@ -338,7 +338,7 @@ See the X11 SECURITY extension specification for full details on the restriction
 ',
         'type' => 'leaf',
         'upstream_default' => '0',
-        'value_type' => 'boolean'
+        'value_type' => 'boolean', write_as => ['no','yes']
       },
       'HostbasedAuthentication',
       {
@@ -346,7 +346,7 @@ See the X11 SECURITY extension specification for full details on the restriction
 ',
         'type' => 'leaf',
         'upstream_default' => '0',
-        'value_type' => 'boolean'
+        'value_type' => 'boolean', write_as => ['no','yes']
       },
       'HostKeyAlgorithms',
       {
@@ -379,7 +379,7 @@ See the X11 SECURITY extension specification for full details on the restriction
         'description' => 'Specifies that ssh(1) should only use the authentication identity files configured in the ssh_config files, even if ssh-agent(1) offers more identities. This option is intended for situations where ssh-agent offers many different identities.',
         'type' => 'leaf',
         'upstream_default' => '0',
-        'value_type' => 'boolean'
+        'value_type' => 'boolean', write_as => ['no','yes']
       },
       'IdentityFile',
       {
@@ -435,7 +435,7 @@ return @good == @v ? 1 : 0;
 ',
         'type' => 'leaf',
         'upstream_default' => '1',
-        'value_type' => 'boolean'
+        'value_type' => 'boolean', write_as => ['no','yes']
       },
       'KbdInteractiveDevices',
       {
@@ -535,7 +535,7 @@ Example:
         'description' => 'This option can be used if the home directory is shared across machines. In this case localhost will refer to a different machine on each of the machines and the user will get many warn ings about changed host keys. However, this option disables host authentication for localhost. The default is to check the host key for localhost.',
         'type' => 'leaf',
         'upstream_default' => '0',
-        'value_type' => 'boolean'
+        'value_type' => 'boolean', write_as => ['no','yes']
       },
       'NumberOfPasswordPrompts',
       {
@@ -549,14 +549,14 @@ Example:
         'description' => 'Specifies whether to use password authentication.',
         'type' => 'leaf',
         'upstream_default' => '1',
-        'value_type' => 'boolean'
+        'value_type' => 'boolean', write_as => ['no','yes']
       },
       'PermitLocalCommand',
       {
         'description' => 'Allow local command execution via the LocalCommand option or using the !command escape sequence in ssh(1).',
         'type' => 'leaf',
         'upstream_default' => '0',
-        'value_type' => 'boolean'
+        'value_type' => 'boolean', write_as => ['no','yes']
       },
       'LocalCommand',
       {
@@ -626,7 +626,7 @@ This directive is useful in conjunction with nc(1) and its proxy support. For ex
         'description' => 'Specifies whether to try public key authentication. This option applies to protocol version 2 only.',
         'type' => 'leaf',
         'upstream_default' => '1',
-        'value_type' => 'boolean'
+        'value_type' => 'boolean', write_as => ['no','yes']
       },
       'RekeyLimit',
       {
@@ -670,14 +670,14 @@ If the bind_address is not specified, the default is to only bind to loopback ad
         'description' => 'Specifies whether to try rhosts based authentication with RSA host authentication. This option applies to protocol version 1 only and requires ssh(1) to be setuid root.',
         'type' => 'leaf',
         'upstream_default' => '0',
-        'value_type' => 'boolean'
+        'value_type' => 'boolean', write_as => ['no','yes']
       },
       'RSAAuthentication',
       {
         'description' => 'Specifies whether to try RSA authentication. RSA authentication will only be attempted if the identity file exists, or an authentication agent is running. Note that this option applies to protocol version 1 only.',
         'type' => 'leaf',
         'upstream_default' => '1',
-        'value_type' => 'boolean'
+        'value_type' => 'boolean', write_as => ['no','yes']
       },
       'SendEnv',
       {
@@ -742,7 +742,7 @@ The default value is 3. If, for example, ServerAliveInterval is set to 15 and Se
 To disable TCP keepalive messages, the value should be set to "no".',
         'type' => 'leaf',
         'upstream_default' => '1',
-        'value_type' => 'boolean'
+        'value_type' => 'boolean', write_as => ['no','yes']
       },
       'Tunnel',
       {
@@ -771,14 +771,14 @@ To disable TCP keepalive messages, the value should be set to "no".',
         'description' => 'Specifies whether ssh(1) should use keys recorded in its blacklist of known-compromised keys (see ssh-vulnkey(1)) for authentication.  If "yes", then attempts to use compromised keys for authentication will be logged but accepted.  It is strongly recommended that this be used only to install new authorized keys on the remote system, and even then only with the utmost care.  If "no", then attempts to use compromised keys for authentication will be prevented.  The default is "no".',
         'type' => 'leaf',
         'upstream_default' => '0',
-        'value_type' => 'boolean'
+        'value_type' => 'boolean', write_as => ['no','yes']
       },
       'UsePrivilegedPort',
       {
         'description' => 'Specifies whether to use a privileged port for outgoing connections.  The argument must be "yes" or "no".  The default is "no". If set to "yes", ssh(1) must be setuid root.  Note that this option must be set to "yes" for RhostsRSAAuthentication with older servers.',
         'type' => 'leaf',
         'upstream_default' => '0',
-        'value_type' => 'boolean'
+        'value_type' => 'boolean', write_as => ['no','yes']
       },
       'User',
       {
@@ -811,7 +811,7 @@ See also VERIFYING HOST KEYS in ssh(1).',
         'description' => 'If this flag is set to "yes", an ASCII art representation of the remote host key fingerprint is printed additionally to the hex fingerprint string.  If this flag is set to "no", only the hex fingerprint string will be printed.  The default is "no".',
         'type' => 'leaf',
         'upstream_default' => '0',
-        'value_type' => 'boolean'
+        'value_type' => 'boolean', write_as => ['no','yes']
       },
       'XAuthLocation',
       {
