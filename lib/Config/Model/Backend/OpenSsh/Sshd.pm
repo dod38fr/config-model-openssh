@@ -3,7 +3,10 @@ package Config::Model::Backend::OpenSsh::Sshd ;
 use Mouse ;
 extends "Config::Model::Backend::OpenSsh" ;
 
-with 'Config::Model::Backend::OpenSsh::Role::MatchBlock';
+with (
+    'Config::Model::Backend::OpenSsh::Role::Reader',
+    'Config::Model::Backend::OpenSsh::Role::MatchBlock',
+);
 
 use Carp ;
 use IO::File ;

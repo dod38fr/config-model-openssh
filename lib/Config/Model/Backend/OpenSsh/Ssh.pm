@@ -4,6 +4,9 @@ use Mouse ;
 use 5.10.1;
 extends "Config::Model::Backend::OpenSsh" ;
 
+with 'Config::Model::Backend::OpenSsh::Role::Reader' ;
+
+
 use Carp ;
 use IO::File ;
 use Log::Log4perl;

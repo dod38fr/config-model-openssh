@@ -7,13 +7,6 @@ use Config::Model 2.128;
 use Mouse ;
 extends "Config::Model::Backend::Any" ;
 
-has 'current_node'  => (
-    is => 'rw',
-    isa => 'Config::Model::Node',
-    weak_ref => 1
-) ;
-
-
 use Carp ;
 use IO::File ;
 use Log::Log4perl 1.11;
@@ -21,50 +14,6 @@ use File::Copy ;
 use File::Path ;
 
 my $logger = Log::Log4perl::get_logger("Backend::OpenSsh");
-
-my @dispatch = (
-    qr/match/i                 => 'match',
-    qr/host\b/i                => 'host',
-    qr/(local|remote)forward/i => 'forward',
-    qr/localcommand/i          => 'assign',
-    qr/\w/                     => 'assign',
-);
-
-sub read {
-    my $self = shift ;
-    my %args = @_ ;
-    my $config_root = $args{object}
-        || croak __PACKAGE__," read_ssh_file: undefined config root object";
-
-    $logger->info("loading config file ".$args{file_path});
-
-    my @lines = $args{file_path}->lines_utf8 ;
-    # try to get global comments (comments before a blank line)
-    $self->read_global_comments(\@lines,'#') ;
-
-    # need to reset this when reading user ssh file after system ssh file
-    $self->current_node($config_root) ;
-
-    my @assoc = $self->associates_comments_with_data( \@lines, '#' ) ;
-    foreach my $item (@assoc) {
-        my ( $vdata, $comment ) = @$item;
-
-        my ( $k, @v ) = split /\s+/, $vdata;
-
-        my $i = 0;
-        while ( $i < @dispatch ) {
-            my ( $regexp, $sub ) = @dispatch[ $i++, $i++ ];
-            if ( $k =~ $regexp and $self->can($sub)) {
-                $logger->trace("read_ssh_file: dispatch calls $sub");
-                $self->$sub( $config_root, $k, \@v, $comment, $args{check} );
-                last;
-            }
-
-            warn __PACKAGE__, " unknown keyword: $k" if $i >= @dispatch;
-        }
-    }
-    return 1;
-}
 
 sub ssh_write {
     my $self = shift ;
@@ -82,51 +31,6 @@ sub ssh_write {
     $args{file_path}->spew_utf8($result);
 
     return 1;
-}
-
-sub assign {
-    my ($self,$root, $raw_key,$arg,$comment, $check) = @_ ;
-    $logger->debug("assign: $raw_key @$arg # $comment");
-
-
-    # keys are case insensitive, try to find a match
-    my $key = $self->current_node->find_element ($raw_key, case => 'any') ;
-
-    if (not defined $key) {
-        if ($check eq 'yes') {
-            # drop if -force is not set
-            die "Error: unknown parameter: '$raw_key'. Use -force option to drop this parameter\n";
-        }
-        else {
-            say "Dropping parameter '$raw_key'" ;
-        }
-        return;
-    }
-
-    my $elt = $self->current_node->fetch_element($key) ;
-    my $type = $elt->get_type;
-    #print "got $key type $type and ",join('+',@$arg),"\n";
-
-    $elt->annotation($comment) if $comment and $type ne 'hash';
-
-    if ($type eq 'leaf') {
-        $elt->store( value => join(' ',@$arg), check => $check ) ;
-    }
-    elsif ($type eq 'list') {
-        $elt->push_x ( values => $arg, check => $check ) ;
-    }
-    elsif ($type eq 'hash') {
-        my $hv = $elt->fetch_with_id($arg->[0]);
-        $hv->store( value => $arg->[1], check => $check );
-        $hv->annotation($comment) if $comment;
-    }
-    elsif ($type eq 'check_list') {
-        my @check = split /\s*,\s*/,$arg->[0] ;
-        $elt->set_checked_list (\@check, check => 'skip') ;
-    }
-    else {
-        die "OpenSsh::assign did not expect $type for $key\n";
-    }
 }
 
 
