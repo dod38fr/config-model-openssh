@@ -1,11 +1,11 @@
 package Config::Model::Backend::OpenSsh::Sshd ;
 
 use Mouse ;
-extends "Config::Model::Backend::OpenSsh" ;
+extends "Config::Model::Backend::Any" ;
 
 with (
     'Config::Model::Backend::OpenSsh::Role::Reader',
-    'Config::Model::Backend::OpenSsh::Role::MatchBlock',
+    'Config::Model::Backend::OpenSsh::Role::Writer',
 );
 
 use Carp ;

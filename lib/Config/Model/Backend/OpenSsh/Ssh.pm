@@ -2,9 +2,12 @@ package Config::Model::Backend::OpenSsh::Ssh ;
 
 use Mouse ;
 use 5.10.1;
-extends "Config::Model::Backend::OpenSsh" ;
+extends "Config::Model::Backend::Any" ;
 
-with 'Config::Model::Backend::OpenSsh::Role::Reader' ;
+with (
+    'Config::Model::Backend::OpenSsh::Role::Reader',
+    'Config::Model::Backend::OpenSsh::Role::Writer',
+);
 
 
 use Carp ;

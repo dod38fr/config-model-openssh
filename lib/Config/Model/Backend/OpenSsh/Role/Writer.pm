@@ -1,17 +1,18 @@
-package Config::Model::Backend::OpenSsh ;
+package Config::Model::Backend::OpenSsh::Role::Writer ;
+
+use Mouse::Role ;
+
+with 'Config::Model::Backend::OpenSsh::Role::MatchBlock';
+
+requires qw(write_global_comments write_data_and_comments);
 
 use 5.10.1;
 
 use Config::Model 2.128;
 
-use Mouse ;
-extends "Config::Model::Backend::Any" ;
-
 use Carp ;
 use IO::File ;
 use Log::Log4perl 1.11;
-use File::Copy ;
-use File::Path ;
 
 my $logger = Log::Log4perl::get_logger("Backend::OpenSsh");
 
@@ -115,18 +116,18 @@ no Mouse;
 
 1;
 
-# ABSTRACT: Common backend methods for Ssh and Sshd backends
+# ABSTRACT: Role to write OpenSsh config files
 
 __END__
 
 =head1 SYNOPSIS
 
-None. Inherited by L<Config::Model::Backend::OpenSsh::Ssh> and
+None. Consumed by L<Config::Model::Backend::OpenSsh::Ssh> and
 L<Config::Model::Backend::OpenSsh::Sshd>.
 
 =head1 DESCRIPTION
 
-Methods used by both L<Config::Model::Backend::OpenSsh::Ssh> and
+Write methods used by both L<Config::Model::Backend::OpenSsh::Ssh> and
 L<Config::Model::Backend::OpenSsh::Sshd>.
 
 =head1 SEE ALSO
