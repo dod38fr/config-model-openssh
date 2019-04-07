@@ -98,6 +98,8 @@ my %override = (
         IdentityFile => $uniline_list,
         LocalForward => $ssh_forward,
         Match => $ssh_host,
+        StrictHostKeyChecking => 'type=leaf value_type=enum '
+            . 'choice=yes,accept-new,no,off,ask upstream_default=ask',
         KbdInteractiveDevices => $uniline_list,
         PreferredAuthentications => $uniline_list,
         RemoteForward => $ssh_forward,
