@@ -67,6 +67,14 @@ sub read {
     return 1;
 }
 
+sub comma_list {
+    my ($self,$root, $raw_key,$arg,$comment, $check) = @_ ;
+    $logger->debug("assign: $raw_key @$arg # $comment");
+
+    my @list = map { split /\s*,\s*/ } @$arg;
+    $self->assign($root, $raw_key,\@list,$comment, $check);
+}
+
 sub assign {
     my ($self,$root, $raw_key,$arg,$comment, $check) = @_ ;
     $logger->debug("assign: $raw_key @$arg # $comment");
