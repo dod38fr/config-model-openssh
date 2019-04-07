@@ -51,7 +51,11 @@ my @setup = (
         name => 'legacy',
         @setup,
         load_check    => 'skip',
-        log4perl_load_warnings => [ [ 'User', ( warn => qr/deprecated/) x 2, ] ],
+        log4perl_load_warnings => [ [
+            'User',
+            ( warn => qr/deprecated/) x 2,
+            warn => qr/Unknown parameter/,
+        ] ],
     },
     {
         name => 'bad-forward',
@@ -65,7 +69,7 @@ my @setup = (
        @setup,
        load_check    => 'skip',
        log4perl_load_warnings => [
-           [ 'User', ( warn => qr/Unknown check_list item/) , ]
+           [ 'User', ( warn => qr/Unexpected authentication method/) , ]
        ],
     },
 );

@@ -24,6 +24,7 @@ class:
         - IPQoS
         - UseRsh
         - FallBackToRsh
+        - PreferredAuthentications
       IdentityFile:
         cargo:
           warn_if_match:
@@ -36,3 +37,11 @@ class:
         type: leaf
         value_type: uniline
       FallBackToRsh: *deprecated
+      PreferredAuthentications:
+        cargo:
+          warn_unless_match:
+            "^(gssapi-with-mic|hostbased|publickey|keyboard-interactive|password)$":
+              msg: |
+                Unexpected authentication method: 'C<$_>'. Expected one of
+                C<gssapi-with-mic>, C<hostbased>, C<publickey>,
+                C<keyboard-interactive> or C<password>

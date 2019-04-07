@@ -27,6 +27,7 @@ my @dispatch = (
     qr/match/i                 => 'match',
     qr/host\b/i                => 'host',
     qr/(local|remote)forward/i => 'forward',
+    qr/^PreferredAuthentications$/ => 'comma_list',
     qr/localcommand/i          => 'assign',
     qr/\w/                     => 'assign',
 );
