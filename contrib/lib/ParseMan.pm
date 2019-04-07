@@ -84,14 +84,15 @@ sub setup_choice {
 my $ssh_host = 'type=hash index_type=string cargo type=node '
     .'config_class_name=Ssh::HostElement';
 my $ssh_forward = 'type=list cargo type=node config_class_name="Ssh::PortForward"';
+my $uniline = 'type=leaf value_type=uniline';
 my %override = (
     all => {
         IPQoS => 'type=leaf value_type=uniline upstream_default="af21 cs1"',
     },
     ssh => {
         # description is too complex to parse
-        EscapeChar => 'type=leaf value_type=uniline',
-        ControlPersist => 'type=leaf value_type=uniline',
+        EscapeChar => $uniline,
+        ControlPersist => $uniline,
         Host => $ssh_host,
         IdentityFile => 'type=list cargo type=leaf value_type=uniline',
         LocalForward => $ssh_forward,
@@ -101,15 +102,15 @@ my %override = (
         RemoteForward => $ssh_forward,
     },
     sshd => {
-        AuthenticationMethods => 'type=leaf value_type=uniline',
-        AuthorizedKeysFile => 'type=leaf value_type=uniline',
+        AuthenticationMethods => $uniline,
+        AuthorizedKeysFile => $uniline,
         AuthorizedPrincipalsFile => 'type=leaf value_type=uniline upstream_default="none"',
         ChrootDirectory => 'type=leaf value_type=uniline upstream_default="none"',
         ForceCommand => 'type=leaf value_type=uniline upstream_default="none"',
         Subsystem => 'type=hash index_type=string '
             . 'cargo type=leaf value_type=uniline mandatory=1 - - ',
         MaxStartups => 'type=leaf value_type=uniline upstream_default=10',
-        VersionAddendum => 'type=leaf value_type=uniline',
+        VersionAddendum => $uniline,
     }
 );
 
