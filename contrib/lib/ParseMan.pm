@@ -85,6 +85,7 @@ my $ssh_host = 'type=hash index_type=string cargo type=node '
     .'config_class_name=Ssh::HostElement';
 my $ssh_forward = 'type=list cargo type=node config_class_name="Ssh::PortForward"';
 my $uniline = 'type=leaf value_type=uniline';
+my $uniline_list = "type=list cargo $uniline";
 my %override = (
     all => {
         IPQoS => 'type=leaf value_type=uniline upstream_default="af21 cs1"',
@@ -94,11 +95,11 @@ my %override = (
         EscapeChar => $uniline,
         ControlPersist => $uniline,
         Host => $ssh_host,
-        IdentityFile => 'type=list cargo type=leaf value_type=uniline',
+        IdentityFile => $uniline_list,
         LocalForward => $ssh_forward,
         Match => $ssh_host,
-        StrictHostKeyChecking => 'type=leaf value_type=enum choice=yes,accept-new,no,off,ask upstream_default=ask',
-        KbdInteractiveDevices => 'type=list cargo type=leaf value_type=uniline',
+        KbdInteractiveDevices => $uniline_list,
+        PreferredAuthentications => $uniline_list,
         RemoteForward => $ssh_forward,
     },
     sshd => {
