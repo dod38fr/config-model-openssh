@@ -21,7 +21,7 @@ subtest "man page transformation" => sub {
 };
 
 subtest "test generation of model string" => sub {
-    my @unilines = qw/AuthorizedKeysFile AuthorizedKeysCommand/;
+    my @unilines = qw/AuthorizedKeysCommand/;
     my $boolean = sub {
         return "type=leaf value_type=boolean write_as=no,yes upstream_default=$_[0]";
     };
@@ -37,6 +37,7 @@ subtest "test generation of model string" => sub {
         AllowStreamLocalForwarding => $enum->('yes,all,no,local,remote','yes'),
         AllowGroups => 'type=list cargo type=leaf value_type=uniline',
         AllowUsers => 'type=list cargo type=leaf value_type=uniline',
+        AuthorizedKeysFile => 'type=list cargo type=leaf value_type=uniline',
         MaxStartups => 'type=leaf value_type=uniline upstream_default=10',
         X11Forwarding => $boolean->('no'),
     );

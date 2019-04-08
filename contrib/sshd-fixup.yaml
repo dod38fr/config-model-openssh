@@ -28,18 +28,20 @@ class:
         - RhostsRSAAuthentication
         - UsePrivilegeSeparation
         - KeyRegenerationInterval
-      AuthorizedKeysFile2: &deprecated
+      AuthorizedKeysFile2:
         description: This parameter is now ignored by Ssh
+        status: deprecated
+        type: list
+        cargo:
+          type: leaf
+          value_type: uniline
+      AuthorizedKeysFile:
+        migrate_values_from: "- AuthorizedKeysFile2"
+      # deprecated with Ssh protocol V1
+      Protocol: &deprecated
         status: deprecated
         type: leaf
         value_type: uniline
-      AuthorizedKeysFile:
-        migrate_from:
-          formula: "$old"
-          variables:
-            old: "- AuthorizedKeysFile2"
-      # deprecated with Ssh protocol V1
-      Protocol: *deprecated
       RSAAuthentication: *deprecated
       RhostsRSAAuthentication: *deprecated
       UsePrivilegeSeparation: *deprecated

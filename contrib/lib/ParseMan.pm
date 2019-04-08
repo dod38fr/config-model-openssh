@@ -106,7 +106,7 @@ my %override = (
     },
     sshd => {
         AuthenticationMethods => $uniline,
-        AuthorizedKeysFile => $uniline,
+        AuthorizedKeysFile => $uniline_list,
         AuthorizedPrincipalsFile => 'type=leaf value_type=uniline upstream_default="none"',
         ChrootDirectory => 'type=leaf value_type=uniline upstream_default="none"',
         ForceCommand => 'type=leaf value_type=uniline upstream_default="none"',
