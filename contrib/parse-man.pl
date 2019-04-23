@@ -44,7 +44,7 @@ sub create_ssh_model ($meta_root) {
         my $target = $element =~ /^(Host|Match)$/ ? 'Ssh' : 'Ssh::HostElement';
         my $obj = $meta_root->grab(qq!class:$target element:"$element"!);
         $obj->load($load_string);
-        $obj->fetch_element("description")->store(join('', @desc));
+        $obj->fetch_element("description")->store(join('', @desc[1,$#desc]));
     }
 
     $meta_root->load(qq!class:Ssh include="Ssh::HostElement"!);
