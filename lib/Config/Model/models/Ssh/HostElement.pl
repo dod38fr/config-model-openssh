@@ -1,4 +1,7 @@
-[
+use strict;
+use warnings;
+
+return [
   {
     'accept' => [
       '.*',
@@ -1824,14 +1827,14 @@ I</usr/bin/xauth>.',
         'upstream_default' => '/usr/bin/xauth',
         'value_type' => 'uniline'
       },
-      'UseRsh',
+      'FallBackToRsh',
       {
         'description' => 'This parameter is now ignored by Ssh',
         'status' => 'deprecated',
         'type' => 'leaf',
         'value_type' => 'uniline'
       },
-      'FallBackToRsh',
+      'UseRsh',
       {
         'description' => 'This parameter is now ignored by Ssh',
         'status' => 'deprecated',
