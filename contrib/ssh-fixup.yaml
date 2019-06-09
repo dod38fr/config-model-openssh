@@ -19,12 +19,7 @@ class:
           darwin: /etc
   Ssh::HostElement:
     element:
-      __order:
-        - IdentityFile
-        - IPQoS
-        - UseRsh
-        - FallBackToRsh
-        - PreferredAuthentications
+      __skip_order: 1
       IdentityFile:
         cargo:
           warn_if_match:
