@@ -26,7 +26,6 @@ sub parse_html_man_page ($html_man_page) {
     );
     my $config_class;
     my $parameter ;
-    my $param_text ;
 
     my $manpage = sub ($t, $elt) {
         my $man = $elt->first_child('refentrytitle')->text;
@@ -127,7 +126,7 @@ sub create_load_data ($ssh_system, $name, @desc) {
     # trim description (which is not saved in this sub) to simplify
     # the regexp below
     $desc =~ s/[\s\n]+/ /g;
-    my ($default, %choice_hash, $value_type);
+    my (%choice_hash, $value_type);
     my @load_extra;
     my ($set_choice, $get_choices) = setup_choice();
 
