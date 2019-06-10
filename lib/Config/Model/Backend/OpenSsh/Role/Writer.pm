@@ -82,7 +82,9 @@ sub write_node_content {
             $match .= $self->write_all_host_block($elt,$mode) ;
         }
         elsif ($name =~ /^(Local|Remote)Forward$/) {
-            map { $result .= $self->write_forward($_,$mode) ;} $elt->fetch_all() ;
+            foreach ($elt->fetch_all()) {
+                $result .= $self->write_forward($_,$mode);
+            }
         }
         elsif ($type eq 'leaf') {
             my $v = $elt->fetch($mode) ;

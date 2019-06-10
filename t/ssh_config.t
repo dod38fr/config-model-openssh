@@ -41,7 +41,12 @@ $joe_config->spew("Host mine.bar\n\nIdentityFile ~/.ssh/mine\n") ;
 
 sub read_user_ssh {
     my $file = shift ;
-    my @res = grep {/\w/} map { chomp; s/\s+/ /g; $_ ;} grep { not /##/ } $file->lines ;
+    my $clean = sub {
+        my $l = shift;
+        chomp $l;
+        return $l =~ s/\s+/ /gr;
+    };
+    my @res = grep {/\w/} map { $clean->($_) ;} grep { not /##/ } $file->lines ;
     return @res ;
 }
 
