@@ -125,9 +125,9 @@ sub write_forward {
     return $self->write_line($forward_elt->element_name,$line,$forward_elt->annotation) ;
 }
 
-1;
-
 no Mouse;
+
+1;
 
 # ABSTRACT: Backend for ssh configuration files
 
