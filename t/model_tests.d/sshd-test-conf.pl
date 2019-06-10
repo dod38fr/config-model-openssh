@@ -39,5 +39,3 @@ my @tests = (
 return {
     tests => \@tests,
 };
-
-1;
