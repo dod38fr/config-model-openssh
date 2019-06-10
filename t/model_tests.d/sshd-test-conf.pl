@@ -1,5 +1,5 @@
-
-$model_to_test = "Sshd" ;
+use strict;
+use warnings;
 
 my $map = {
    'darwin' => '/etc/sshd_config',
@@ -8,7 +8,7 @@ my $map = {
 
 my $target = $map->{$^O} || $map->{default} ;
 
-@tests = (
+my @tests = (
     { 
         name => 'debian-bug-671367' ,
         setup => {
@@ -35,5 +35,9 @@ my $target = $map->{$^O} || $map->{default} ;
         }
     }
 );
+
+return {
+    tests => \@tests,
+};
 
 1;

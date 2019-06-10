@@ -1,14 +1,11 @@
 use Config::Model::BackendMgr;
+use strict;
+use warnings;
 
 # test loading layered config à la ssh_config
 
-$home_for_test =
-  $^O eq 'darwin'
-  ? '/Users/joe'
-  : '/home/joe';
-Config::Model::BackendMgr::_set_test_home($home_for_test);
-
-$model_to_test = "Ssh";
+my $home_for_test = $^O eq 'darwin' ? '/Users/joe'
+                  :                   '/home/joe';
 
 # Ssh backend excepts both system and user files
 my @setup = (
@@ -21,7 +18,7 @@ my @setup = (
     }
 );
 
-@tests = (
+my @tests = (
     {
         name => 'basic',
         @setup,
@@ -74,4 +71,7 @@ my @setup = (
     },
 );
 
-1;
+return {
+    home_for_test => $home_for_test,
+    tests => \@tests,
+};

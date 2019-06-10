@@ -1,12 +1,9 @@
 use strict;
-
-use Config::Model::BackendMgr;
+use warnings;
 
 # test loading layered config à la ssh_config
 
-$model_to_test = "SystemSsh";
-
-@tests = (
+my @tests = (
     {    # t0
         name  => 'basic',
         setup => {
@@ -28,4 +25,6 @@ $model_to_test = "SystemSsh";
     }
 );
 
-1;
+return {
+    tests => \@tests,
+};
