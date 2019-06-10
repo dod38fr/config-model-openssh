@@ -12,11 +12,11 @@ use utf8;
 use lib qw(lib contrib/lib);
 use experimental qw/postderef signatures/ ;
 use XML::Twig;
+use List::MoreUtils qw/any/;
 
 use Exporter 'import';
 
 our @EXPORT = qw(parse_html_man_page create_load_data create_class_boilerplate);
-
 
 sub parse_html_man_page ($html_man_page) {
 
@@ -165,7 +165,7 @@ sub create_load_data ($ssh_system, $name, @desc) {
         die "Parser error: Cannot create an enum with only once choice ($name): @choices\n",
             "Description is:\n $desc\n";
     }
-    elsif (@choices == 2 and grep { /^yes|no$/ } @choices) {
+    elsif (@choices == 2 and any { /^yes|no$/ } @choices) {
         $value_type = 'boolean';
         push @load_extra, 'write_as=no,yes';
     }
