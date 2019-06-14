@@ -44,7 +44,8 @@ sub read_user_ssh {
     my $clean = sub {
         my $l = shift;
         chomp $l;
-        return $l =~ s/\s+/ /gr;
+        $l =~ s/\s+/ /g;
+        return $l;
     };
     my @res = grep {/\w/} map { $clean->($_) ;} grep { not /##/ } $file->lines ;
     return @res ;
