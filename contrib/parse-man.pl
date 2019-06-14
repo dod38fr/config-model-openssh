@@ -9,7 +9,7 @@ use lib 'contrib/lib';
 
 use IO::Pipe;
 use Path::Tiny;
-use Config::Model 2.134; # load_data __skip_order parameterx
+use Config::Model 2.134; # load_data __skip_order parameter
 use Config::Model::Itself 2.012;
 use Config::Model::Exception;
 use YAML::XS qw/LoadFile/;
