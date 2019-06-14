@@ -1,10 +1,10 @@
+use strict;
+use warnings;
+
 package ParseMan;
 
 # This module is used by parse_man.pl to generate Ssh models
 # and should not be shippped to CPAN
-
-use strict;
-use warnings;
 
 use 5.22.0;
 use utf8;

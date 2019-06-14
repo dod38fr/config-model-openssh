@@ -1,6 +1,7 @@
-package Config::Model::OpenSsh ;
 use strict;
 use warnings;
+
+package Config::Model::OpenSsh ;
 
 use Config::Model 2.111;
 

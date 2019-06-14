@@ -1,3 +1,6 @@
+use strict;
+use warnings;
+
 package Config::Model::Backend::OpenSsh::Role::MatchBlock ;
 
 use Mouse::Role ;
