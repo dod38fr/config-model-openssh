@@ -1,5 +1,11 @@
 {{$NEXT}}
 
+2.7.9.2 2019-06-14
+
+  This release fixes CI/CD bugs:
+  * Work around Dzil bug that break tests on travis.
+  * Fix statement in test not compatible with perl 5.12
+
 v2.7.9.1 2019-06-10
 
   The main visible changes of this release are:
