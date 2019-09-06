@@ -47,6 +47,8 @@ sub parse_html_man_page ($html_man_page) {
         $text =~ s/([\w-]+)\((\d+)\)/L<$1($2)>/g;
         # replace utf-8 quotes with B<>
         $text =~ s/\x{201c}(\w+)\x{201d}/B<$1>/g;
+        # replace single utf-8 quote with ascii quote
+        $text =~ s/\x{2019}/'/g;
         push $data{element_data}{$parameter}->@*, $text if $parameter;
     };
 
