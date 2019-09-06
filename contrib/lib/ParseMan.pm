@@ -45,6 +45,8 @@ sub parse_html_man_page ($html_man_page) {
     my $ssh_data = sub {
         my $text = $_->text();
         $text =~ s/([\w-]+)\((\d+)\)/L<$1($2)>/g;
+        # replace utf-8 quotes with B<>
+        $text =~ s/\x{201c}(\w+)\x{201d}/B<$1>/g;
         push $data{element_data}{$parameter}->@*, $text if $parameter;
     };
 
