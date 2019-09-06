@@ -29,6 +29,11 @@ sub parse_man_page ($man_page_name) {
     return parse_html_man_page(join('',@lines));
 }
 
+sub store_description ($obj, @desc) {
+    shift @desc; # remove keyword
+    $obj->fetch_element("description")->store(join("\n\n", @desc));
+}
+
 sub create_ssh_model ($meta_root) {
     say "Processing ssh documentation...";
 
@@ -44,7 +49,7 @@ sub create_ssh_model ($meta_root) {
         my $target = $element =~ /^(Host|Match)$/ ? 'Ssh' : 'Ssh::HostElement';
         my $obj = $meta_root->grab(qq!class:$target element:"$element"!);
         $obj->load($load_string);
-        $obj->fetch_element("description")->store(join('', @desc[1,$#desc]));
+        store_description($obj, @desc);
     }
 
     $meta_root->load(qq!class:Ssh include="Ssh::HostElement"!);
@@ -67,7 +72,7 @@ sub create_sshd_model ($meta_root) {
         my $target = $is_match->{$element} ? 'Sshd::MatchElement' : 'Sshd';
         my $obj = $meta_root->grab(qq!class:$target element:"$element"!);
         $obj->load($load_string);
-        $obj->fetch_element("description")->store(join('', @desc));
+        store_description($obj, @desc);
     }
 
     $meta_root->load(qq!class:Sshd include="Sshd::MatchElement"!);
