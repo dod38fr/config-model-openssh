@@ -1,12 +1,22 @@
 {{$NEXT}}
 
+2.8.0.1 2019-09-08
+
+  Update:
+    * Support for OpenSsh 8.0
+
+  Bug fix related to generation of OpenSsh model:
+    * fix storage of description text
+    * change quoted text to text with bold font
+    * replace utf-8 quote with ascii quote
+
 2.7.9.2 2019-06-14
 
   This release fixes CI/CD bugs:
   * Work around Dzil bug that break tests on travis.
   * Fix statement in test not compatible with perl 5.12
 
-v2.7.9.1 2019-06-10
+2.7.9.1 2019-06-10
 
   The main visible changes of this release are:
   * Support for OpenSsh 7.9
