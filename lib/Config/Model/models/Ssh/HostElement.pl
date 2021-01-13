@@ -20,8 +20,8 @@ by L<parse-man.pl|https://github.com/dod38fr/config-model-openssh/contrib/parse-
       {
         'choice' => [
           'yes',
-          'confirm',
           'ask',
+          'confirm',
           'no'
         ],
         'description' => 'Specifies whether keys should
@@ -34,9 +34,14 @@ SSH_ASKPASS program before adding a key (see L<ssh-add(1)> for
 details). If this option is set to B<confirm>, each use
 of the key must be confirmed, as if the B<-c> option was
 specified to L<ssh-add(1)>. If this option is set to B<no>,
-no keys are added to the agent. The argument must be
-B<yes>, B<confirm>, B<ask>, or B<no> (the
-default).',
+no keys are added to the agent. Alternately, this option may
+be specified as a time interval using the format described
+in the I<TIME FORMATS> section of L<sshd_config(5)> to
+specify the key\'s lifetime in L<ssh-agent(1)>, after
+which it will automatically be removed. The argument must be
+B<no> (the default), B<yes>, B<confirm>
+(optionally followed by a time interval), B<ask> or a
+time interval.',
         'type' => 'leaf',
         'upstream_default' => 'no',
         'value_type' => 'enum'
@@ -58,12 +63,13 @@ IPv6 only).',
       },
       'BatchMode',
       {
-        'description' => 'If set to B<yes>,
-passphrase/password querying will be disabled. In addition,
-the B<ServerAliveInterval> option will be set to 300
-seconds by default (Debian-specific). This option is useful
-in scripts and other batch jobs where no user is present to
-supply the password, and where it is desirable to detect a
+        'description' => 'If set to B<yes>, user
+interaction such as password prompts and host key
+confirmation requests will be disabled. In addition, the
+B<ServerAliveInterval> option will be set to 300 seconds
+by default (Debian-specific). This option is useful in
+scripts and other batch jobs where no user is present to
+interact with L<ssh(1)>, and where it is desirable to detect a
 broken network swiftly. The argument must be B<yes> or
 B<no> (the default).',
         'type' => 'leaf',
@@ -179,7 +185,7 @@ or "*.c.example.com" domains.',
 allowed for signing of certificates by certificate
 authorities (CAs). The default is:
 
-ecdsa-sha2-nistp256.ecdsa-sha2-nistp384,ecdsa-sha2-nistp521,
+ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,ecdsa-sha2-nistp521,
 
 ssh-ed25519,rsa-sha2-512,rsa-sha2-256,ssh-rsa
 
@@ -196,12 +202,13 @@ user\'s certificate is read. A corresponding private
 key must be provided separately in order to use this
 certificate either from an B<IdentityFile> directive or
 B<-i> flag to L<ssh(1)>, via L<ssh-agent(1)>, or via a
-B<PKCS11Provider>.
+B<PKCS11Provider> or B<SecurityKeyProvider>.
 
 Arguments to
 B<CertificateFile> may use the tilde syntax to refer to
-a user\'s home directory or the tokens described in the
-I<TOKENS> section.
+a user\'s home directory, the tokens described in the
+I<TOKENS> section and environment variables as described
+in the I<ENVIRONMENT VARIABLES> section.
 
 It is possible
 to have multiple certificate files specified in
@@ -246,12 +253,15 @@ B<no>, the check will not be executed.',
       {
         'description' => 'Specifies the ciphers allowed
 and their order of preference. Multiple ciphers must be
-comma-separated. If the specified value begins with a
+comma-separated. If the specified list begins with a
 \'+\' character, then the specified ciphers will
 be appended to the default set instead of replacing them. If
-the specified value begins with a \'-\' character,
+the specified list begins with a \'-\' character,
 then the specified ciphers (including wildcards) will be
-removed from the default set instead of replacing them.
+removed from the default set instead of replacing them. If
+the specified list begins with a \'^\' character,
+then the specified ciphers will be placed at the head of the
+default set.
 
 The supported
 ciphers are:
@@ -325,9 +335,10 @@ connection sometimes fails. The default is 1.',
       {
         'description' => 'Specifies the timeout (in
 seconds) used when connecting to the SSH server, instead of
-using the default system TCP timeout. This value is used
-only when the target is down or really unreachable, not when
-it refuses the connection.',
+using the default system TCP timeout. This timeout is
+applied both to establishing the connection and to
+performing the initial SSH protocol handshake and key
+exchange.',
         'type' => 'leaf',
         'value_type' => 'integer'
       },
@@ -381,13 +392,14 @@ socket used for connection sharing as described in the
 B<ControlMaster> section above or the string B<none>
 to disable connection sharing. Arguments to
 B<ControlPath> may use the tilde syntax to refer to a
-user\'s home directory or the tokens described in the
-I<TOKENS> section. It is recommended that any
-B<ControlPath> used for opportunistic connection sharing
-include at least %h, %p, and %r (or alternatively %C) and be
-placed in a directory that is not writable by other users.
-This ensures that shared connections are uniquely
-identified.',
+user\'s home directory, the tokens described in the
+I<TOKENS> section and environment variables as described
+in the I<ENVIRONMENT VARIABLES> section. It is
+recommended that any B<ControlPath> used for
+opportunistic connection sharing include at least %h, %p,
+and %r (or alternatively %C) and be placed in a directory
+that is not writable by other users. This ensures that
+shared connections are uniquely identified.',
         'type' => 'leaf',
         'value_type' => 'uniline'
       },
@@ -397,16 +409,17 @@ identified.',
 B<ControlMaster>, specifies that the master connection
 should remain open in the background (waiting for future
 client connections) after the initial client connection has
-been closed. If set to B<no>, then the master connection
-will not be placed into the background, and will close as
-soon as the initial client connection is closed. If set to
-B<yes> or 0, then the master connection will remain in
-the background indefinitely (until killed or closed via a
-mechanism such as the "ssh -O exit"). If set to a
-time in seconds, or a time in any of the formats documented
-in L<sshd_config(5)>, then the backgrounded master connection
-will automatically terminate after it has remained idle
-(with no client connections) for the specified time.',
+been closed. If set to B<no> (the default), then the
+master connection will not be placed into the background,
+and will close as soon as the initial client connection is
+closed. If set to B<yes> or 0, then the master
+connection will remain in the background indefinitely (until
+killed or closed via a mechanism such as the "ssh -O
+exit"). If set to a time in seconds, or a time in any
+of the formats documented in L<sshd_config(5)>, then the
+backgrounded master connection will automatically terminate
+after it has remained idle (with no client connections) for
+the specified time.',
         'type' => 'leaf',
         'value_type' => 'uniline'
       },
@@ -508,8 +521,11 @@ B<md5> and B<sha256> (the default).',
       {
         'description' => 'Specifies whether the
 connection to the authentication agent (if any) will be
-forwarded to the remote machine. The argument must be
-B<yes> or B<no> (the default).
+forwarded to the remote machine. The argument may be
+B<yes>, B<no> (the default), an explicit path to an
+agent socket or the name of an environment variable
+(beginning with \'$\') in which to find the
+path.
 
 Agent
 forwarding should be enabled with caution. Users with the
@@ -735,9 +751,8 @@ gss-nistp256-sha256-,
 gss-curve25519-sha256-
 
 The default is
-\x{201c}gss-gex-sha1-,gss-group14-sha1-\x{201d}. This option
-only applies to protocol version 2 connections using
-GSSAPI.",
+\x{201c}gss-group14-sha256-,gss-group16-sha512-,gss-nistp256-sha256-,gss-curve25519-sha256-,gss-gex-sha1-,gss-group14-sha1-\x{201d}.
+This option only applies to connections using GSSAPI.",
         'type' => 'leaf',
         'value_type' => 'uniline'
       },
@@ -746,9 +761,9 @@ GSSAPI.",
         'description' => 'Indicates that L<ssh(1)> should
 hash host names and addresses when they are added to
 I<~/.ssh/known_hosts>. These hashed names may be used
-normally by L<ssh(1)> and L<sshd(8)>, but they do not reveal
-identifying information should the file\'s contents be
-disclosed. The default is B<no>. Note that existing
+normally by L<ssh(1)> and L<sshd(8)>, but they do not visually
+reveal identifying information if the file\'s contents
+are disclosed. The default is B<no>. Note that existing
 names and addresses in known hosts files will not be
 converted automatically, but may be manually hashed using
 L<ssh-keygen(1)>. Use of this option may break facilities such
@@ -780,27 +795,32 @@ argument must be B<yes> or B<no> (the default).',
         'description' => 'Specifies the key types that
 will be used for hostbased authentication as a
 comma-separated list of patterns. Alternately if the
-specified value begins with a \'+\' character,
-then the specified key types will be appended to the default
-set instead of replacing them. If the specified value begins
-with a \'-\' character, then the specified key
-types (including wildcards) will be removed from the default
-set instead of replacing them. The default for this option
-is:
+specified list begins with a \'+\' character, then
+the specified key types will be appended to the default set
+instead of replacing them. If the specified list begins with
+a \'-\' character, then the specified key types
+(including wildcards) will be removed from the default set
+instead of replacing them. If the specified list begins with
+a \'^\' character, then the specified key types
+will be placed at the head of the default set. The default
+for this option is:
 
 ecdsa-sha2-nistp256-cert-v01@openssh.com,
 
 ecdsa-sha2-nistp384-cert-v01@openssh.com, 
 ecdsa-sha2-nistp521-cert-v01@openssh.com, 
+sk-ecdsa-sha2-nistp256-cert-v01@openssh.com, 
 ssh-ed25519-cert-v01@openssh.com, 
-
-rsa-sha2-512-cert-v01@openssh.com,rsa-sha2-256-cert-v01@openssh.com,
-
+sk-ssh-ed25519-cert-v01@openssh.com, 
+rsa-sha2-512-cert-v01@openssh.com, 
+rsa-sha2-256-cert-v01@openssh.com, 
 ssh-rsa-cert-v01@openssh.com, 
 
 ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,ecdsa-sha2-nistp521,
 
-ssh-ed25519,rsa-sha2-512,rsa-sha2-256,ssh-rsa
+sk-ecdsa-sha2-nistp256@openssh.com, 
+ssh-ed25519,sk-ssh-ed25519@openssh.com, 
+rsa-sha2-512,rsa-sha2-256,ssh-rsa
 
 The B<-Q>
 option of L<ssh(1)> may be used to list supported key
@@ -812,27 +832,32 @@ types.',
       {
         'description' => 'Specifies the host key
 algorithms that the client wants to use in order of
-preference. Alternately if the specified value begins with a
+preference. Alternately if the specified list begins with a
 \'+\' character, then the specified key types will
 be appended to the default set instead of replacing them. If
-the specified value begins with a \'-\' character,
+the specified list begins with a \'-\' character,
 then the specified key types (including wildcards) will be
-removed from the default set instead of replacing them. The
-default for this option is:
+removed from the default set instead of replacing them. If
+the specified list begins with a \'^\' character,
+then the specified key types will be placed at the head of
+the default set. The default for this option is:
 
 ecdsa-sha2-nistp256-cert-v01@openssh.com,
 
 ecdsa-sha2-nistp384-cert-v01@openssh.com, 
 ecdsa-sha2-nistp521-cert-v01@openssh.com, 
+sk-ecdsa-sha2-nistp256-cert-v01@openssh.com, 
 ssh-ed25519-cert-v01@openssh.com, 
-
-rsa-sha2-512-cert-v01@openssh.com,rsa-sha2-256-cert-v01@openssh.com,
-
+sk-ssh-ed25519-cert-v01@openssh.com, 
+rsa-sha2-512-cert-v01@openssh.com, 
+rsa-sha2-256-cert-v01@openssh.com, 
 ssh-rsa-cert-v01@openssh.com, 
 
 ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,ecdsa-sha2-nistp521,
 
-ssh-ed25519,rsa-sha2-512,rsa-sha2-256,ssh-rsa
+sk-ecdsa-sha2-nistp256@openssh.com, 
+ssh-ed25519,sk-ssh-ed25519@openssh.com, 
+rsa-sha2-512,rsa-sha2-256,ssh-rsa
 
 If hostkeys are
 known for the destination host then this default is modified
@@ -840,7 +865,7 @@ to prefer their algorithms.
 
 The list of
 available key types may also be obtained using "ssh -Q
-key".',
+HostKeyAlgorithms".',
         'type' => 'leaf',
         'value_type' => 'uniline'
       },
@@ -855,14 +880,14 @@ a single host.',
         'type' => 'leaf',
         'value_type' => 'uniline'
       },
-      'HostName',
+      'Hostname',
       {
         'description' => 'Specifies the real host name to
 log into. This can be used to specify nicknames or
-abbreviations for hosts. Arguments to B<HostName> accept
+abbreviations for hosts. Arguments to B<Hostname> accept
 the tokens described in the I<TOKENS> section. Numeric
 IP addresses are also permitted (both on the command line
-and in B<HostName> specifications). The default is the
+and in B<Hostname> specifications). The default is the
 name given on the command line.',
         'type' => 'leaf',
         'value_type' => 'uniline'
@@ -870,13 +895,15 @@ name given on the command line.',
       'IdentitiesOnly',
       {
         'description' => 'Specifies that L<ssh(1)> should
-only use the authentication identity and certificate files
+only use the configured authentication identity and
+certificate files (either the default files, or those
 explicitly configured in the B<ssh_config> files or
-passed on the L<ssh(1)> command-line, even if L<ssh-agent(1)> or a
-B<PKCS11Provider> offers more identities. The argument
-to this keyword must be B<yes> or B<no> (the
-default). This option is intended for situations where
-ssh-agent offers many different identities.',
+passed on the L<ssh(1)> command-line), even if L<ssh-agent(1)> or
+a B<PKCS11Provider> or B<SecurityKeyProvider> offers
+more identities. The argument to this keyword must be
+B<yes> or B<no> (the default). This option is
+intended for situations where ssh-agent offers many
+different identities.',
         'type' => 'leaf',
         'upstream_default' => 'no',
         'value_type' => 'boolean',
@@ -904,8 +931,9 @@ of the socket.
 
 Arguments to
 B<IdentityAgent> may use the tilde syntax to refer to a
-user\'s home directory or the tokens described in the
-I<TOKENS> section.',
+user\'s home directory, the tokens described in the
+I<TOKENS> section and environment variables as described
+in the I<ENVIRONMENT VARIABLES> section.',
         'type' => 'leaf',
         'value_type' => 'uniline'
       },
@@ -922,9 +950,11 @@ I<TOKENS> section.',
           }
         },
         'description' => 'Specifies a file from which the
-user\'s DSA, ECDSA, Ed25519 or RSA authentication
+user\'s DSA, ECDSA, authenticator-hosted ECDSA,
+Ed25519, authenticator-hosted Ed25519 or RSA authentication
 identity is read. The default is I<~/.ssh/id_dsa>,
-I<~/.ssh/id_ecdsa>, I<~/.ssh/id_ed25519> and
+I<~/.ssh/id_ecdsa>, I<~/.ssh/id_ecdsa_sk>,
+I<~/.ssh/id_ed25519>, I<~/.ssh/id_ed25519_sk> and
 I<~/.ssh/id_rsa>. Additionally, any identities
 represented by the authentication agent will be used for
 authentication unless B<IdentitiesOnly> is set. If no
@@ -977,7 +1007,8 @@ applied to unknown options that appear before it.',
 configuration file(s). Multiple pathnames may be specified
 and each pathname may contain L<glob(7)> wildcards and, for
 user configurations, shell-like \'~\' references
-to user home directories. Files without absolute paths are
+to user home directories. Wildcards will be expanded and
+processed in lexical order. Files without absolute paths are
 assumed to be in I<~/.ssh> if included in a user
 configuration file or I</etc/ssh> if included from the
 system configuration file. B<Include> directive may
@@ -1015,16 +1046,16 @@ B<af21>, B<af22>, B<af23>, B<af31>,
 B<af32>, B<af33>, B<af41>, B<af42>,
 B<af43>, B<cs0>, B<cs1>, B<cs2>, B<cs3>,
 B<cs4>, B<cs5>, B<cs6>, B<cs7>, B<ef>,
-B<lowdelay>, B<throughput>, B<reliability>, a
-numeric value, or B<none> to use the operating system
-default. This option may take one or two arguments,
-separated by whitespace. If one argument is specified, it is
-used as the packet class unconditionally. If two values are
-specified, the first is automatically selected for
-interactive sessions and the second for non-interactive
-sessions. The default is B<lowdelay> for interactive
-sessions and B<throughput> for non-interactive
-sessions.',
+B<le>, B<lowdelay>, B<throughput>,
+B<reliability>, a numeric value, or B<none> to use
+the operating system default. This option may take one or
+two arguments, separated by whitespace. If one argument is
+specified, it is used as the packet class unconditionally.
+If two values are specified, the first is automatically
+selected for interactive sessions and the second for
+non-interactive sessions. The default is B<lowdelay> for
+interactive sessions and B<throughput> for
+non-interactive sessions.',
         'type' => 'leaf',
         'upstream_default' => 'af21 cs1',
         'value_type' => 'uniline'
@@ -1061,13 +1092,15 @@ B<pam>.',
       {
         'description' => 'Specifies the available KEX
 (Key Exchange) algorithms. Multiple algorithms must be
-comma-separated. Alternately if the specified value begins
-with a \'+\' character, then the specified methods
-will be appended to the default set instead of replacing
-them. If the specified value begins with a \'-\'
-character, then the specified methods (including wildcards)
-will be removed from the default set instead of replacing
-them. The default is:
+comma-separated. If the specified list begins with a
+\'+\' character, then the specified methods will
+be appended to the default set instead of replacing them. If
+the specified list begins with a \'-\' character,
+then the specified methods (including wildcards) will be
+removed from the default set instead of replacing them. If
+the specified list begins with a \'^\' character,
+then the specified methods will be placed at the head of the
+default set. The default is:
 
 curve25519-sha256,curve25519-sha256@libssh.org,
 
@@ -1076,8 +1109,7 @@ ecdh-sha2-nistp256,ecdh-sha2-nistp384,ecdh-sha2-nistp521,
 diffie-hellman-group-exchange-sha256, 
 diffie-hellman-group16-sha512, 
 diffie-hellman-group18-sha512, 
-diffie-hellman-group14-sha256, 
-diffie-hellman-group14-sha1
+diffie-hellman-group14-sha256
 
 The list of
 available key exchange algorithms may also be obtained using
@@ -1114,10 +1146,14 @@ enabled.',
         'description' => 'Specifies that a TCP port on
 the local machine be forwarded over the secure channel to
 the specified host and port from the remote machine. The
-first argument must be [
+first argument specifies the listener and may be [
 
-I<bind_address>: ]I<port> and the second
-argument must be I<host>:I<hostport>. IPv6 addresses
+I<bind_address>: ]I<port> or a Unix domain
+socket path. The second argument is the destination and may
+be I<host>:I<hostport> or a Unix domain socket path
+if the remote host supports it.
+
+IPv6 addresses
 can be specified by enclosing addresses in square brackets.
 Multiple forwardings may be specified, and additional
 forwardings can be given on the command line. Only the
@@ -1129,7 +1165,10 @@ specific address. The I<bind_address> of
 B<localhost> indicates that the listening port be bound
 for local use only, while an empty address or
 \'*\' indicates that the port should be available
-from all interfaces.',
+from all interfaces. Unix domain socket paths may use the
+tokens described in the I<TOKENS> section and
+environment variables as described in the I<ENVIRONMENT
+VARIABLES> section.',
         'type' => 'list'
       },
       'LogLevel',
@@ -1161,12 +1200,15 @@ levels of verbose output.',
 MAC (message authentication code) algorithms in order of
 preference. The MAC algorithm is used for data integrity
 protection. Multiple algorithms must be comma-separated. If
-the specified value begins with a \'+\' character,
+the specified list begins with a \'+\' character,
 then the specified algorithms will be appended to the
-default set instead of replacing them. If the specified
-value begins with a \'-\' character, then the
-specified algorithms (including wildcards) will be removed
-from the default set instead of replacing them.
+default set instead of replacing them. If the specified list
+begins with a \'-\' character, then the specified
+algorithms (including wildcards) will be removed from the
+default set instead of replacing them. If the specified list
+begins with a \'^\' character, then the specified
+algorithms will be placed at the head of the default
+set.
 
 The algorithms
 that contain "-etm" calculate the MAC after
@@ -1299,10 +1341,11 @@ anything, and should read from its standard input and write
 to its standard output. It should eventually connect an
 L<sshd(8)> server running on some machine, or execute B<sshd
 -i> somewhere. Host key management will be done using the
-HostName of the host being connected (defaulting to the name
-typed by the user). Setting the command to B<none>
-disables this option entirely. Note that B<CheckHostIP>
-is not available for connects with a proxy command.
+B<Hostname> of the host being connected (defaulting to
+the name typed by the user). Setting the command to
+B<none> disables this option entirely. Note that
+B<CheckHostIP> is not available for connects with a
+proxy command.
 
 This directive
 is useful in conjunction with L<nc(1)> and its proxy support.
@@ -1362,32 +1405,37 @@ data. The default is B<no>.',
       {
         'description' => 'Specifies the key types that
 will be used for public key authentication as a
-comma-separated list of patterns. Alternately if the
-specified value begins with a \'+\' character,
-then the key types after it will be appended to the default
-instead of replacing it. If the specified value begins with
-a \'-\' character, then the specified key types
+comma-separated list of patterns. If the specified list
+begins with a \'+\' character, then the key types
+after it will be appended to the default instead of
+replacing it. If the specified list begins with a
+\'-\' character, then the specified key types
 (including wildcards) will be removed from the default set
-instead of replacing them. The default for this option
-is:
+instead of replacing them. If the specified list begins with
+a \'^\' character, then the specified key types
+will be placed at the head of the default set. The default
+for this option is:
 
 ecdsa-sha2-nistp256-cert-v01@openssh.com,
 
 ecdsa-sha2-nistp384-cert-v01@openssh.com, 
 ecdsa-sha2-nistp521-cert-v01@openssh.com, 
+sk-ecdsa-sha2-nistp256-cert-v01@openssh.com, 
 ssh-ed25519-cert-v01@openssh.com, 
-
-rsa-sha2-512-cert-v01@openssh.com,rsa-sha2-256-cert-v01@openssh.com,
-
+sk-ssh-ed25519-cert-v01@openssh.com, 
+rsa-sha2-512-cert-v01@openssh.com, 
+rsa-sha2-256-cert-v01@openssh.com, 
 ssh-rsa-cert-v01@openssh.com, 
 
 ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,ecdsa-sha2-nistp521,
 
-ssh-ed25519,rsa-sha2-512,rsa-sha2-256,ssh-rsa
+sk-ecdsa-sha2-nistp256@openssh.com, 
+ssh-ed25519,sk-ssh-ed25519@openssh.com, 
+rsa-sha2-512,rsa-sha2-256,ssh-rsa
 
 The list of
 available key types may also be obtained using "ssh -Q
-key".',
+PubkeyAcceptedKeyTypes".',
         'type' => 'leaf',
         'value_type' => 'uniline'
       },
@@ -1416,7 +1464,7 @@ indicate Kilobytes, Megabytes, or Gigabytes, respectively.
 The default is between \'1G\' and
 \'4G\', depending on the cipher. The optional
 second value is specified in seconds and may use any of the
-units documented in the I<TIME FORMATS> section of
+units documented in the TIME FORMATS section of
 L<sshd_config(5)>. The default value for B<RekeyLimit> is
 B<default none>, which means that rekeying is performed
 after the cipher\'s default amount of data has been
@@ -1446,21 +1494,25 @@ the remote machine be forwarded over the secure channel. The
 remote port may either be forwarded to a specified host and
 port from the local machine, or may act as a SOCKS 4/5 proxy
 that allows a remote client to connect to arbitrary
-destinations from the local machine. The first argument must
-be [
+destinations from the local machine. The first argument is
+the listening specification and may be [
 
-I<bind_address>: ]I<port> If forwarding to a
+I<bind_address>: ]I<port> or, if the remote host
+supports it, a Unix domain socket path. If forwarding to a
 specific destination then the second argument must be
-I<host>:I<hostport>, otherwise if no destination
-argument is specified then the remote forwarding will be
-established as a SOCKS proxy.
+I<host>:I<hostport> or a Unix domain socket path,
+otherwise if no destination argument is specified then the
+remote forwarding will be established as a SOCKS proxy.
 
 IPv6 addresses
 can be specified by enclosing addresses in square brackets.
 Multiple forwardings may be specified, and additional
 forwardings can be given on the command line. Privileged
 ports can be forwarded only when logging in as root on the
-remote machine.
+remote machine. Unix domain socket paths may use the tokens
+described in the I<TOKENS> section and environment
+variables as described in the I<ENVIRONMENT VARIABLES>
+section.
 
 If the
 I<port> argument is 0, the listen port will be
@@ -1509,6 +1561,20 @@ L<ssh-keygen(1)>.',
         'type' => 'leaf',
         'value_type' => 'uniline'
       },
+      'SecurityKeyProvider',
+      {
+        'description' => 'Specifies a path to a library
+that will be used when loading any FIDO authenticator-hosted
+keys, overriding the default of using the built-in USB HID
+support.
+
+If the
+specified value begins with a \'$\' character,
+then it will be treated as an environment variable
+containing the path to the library.',
+        'type' => 'leaf',
+        'value_type' => 'uniline'
+      },
       'SendEnv',
       {
         'cargo' => {
@@ -1550,7 +1616,7 @@ encrypted channel and therefore will not be spoofable. The
 TCP keepalive option enabled by B<TCPKeepAlive> is
 spoofable. The server alive mechanism is valuable when the
 client or server depend on knowing when a connection has
-become inactive.
+become unresponsive.
 
 The default
 value is 3. If, for example, B<ServerAliveInterval> (see
@@ -1758,24 +1824,30 @@ B<any>. The default is B<any:any>.',
 accept notifications of additional hostkeys from the server
 sent after authentication has completed and add them to
 B<UserKnownHostsFile>. The argument must be B<yes>,
-B<no> (the default) or B<ask>. Enabling this option
-allows learning alternate hostkeys for a server and supports
-graceful key rotation by allowing a server to send
-replacement public keys before old ones are removed.
-Additional hostkeys are only accepted if the key used to
-authenticate the host was already trusted or explicitly
-accepted by the user. If B<UpdateHostKeys> is set to
-B<ask>, then the user is asked to confirm the
-modifications to the known_hosts file. Confirmation is
-currently incompatible with B<ControlPersist>, and will
-be disabled if it is enabled.
+B<no> or B<ask>. This option allows learning
+alternate hostkeys for a server and supports graceful key
+rotation by allowing a server to send replacement public
+keys before old ones are removed. Additional hostkeys are
+only accepted if the key used to authenticate the host was
+already trusted or explicitly accepted by the user.
+
+B<UpdateHostKeys>
+is enabled by default if the user has not overridden the
+default B<UserKnownHostsFile> setting, otherwise
+B<UpdateHostKeys> will be set to B<ask>.
+
+If
+B<UpdateHostKeys> is set to B<ask>, then the user is
+asked to confirm the modifications to the known_hosts file.
+Confirmation is currently incompatible with
+B<ControlPersist>, and will be disabled if it is
+enabled.
 
 Presently, only
 L<sshd(8)> from OpenSSH 6.8 and greater support the
 "hostkeys@openssh.com" protocol extension used to
 inform the client of all the server\'s hostkeys.',
         'type' => 'leaf',
-        'upstream_default' => 'no',
         'value_type' => 'enum'
       },
       'User',
@@ -1792,8 +1864,11 @@ line.',
       {
         'description' => 'Specifies one or more files to
 use for the user host key database, separated by whitespace.
-The default is I<~/.ssh/known_hosts>,
-I<~/.ssh/known_hosts2>.',
+Each filename may use tilde notation to refer to the
+user\'s home directory, the tokens described in the
+I<TOKENS> section and environment variables as described
+in the I<ENVIRONMENT VARIABLES> section. The default is
+I<~/.ssh/known_hosts>, I<~/.ssh/known_hosts2>.',
         'type' => 'leaf',
         'value_type' => 'uniline'
       },
@@ -1858,7 +1933,7 @@ I</usr/bin/xauth>.',
         'value_type' => 'uniline'
       }
     ],
-    'generated_by' => 'parse-man.pl from ssh_system  8.0p1 doc',
+    'generated_by' => 'parse-man.pl from ssh_system  8.4p1 doc',
     'license' => 'LGPL2',
     'name' => 'Ssh::HostElement'
   }

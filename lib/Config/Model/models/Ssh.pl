@@ -107,7 +107,7 @@ in system-wide B<ssh_config> files).',
         'type' => 'hash'
       }
     ],
-    'generated_by' => 'parse-man.pl from ssh_system  8.0p1 doc',
+    'generated_by' => 'parse-man.pl from ssh_system  8.4p1 doc',
     'include' => [
       'Ssh::HostElement'
     ],

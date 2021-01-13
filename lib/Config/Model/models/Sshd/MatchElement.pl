@@ -66,9 +66,9 @@ specified, login is allowed only for users whose primary
 group or supplementary group list matches one of the
 patterns. Only group names are valid; a numerical group ID
 is not recognized. By default, login is allowed for all
-groups. The allow/deny directives are processed in the
-following order: B<DenyUsers>, B<AllowUsers>,
-B<DenyGroups>, and finally B<AllowGroups>.
+groups. The allow/deny groups directives are processed in
+the following order: B<DenyGroups>,
+B<AllowGroups>.
 
 See PATTERNS in
 L<ssh_config(5)> for more information on patterns.',
@@ -134,10 +134,9 @@ all users. If the pattern takes the form USER@HOST then USER
 and HOST are separately checked, restricting logins to
 particular users from particular hosts. HOST criteria may
 additionally contain addresses to match in CIDR
-address/masklen format. The allow/deny directives are
+address/masklen format. The allow/deny users directives are
 processed in the following order: B<DenyUsers>,
-B<AllowUsers>, B<DenyGroups>, and finally
-B<AllowGroups>.
+B<AllowUsers>.
 
 See PATTERNS in
 L<ssh_config(5)> for more information on patterns.',
@@ -207,10 +206,9 @@ then the username of the target user is used.
 The program
 should produce on standard output zero or more lines of
 authorized_keys output (see I<AUTHORIZED_KEYS> in
-L<sshd(8)>). If a key supplied by B<AuthorizedKeysCommand>
-does not successfully authenticate and authorize the user
-then public key authentication continues using the usual
-B<AuthorizedKeysFile> files. By default, no
+L<sshd(8)>). B<AuthorizedKeysCommand> is tried after the
+usual B<AuthorizedKeysFile> files and will not be
+executed if a matching key is found there. By default, no
 B<AuthorizedKeysCommand> is run.',
         'type' => 'leaf',
         'value_type' => 'uniline'
@@ -235,16 +233,16 @@ refuse to start.',
         },
         'description' => 'Specifies the file that
 contains the public keys used for user authentication. The
-format is described in the I<AUTHORIZED_KEYS FILE
-FORMAT> section of L<sshd(8)>. Arguments to
-B<AuthorizedKeysFile> accept the tokens described in the
-I<TOKENS> section. After expansion,
-B<AuthorizedKeysFile> is taken to be an absolute path or
-one relative to the user\'s home directory. Multiple
-files may be listed, separated by whitespace. Alternately
-this option may be set to B<none> to skip checking for
-user keys in files. The default is
-".ssh/authorized_keys .ssh/authorized_keys2".',
+format is described in the AUTHORIZED_KEYS FILE FORMAT
+section of L<sshd(8)>. Arguments to B<AuthorizedKeysFile>
+accept the tokens described in the I<TOKENS> section.
+After expansion, B<AuthorizedKeysFile> is taken to be an
+absolute path or one relative to the user\'s home
+directory. Multiple files may be listed, separated by
+whitespace. Alternately this option may be set to
+B<none> to skip checking for user keys in files. The
+default is ".ssh/authorized_keys
+.ssh/authorized_keys2".',
         'migrate_values_from' => '- AuthorizedKeysFile2',
         'type' => 'list'
       },
@@ -375,13 +373,15 @@ messages are sent through the encrypted channel and
 therefore will not be spoofable. The TCP keepalive option
 enabled by B<TCPKeepAlive> is spoofable. The client
 alive mechanism is valuable when the client or server depend
-on knowing when a connection has become inactive.
+on knowing when a connection has become unresponsive.
 
 The default
 value is 3. If B<ClientAliveInterval> is set to 15, and
 B<ClientAliveCountMax> is left at the default,
 unresponsive SSH clients will be disconnected after
-approximately 45 seconds.',
+approximately 45 seconds. Setting a zero
+B<ClientAliveCountMax> disables connection
+termination.',
         'type' => 'leaf',
         'upstream_default' => '3',
         'value_type' => 'integer'
@@ -409,10 +409,9 @@ a list of group name patterns, separated by spaces. Login is
 disallowed for users whose primary group or supplementary
 group list matches one of the patterns. Only group names are
 valid; a numerical group ID is not recognized. By default,
-login is allowed for all groups. The allow/deny directives
-are processed in the following order: B<DenyUsers>,
-B<AllowUsers>, B<DenyGroups>, and finally
-B<AllowGroups>.
+login is allowed for all groups. The allow/deny groups
+directives are processed in the following order:
+B<DenyGroups>, B<AllowGroups>.
 
 See PATTERNS in
 L<ssh_config(5)> for more information on patterns.',
@@ -433,9 +432,8 @@ the pattern takes the form USER@HOST then USER and HOST are
 separately checked, restricting logins to particular users
 from particular hosts. HOST criteria may additionally
 contain addresses to match in CIDR address/masklen format.
-The allow/deny directives are processed in the following
-order: B<DenyUsers>, B<AllowUsers>,
-B<DenyGroups>, and finally B<AllowGroups>.
+The allow/deny users directives are processed in the
+following order: B<DenyUsers>, B<AllowUsers>.
 
 See PATTERNS in
 L<ssh_config(5)> for more information on patterns.',
@@ -500,32 +498,37 @@ B<no>.',
       {
         'description' => 'Specifies the key types that
 will be accepted for hostbased authentication as a list of
-comma-separated patterns. Alternately if the specified value
+comma-separated patterns. Alternately if the specified list
 begins with a \'+\' character, then the specified
 key types will be appended to the default set instead of
-replacing them. If the specified value begins with a
+replacing them. If the specified list begins with a
 \'-\' character, then the specified key types
 (including wildcards) will be removed from the default set
-instead of replacing them. The default for this option
-is:
+instead of replacing them. If the specified list begins with
+a \'^\' character, then the specified key types
+will be placed at the head of the default set. The default
+for this option is:
 
 ecdsa-sha2-nistp256-cert-v01@openssh.com,
 
 ecdsa-sha2-nistp384-cert-v01@openssh.com, 
 ecdsa-sha2-nistp521-cert-v01@openssh.com, 
+sk-ecdsa-sha2-nistp256-cert-v01@openssh.com, 
 ssh-ed25519-cert-v01@openssh.com, 
-
-rsa-sha2-512-cert-v01@openssh.com,rsa-sha2-256-cert-v01@openssh.com,
-
+sk-ssh-ed25519-cert-v01@openssh.com, 
+rsa-sha2-512-cert-v01@openssh.com, 
+rsa-sha2-256-cert-v01@openssh.com, 
 ssh-rsa-cert-v01@openssh.com, 
 
 ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,ecdsa-sha2-nistp521,
 
-ssh-ed25519,rsa-sha2-512,rsa-sha2-256,ssh-rsa
+sk-ecdsa-sha2-nistp256@openssh.com, 
+ssh-ed25519,sk-ssh-ed25519@openssh.com, 
+rsa-sha2-512,rsa-sha2-256,ssh-rsa
 
 The list of
 available key types may also be obtained using "ssh -Q
-key".',
+HostbasedAcceptedKeyTypes".',
         'type' => 'leaf',
         'value_type' => 'uniline'
       },
@@ -561,6 +564,42 @@ connection itself. The default is B<no>.',
           'yes'
         ]
       },
+      'IgnoreRhosts',
+      {
+        'description' => 'Specifies whether to ignore
+per-user I<.rhosts> and I<.shosts> files during
+B<HostbasedAuthentication>. The system-wide
+I</etc/hosts.equiv> and I</etc/ssh/shosts.equiv> are
+still used regardless of this setting.
+
+Accepted values
+are B<yes> (the default) to ignore all per-user files,
+B<shosts-only> to allow the use of I<.shosts> but to
+ignore I<.rhosts> or B<no> to allow both
+I<.shosts> and I<rhosts>.',
+        'type' => 'leaf',
+        'upstream_default' => 'yes',
+        'value_type' => 'boolean',
+        'write_as' => [
+          'no',
+          'yes'
+        ]
+      },
+      'Include',
+      {
+        'cargo' => {
+          'type' => 'leaf',
+          'value_type' => 'uniline'
+        },
+        'description' => 'Include the specified
+configuration file(s). Multiple pathnames may be specified
+and each pathname may contain L<glob(7)> wildcards that will be
+expanded and processed in lexical order. Files without
+absolute paths are assumed to be in I</etc/ssh>. An
+B<Include> directive may appear inside a B<Match>
+block to perform conditional inclusion.',
+        'type' => 'list'
+      },
       'IPQoS',
       {
         'assert' => {
@@ -591,16 +630,16 @@ B<af21>, B<af22>, B<af23>, B<af31>,
 B<af32>, B<af33>, B<af41>, B<af42>,
 B<af43>, B<cs0>, B<cs1>, B<cs2>, B<cs3>,
 B<cs4>, B<cs5>, B<cs6>, B<cs7>, B<ef>,
-B<lowdelay>, B<throughput>, B<reliability>, a
-numeric value, or B<none> to use the operating system
-default. This option may take one or two arguments,
-separated by whitespace. If one argument is specified, it is
-used as the packet class unconditionally. If two values are
-specified, the first is automatically selected for
-interactive sessions and the second for non-interactive
-sessions. The default is B<lowdelay> for interactive
-sessions and B<throughput> for non-interactive
-sessions.',
+B<le>, B<lowdelay>, B<throughput>,
+B<reliability>, a numeric value, or B<none> to use
+the operating system default. This option may take one or
+two arguments, separated by whitespace. If one argument is
+specified, it is used as the packet class unconditionally.
+If two values are specified, the first is automatically
+selected for interactive sessions and the second for
+non-interactive sessions. The default is B<lowdelay> for
+interactive sessions and B<throughput> for
+non-interactive sessions.',
         'type' => 'leaf',
         'upstream_default' => 'af21 cs1',
         'value_type' => 'uniline'
@@ -760,9 +799,10 @@ whitespace. An argument of B<any> can be used to remove
 all restrictions and permit any forwarding requests. An
 argument of B<none> can be used to prohibit all
 forwarding requests. The wildcard \'*\' can be
-used for host or port to allow all hosts or ports,
-respectively. By default all port forwarding requests are
-permitted.',
+used for host or port to allow all hosts or ports
+respectively. Otherwise, no pattern matching or address
+lookups are performed on supplied names. By default all port
+forwarding requests are permitted.',
         'type' => 'list'
       },
       'PermitRootLogin',
@@ -847,32 +887,37 @@ B<yes>.',
       {
         'description' => 'Specifies the key types that
 will be accepted for public key authentication as a list of
-comma-separated patterns. Alternately if the specified value
+comma-separated patterns. Alternately if the specified list
 begins with a \'+\' character, then the specified
 key types will be appended to the default set instead of
-replacing them. If the specified value begins with a
+replacing them. If the specified list begins with a
 \'-\' character, then the specified key types
 (including wildcards) will be removed from the default set
-instead of replacing them. The default for this option
-is:
+instead of replacing them. If the specified list begins with
+a \'^\' character, then the specified key types
+will be placed at the head of the default set. The default
+for this option is:
 
 ecdsa-sha2-nistp256-cert-v01@openssh.com,
 
 ecdsa-sha2-nistp384-cert-v01@openssh.com, 
 ecdsa-sha2-nistp521-cert-v01@openssh.com, 
+sk-ecdsa-sha2-nistp256-cert-v01@openssh.com, 
 ssh-ed25519-cert-v01@openssh.com, 
-
-rsa-sha2-512-cert-v01@openssh.com,rsa-sha2-256-cert-v01@openssh.com,
-
+sk-ssh-ed25519-cert-v01@openssh.com, 
+rsa-sha2-512-cert-v01@openssh.com, 
+rsa-sha2-256-cert-v01@openssh.com, 
 ssh-rsa-cert-v01@openssh.com, 
 
 ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,ecdsa-sha2-nistp521,
 
-ssh-ed25519,rsa-sha2-512,rsa-sha2-256,ssh-rsa
+sk-ecdsa-sha2-nistp256@openssh.com, 
+ssh-ed25519,sk-ssh-ed25519@openssh.com, 
+rsa-sha2-512,rsa-sha2-256,ssh-rsa
 
 The list of
 available key types may also be obtained using "ssh -Q
-key".',
+PubkeyAcceptedKeyTypes".',
         'type' => 'leaf',
         'value_type' => 'uniline'
       },
@@ -1044,6 +1089,28 @@ own forwarders.',
           'yes'
         ]
       },
+      'X11UseLocalhost',
+      {
+        'description' => 'Specifies whether L<sshd(8)>
+should bind the X11 forwarding server to the loopback
+address or to the wildcard address. By default, sshd binds
+the forwarding server to the loopback address and sets the
+hostname part of the DISPLAY environment variable to
+B<localhost>. This prevents remote hosts from connecting
+to the proxy display. However, some older X11 clients may
+not function with this configuration. B<X11UseLocalhost>
+may be set to B<no> to specify that the forwarding
+server should be bound to the wildcard address. The argument
+must be B<yes> or B<no>. The default is
+B<yes>.',
+        'type' => 'leaf',
+        'upstream_default' => 'yes',
+        'value_type' => 'boolean',
+        'write_as' => [
+          'no',
+          'yes'
+        ]
+      },
       'AuthorizedKeysFile2',
       {
         'cargo' => {
@@ -1085,7 +1152,7 @@ own forwarders.',
         'value_type' => 'uniline'
       }
     ],
-    'generated_by' => 'parse-man.pl from sshd_system  8.0p1 doc',
+    'generated_by' => 'parse-man.pl from sshd_system  8.4p1 doc',
     'license' => 'LGPL2',
     'name' => 'Sshd::MatchElement'
   }

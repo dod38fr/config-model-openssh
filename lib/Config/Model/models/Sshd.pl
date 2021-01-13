@@ -37,7 +37,7 @@ should be used by L<sshd(8)>. Valid arguments are B<any>
 allowed for signing of certificates by certificate
 authorities (CAs). The default is:
 
-ecdsa-sha2-nistp256.ecdsa-sha2-nistp384,ecdsa-sha2-nistp521,
+ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,ecdsa-sha2-nistp521,
 
 ssh-ed25519,rsa-sha2-512,rsa-sha2-256,ssh-rsa
 
@@ -64,12 +64,14 @@ The default is B<yes>.',
       {
         'description' => 'Specifies the ciphers allowed.
 Multiple ciphers must be comma-separated. If the specified
-value begins with a \'+\' character, then the
+list begins with a \'+\' character, then the
 specified ciphers will be appended to the default set
-instead of replacing them. If the specified value begins
-with a \'-\' character, then the specified ciphers
+instead of replacing them. If the specified list begins with
+a \'-\' character, then the specified ciphers
 (including wildcards) will be removed from the default set
-instead of replacing them.
+instead of replacing them. If the specified list begins with
+a \'^\' character, then the specified ciphers will
+be placed at the head of the default set.
 
 The supported
 ciphers are:
@@ -249,9 +251,8 @@ gss-nistp256-sha256-,
 gss-curve25519-sha256-
 
 The default is
-\x{201c}gss-gex-sha1-,gss-group14-sha1-\x{201d}. This option
-only applies to protocol version 2 connections using
-GSSAPI.",
+\x{201c}gss-group14-sha256-,gss-group16-sha512-,gss-nistp256-sha256-,gss-curve25519-sha256-,gss-gex-sha1-,gss-group14-sha1-\x{201d}.
+This option only applies to connections using GSSAPI.",
         'type' => 'leaf',
         'value_type' => 'uniline'
       },
@@ -308,38 +309,24 @@ ecdsa-sha2-nistp256-cert-v01@openssh.com,
 
 ecdsa-sha2-nistp384-cert-v01@openssh.com, 
 ecdsa-sha2-nistp521-cert-v01@openssh.com, 
+sk-ecdsa-sha2-nistp256-cert-v01@openssh.com, 
 ssh-ed25519-cert-v01@openssh.com, 
-
-rsa-sha2-512-cert-v01@openssh.com,rsa-sha2-256-cert-v01@openssh.com,
-
+sk-ssh-ed25519-cert-v01@openssh.com, 
+rsa-sha2-512-cert-v01@openssh.com, 
+rsa-sha2-256-cert-v01@openssh.com, 
 ssh-rsa-cert-v01@openssh.com, 
 
 ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,ecdsa-sha2-nistp521,
 
-ssh-ed25519,rsa-sha2-512,rsa-sha2-256,ssh-rsa
+sk-ecdsa-sha2-nistp256@openssh.com, 
+ssh-ed25519,sk-ssh-ed25519@openssh.com, 
+rsa-sha2-512,rsa-sha2-256,ssh-rsa
 
 The list of
 available key types may also be obtained using "ssh -Q
-key".',
+HostKeyAlgorithms".',
         'type' => 'leaf',
         'value_type' => 'uniline'
-      },
-      'IgnoreRhosts',
-      {
-        'description' => 'Specifies that I<.rhosts>
-and I<.shosts> files will not be used in
-B<HostbasedAuthentication>.
-
-I</etc/hosts.equiv>
-and I</etc/ssh/shosts.equiv> are still used. The default
-is B<yes>.',
-        'type' => 'leaf',
-        'upstream_default' => 'yes',
-        'value_type' => 'boolean',
-        'write_as' => [
-          'no',
-          'yes'
-        ]
       },
       'IgnoreUserKnownHosts',
       {
@@ -401,13 +388,15 @@ logout. The default is B<yes>.',
       {
         'description' => 'Specifies the available KEX
 (Key Exchange) algorithms. Multiple algorithms must be
-comma-separated. Alternately if the specified value begins
+comma-separated. Alternately if the specified list begins
 with a \'+\' character, then the specified methods
 will be appended to the default set instead of replacing
-them. If the specified value begins with a \'-\'
+them. If the specified list begins with a \'-\'
 character, then the specified methods (including wildcards)
 will be removed from the default set instead of replacing
-them. The supported algorithms are:
+them. If the specified list begins with a \'^\'
+character, then the specified methods will be placed at the
+head of the default set. The supported algorithms are:
 
 curve25519-sha256
 
@@ -421,7 +410,8 @@ diffie-hellman-group-exchange-sha1
 diffie-hellman-group-exchange-sha256 
 ecdh-sha2-nistp256 
 ecdh-sha2-nistp384 
-ecdh-sha2-nistp521
+ecdh-sha2-nistp521 
+sntrup4591761x25519-sha512@tinyssh.org
 
 The default
 is:
@@ -434,12 +424,11 @@ diffie-hellman-group-exchange-sha256,
 
 diffie-hellman-group16-sha512,diffie-hellman-group18-sha512,
 
-
-diffie-hellman-group14-sha256,diffie-hellman-group14-sha1
+diffie-hellman-group14-sha256
 
 The list of
 available key exchange algorithms may also be obtained using
-"ssh -Q kex".',
+"ssh -Q KexAlgorithms".',
         'type' => 'leaf',
         'value_type' => 'uniline'
       },
@@ -485,12 +474,14 @@ seconds.',
 available MAC (message authentication code) algorithms. The
 MAC algorithm is used for data integrity protection.
 Multiple algorithms must be comma-separated. If the
-specified value begins with a \'+\' character,
-then the specified algorithms will be appended to the
-default set instead of replacing them. If the specified
-value begins with a \'-\' character, then the
-specified algorithms (including wildcards) will be removed
-from the default set instead of replacing them.
+specified list begins with a \'+\' character, then
+the specified algorithms will be appended to the default set
+instead of replacing them. If the specified list begins with
+a \'-\' character, then the specified algorithms
+(including wildcards) will be removed from the default set
+instead of replacing them. If the specified list begins with
+a \'^\' character, then the specified algorithms
+will be placed at the head of the default set.
 
 The algorithms
 that contain "-etm" calculate the MAC after
@@ -589,7 +580,8 @@ B<DenyUsers>, B<ForceCommand>, B<GatewayPorts>,
 B<GSSAPIAuthentication>,
 B<HostbasedAcceptedKeyTypes>,
 B<HostbasedAuthentication>,
-B<HostbasedUsesNameFromPacketOnly>, B<IPQoS>,
+B<HostbasedUsesNameFromPacketOnly>, B<IgnoreRhosts>,
+B<Include>, B<IPQoS>,
 B<KbdInteractiveAuthentication>,
 B<KerberosAuthentication>, B<LogLevel>,
 B<MaxAuthTries>, B<MaxSessions>,
@@ -602,7 +594,7 @@ B<RekeyLimit>, B<RevokedKeys>, B<RDomain>,
 B<SetEnv>, B<StreamLocalBindMask>,
 B<StreamLocalBindUnlink>, B<TrustedUserCAKeys>,
 B<X11DisplayOffset>, B<X11Forwarding> and
-B<X11UseLocalHost>.',
+B<X11UseLocalhost>.',
         'type' => 'list'
       },
       'MaxStartups',
@@ -689,6 +681,47 @@ B<yes>.',
           'no',
           'yes'
         ]
+      },
+      'PubkeyAuthOptions',
+      {
+        'choice' => [
+          'touch-required',
+          'verify-required'
+        ],
+        'description' => 'Sets one or more public key
+authentication options. The supported keywords are:
+B<none> (the default; indicating no additional options
+are enabled), B<touch-required> and
+B<verify-required>.
+
+The
+B<touch-required> option causes public key
+authentication using a FIDO authenticator algorithm (i.e.
+B<ecdsa-sk> or B<ed25519-sk>) to always require the
+signature to attest that a physically present user
+explicitly confirmed the authentication (usually by touching
+the authenticator). By default, L<sshd(8)> requires user
+presence unless overridden with an authorized_keys option.
+The B<touch-required> flag disables this override.
+
+The
+B<verify-required> option requires a FIDO key signature
+attest that the user was verified, e.g. via a PIN.
+
+Neither the
+B<touch-required> or B<verify-required> options have
+any effect for other, non-FIDO, public key types.',
+        'type' => 'leaf',
+        'value_type' => 'enum'
+      },
+      'SecurityKeyProvider',
+      {
+        'description' => 'Specifies a path to a library
+that will be used when loading FIDO authenticator-hosted
+keys, overriding the default of using the built-in USB HID
+support.',
+        'type' => 'leaf',
+        'value_type' => 'uniline'
       },
       'StrictModes',
       {
@@ -842,28 +875,6 @@ upon connection. The default is B<none>.',
         'type' => 'leaf',
         'value_type' => 'uniline'
       },
-      'X11UseLocalhost',
-      {
-        'description' => 'Specifies whether L<sshd(8)>
-should bind the X11 forwarding server to the loopback
-address or to the wildcard address. By default, sshd binds
-the forwarding server to the loopback address and sets the
-hostname part of the DISPLAY environment variable to
-B<localhost>. This prevents remote hosts from connecting
-to the proxy display. However, some older X11 clients may
-not function with this configuration. B<X11UseLocalhost>
-may be set to B<no> to specify that the forwarding
-server should be bound to the wildcard address. The argument
-must be B<yes> or B<no>. The default is
-B<yes>.',
-        'type' => 'leaf',
-        'upstream_default' => 'yes',
-        'value_type' => 'boolean',
-        'write_as' => [
-          'no',
-          'yes'
-        ]
-      },
       'XAuthLocation',
       {
         'description' => 'Specifies the full pathname of
@@ -874,7 +885,7 @@ default is I</usr/bin/xauth>.',
         'value_type' => 'uniline'
       }
     ],
-    'generated_by' => 'parse-man.pl from sshd_system  8.0p1 doc',
+    'generated_by' => 'parse-man.pl from sshd_system  8.4p1 doc',
     'include' => [
       'Sshd::MatchElement'
     ],
