@@ -1,6 +1,10 @@
 {{$NEXT}}
 
-2.8.4.1 2021-01-13
+2.8.4.2 2021-01-13
+
+  Update:
+    * Support for OpenSsh 8.4
+    * update copyright year
 
 2.8.0.1 2019-09-08
 
