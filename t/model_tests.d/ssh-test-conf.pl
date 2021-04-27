@@ -8,7 +8,7 @@ my $home_for_test = $^O eq 'darwin' ? '/Users/joe'
                   :                   '/home/joe';
 
 # Ssh backend excepts both system and user files
-my @setup = (
+my %setup = (
     setup => {
         'system_ssh_config' => {
             'darwin'  => '/etc/ssh_config',
@@ -21,7 +21,7 @@ my @setup = (
 my @tests = (
     {
         name => 'basic',
-        @setup,
+        %setup,
         check => [
             'Host:"*" Port' => {qw/mode layered value 22/},
             'Host:"*" Port' => '1022',
@@ -46,7 +46,7 @@ my @tests = (
     },
     {
         name => 'legacy',
-        @setup,
+        %setup,
         load_check    => 'skip',
         log4perl_load_warnings => [ [
             'User',
@@ -56,14 +56,14 @@ my @tests = (
     },
     {
         name => 'bad-forward',
-        @setup,
+        %setup,
         load_check    => 'skip',
         load => 'Host:"foo.*,*.bar" LocalForward:0 port=20022',
         log4perl_load_warnings => [ [ 'User', warn => qr/value '20022\+' does not match regexp/ ] ],
     },
     {
        name => 'bad-pref-auth',
-       @setup,
+       %setup,
        load_check    => 'skip',
        log4perl_load_warnings => [
            [ 'User', ( warn => qr/Unexpected authentication method/) , ]
