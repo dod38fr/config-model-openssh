@@ -69,6 +69,12 @@ my @tests = (
            [ 'User', ( warn => qr/Unexpected authentication method/) , ]
        ],
     },
+    {
+       name => 'no-user-file',
+       setup => {
+           'system_ssh_config' => $setup{setup}{system_ssh_config},
+       },
+    },
 );
 
 return {
