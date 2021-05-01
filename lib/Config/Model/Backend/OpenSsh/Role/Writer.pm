@@ -28,13 +28,16 @@ sub ssh_write {
 
     $logger->info("writing config file $args{file_path}");
 
-    my $result = $self->write_global_comment('#') ;
+    my $comment = $self->write_global_comment('#') ;
 
-    $result .= $self->write_node_content($config_root,$args{ssh_mode});
+    my $result = $self->write_node_content($config_root,$args{ssh_mode});
 
-    $args{file_path}->spew_utf8($result);
+    if ($result) {
+        $args{file_path}->spew_utf8($comment.$result);
+        return 1;
+    }
 
-    return 1;
+    return 0;
 }
 
 
