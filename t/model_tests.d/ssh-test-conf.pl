@@ -75,6 +75,20 @@ my @tests = (
            'system_ssh_config' => $setup{setup}{system_ssh_config},
        },
     },
+    {
+        name => 'delete-user-file',
+        setup => {
+            'user_ssh_config' => "$home_for_test/.ssh/config"
+        },
+        # this removes all custom data from test file. Hence the user
+        # file is deleted
+        load => 'Host:.clear',
+        file_check_sub => sub {
+            my $list_ref = shift ;
+            # user config removed because load cleared all user data
+            pop @$list_ref ;
+        }
+    },
 );
 
 return {
