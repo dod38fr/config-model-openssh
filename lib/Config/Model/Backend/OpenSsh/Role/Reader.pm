@@ -41,6 +41,8 @@ sub read {
     my $config_root = $args{object}
         || croak __PACKAGE__," read_ssh_file: undefined config root object";
 
+    return 0 unless $args{file_path}->is_file;
+
     $logger->info("loading config file ".$args{file_path});
 
     my @lines = $args{file_path}->lines_utf8 ;
