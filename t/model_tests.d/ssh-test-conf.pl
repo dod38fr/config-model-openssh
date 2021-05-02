@@ -55,15 +55,25 @@ my @tests = (
         log4perl_load_warnings => [ [ 'User', warn => qr/value '20022\+' does not match regexp/ ] ],
     },
     {
-       name => 'bad-pref-auth',
-       %setup,
-       load_check    => 'skip',
-       log4perl_load_warnings => [
-           [ 'User', ( warn => qr/Unexpected authentication method/) , ]
-       ],
+        name => 'bad-pref-auth',
+        %setup,
+        load_check    => 'skip',
+        log4perl_load_warnings => [
+            [ 'User', ( warn => qr/Unexpected authentication method/) , ]
+        ],
     },
     {
-       name => 'no-user-file',
+        name => 'no-user-file',
+    },
+    {
+        name => 'check-host-order',
+        # use load to add a new Host spec and check the dump.
+        data_from => 'basic',
+        %setup,
+        file_contents_like => {
+            "/home/joe/.ssh/config" => qr/GSSAPIDelegateCredentials no\n\nHost picos/
+
+        }
     },
     {
         name => 'delete-user-file',
