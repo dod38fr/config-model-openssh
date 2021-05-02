@@ -142,23 +142,23 @@ None
 
 =head1 DESCRIPTION
 
-This calls provides a backend to read and write ssh client configuration files.
+This module provides a backend to read and write ssh client configuration files.
 
 =head1 STOP
 
-The documentation provides on the reader and writer of OpenSsh configuration files.
-These details are not needed for the basic usages explained in L<Config::Model::OpenSsh>.
+The documentation provides details on the module used to read and
+write OpenSsh configuration files.  These details are not needed for
+the basic usages explained in L<Config::Model::OpenSsh>.
 
 =head1 Methods
 
-These read/write functions are part of C<OpenSsh::Ssh> read/write backend.
-They are
-declared in Ssh configuration model and are called back when needed to read the
-configuration file and write it back.
+These read/write functions are part of C<OpenSsh::Ssh> read/write
+backend.  They are declared in Ssh configuration model and are called
+back when needed to read and write the configuration file.
 
 =head2 read (object => <ssh_root>, config_dir => ...)
 
-Read F<ssh_config> in C<config_dir> and load the data in the
+Reads F<ssh_config> in C<config_dir> and load the data in the
 C<ssh_root> configuration tree.
 
 =head2 write (object => <ssh_root>, config_dir => ...)
