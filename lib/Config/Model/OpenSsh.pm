@@ -15,40 +15,40 @@ __END__
 
 =head2 invoke editor
 
-The following will launch a graphical editor (if L<Config::Model::TkUI>
+The following launches a graphical editor (if L<Config::Model::TkUI>
 is installed):
 
- sudo cme edit sshd 
+ sudo cme edit sshd
 
 =head2 command line
 
-This command will add a C<Host Foo> section in C<~/.ssh/config>: 
+This command adds a C<Host Foo> section in C<~/.ssh/config>:
 
  cme modify ssh Host:Foo ForwardX11=yes
- 
+
 =head2 programmatic
 
-This code snippet will remove the C<Host Foo> section added above:
+This code snippet removes the C<Host Foo> section added above:
 
  use Config::Model ;
- my $model = Config::Model -> new ( ) ;
+ my $model = Config::Model->new() ;
  my $inst = $model->instance (root_class_name => 'Ssh');
- $inst -> config_root ->load("Host~Foo") ;
+ $inst -> config_root->load("Host~Foo") ;
  $inst->write_back() ;
 
 =head1 DESCRIPTION
 
-This module provides a configuration editors (and models) for the 
-configuration files of OpenSSH. (C</etc/ssh/sshd_config>, F</etc/ssh/ssh_config>
+This module provides a configuration editor (and models) for the
+configuration files of OpenSSH. (C</etc/ssh/sshd_config>, C</etc/ssh/ssh_config>
 and C<~/.ssh/config>).
 
 This module can also be used to modify safely the
-content of these configuration files from a Perl programs.
+content of these configuration files from a Perl program.
 
-Once this module is installed, you can edit C</etc/ssh/sshd_config> 
-with run (as root) :
+Once this module is installed, you can edit C</etc/ssh/sshd_config>
+with (as root) :
 
- # cme edit sshd 
+ # cme edit sshd
 
 To edit F</etc/ssh/ssh_config>, run (as root):
 
