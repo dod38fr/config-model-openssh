@@ -118,13 +118,6 @@ in system-wide B<ssh_config> files).',
       'auto_create' => '1',
       'backend' => 'OpenSsh::Ssh',
       'config_dir' => '~/.ssh',
-      'default_layer' => {
-        'config_dir' => '/etc/ssh',
-        'file' => 'ssh_config',
-        'os_config_dir' => {
-          'darwin' => '/etc'
-        }
-      },
       'file' => 'config'
     }
   }

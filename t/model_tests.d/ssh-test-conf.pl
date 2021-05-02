@@ -10,10 +10,6 @@ my $home_for_test = $^O eq 'darwin' ? '/Users/joe'
 # Ssh backend excepts both system and user files
 my %setup = (
     setup => {
-        'system_ssh_config' => {
-            'darwin'  => '/etc/ssh_config',
-            'default' => '/etc/ssh/ssh_config',
-        },
         'user_ssh_config' => "$home_for_test/.ssh/config"
     }
 );
@@ -23,11 +19,8 @@ my @tests = (
         name => 'basic',
         %setup,
         check => [
-            'Host:"*" Port' => {qw/mode layered value 22/},
             'Host:"*" Port' => '1022',
 
-            # user value will completely override layered values
-            'Host:"*" Ciphers' => { qw/mode layered value/, '3des-cbc' },
             'Host:"*" Ciphers' => { qw/mode user value/,    'aes192-cbc,aes128-cbc' },
             'Host:"*" Ciphers' => 'aes192-cbc,aes128-cbc',
 
@@ -71,9 +64,6 @@ my @tests = (
     },
     {
        name => 'no-user-file',
-       setup => {
-           'system_ssh_config' => $setup{setup}{system_ssh_config},
-       },
     },
     {
         name => 'delete-user-file',

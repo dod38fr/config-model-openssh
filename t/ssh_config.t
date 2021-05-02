@@ -27,30 +27,6 @@ $ssh_path->mkpath;
 my $ssh_file = $ssh_path->child('ssh_config');
 $ssh_file->spew(@orig);
 
-# special global variable used only for tests
-my $joe_home = $^O eq 'darwin' ? '/Users/joe'
-             :                   '/home/joe' ; ;
-Config::Model::BackendMgr::_set_test_home($joe_home) ;
-
-# set up Joe's environment
-my $joe_ssh = $wr_root->child($joe_home.'/.ssh');
-$joe_ssh->mkpath;
-
-my $joe_config = $joe_ssh->child('config');
-$joe_config->spew("Host mine.bar\n\nIdentityFile ~/.ssh/mine\n") ;
-
-sub read_user_ssh {
-    my $file = shift ;
-    my $clean = sub {
-        my $l = shift;
-        chomp $l;
-        $l =~ s/\s+/ /g;
-        return $l;
-    };
-    my @res = grep {/\w/} map { $clean->($_) ;} grep { not /##/ } $file->lines ;
-    return @res ;
-}
-
 print "Test from directory $wr_root\n" if $trace ;
 
 note "Running test like root (no layered config)" ;
@@ -96,66 +72,6 @@ print $dump2 if $trace ;
 
 is_deeply([split /\n/,$dump2],[split /\n/,$dump],
 	  "check if both root_ssh dumps are identical") ;
-
-SKIP: {
-    skip "user tests when test is run as root", 12
-       if $EUID == 0 ;
-
-    note "Running test like user with layered config";
-
-    my $user_inst = $model->instance (
-        root_class_name   => 'Ssh',
-        instance_name     => 'user_ssh_instance',
-        root_dir          => $wr_root,
-    );
-
-    ok($user_inst,"Read user .ssh/config and created instance") ;
-
-    my @joe_orig    = read_user_ssh($joe_config) ;
-
-    my $user_cfg = $user_inst -> config_root ;
-
-    $dump =  $user_cfg->dump_tree (mode => 'full' );
-    print $dump if $trace ;
-
-    like($dump,qr/Host:"foo\.\*,\*\.bar"/,"check root Host pattern") ;
-    like($dump,qr/Host:"?mine.bar"?/,"check user Host pattern") ;
-
-    $user_inst->write_back() ;
-    ok(1,"wrote user .ssh/config data in $joe_config") ;
-
-    ok($joe_config->is_file,"Found $joe_config") ;
-
-    # compare original and written file
-    my @joe_written = read_user_ssh($joe_config) ;
-    eq_or_diff(\@joe_written,\@joe_orig,"check user .ssh/config files") ;
-
-    # write some data
-    $user_cfg->load('EnableSSHKeysign=1') ;
-    $user_inst->write_back() ;
-    unshift @joe_orig,'EnableSSHKeysign yes';
-    @joe_written = read_user_ssh($joe_config) ;
-    eq_or_diff(\@joe_written,\@joe_orig,"check user .ssh/config files after modif") ;
-
-    # run test on tricky element
-    warning_like {
-        $user_inst->load( check => 'skip', step => 'Host:"*" IPQoS="foo bar baz"') ;
-    } qr/skipping value/ ,"too many fields warning";
-    warning_like {
-        $user_inst->load( check => 'skip', step => 'Host:"*" IPQoS="foo"') ;
-    } qr/skipping/ ,"bad fields warning";
-    ok($user_inst->has_error,"check errors count") ;
-    like($user_inst->error_messages,qr/"af11"/,"check error message") ;
-
-    $user_inst->load('Host:"*" IPQoS="af11 af12"') ;
-
-    # fix is pending
-    my $expect = $Config::Model::VERSION > 2.046 ? 0 : 1 ;
-    is($user_inst->has_error,$expect,"check error count after fix") ;
-
-    # check if config has warnings
-    is($user_inst->has_warning,0,"check if warnings are left");
-}
 
 done_testing;
 
