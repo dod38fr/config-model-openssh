@@ -67,12 +67,11 @@ my @tests = (
     },
     {
         name => 'check-host-order',
-        # use load to add a new Host spec and check the dump.
         data_from => 'basic',
         %setup,
         file_contents_like => {
-            "/home/joe/.ssh/config" => qr/GSSAPIDelegateCredentials no\n\nHost picos/
-
+            # check that picos is still before foo
+            "/home/joe/.ssh/config" => qr/Host\s+picos.*?Host\s+foo/s
         }
     },
     {

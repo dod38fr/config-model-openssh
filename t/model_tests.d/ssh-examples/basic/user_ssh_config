@@ -14,6 +14,13 @@ Host *
     GSSAPIAuthentication yes
     GSSAPIDelegateCredentials no
 
+Host picos
+ForwardX11           yes
+HostName             localhost
+Port                 20022
+User                 ocad
+ControlPersist       YES
+
 # foo bar big
 # comment
 Host foo.*,*.bar
@@ -33,12 +40,5 @@ LocalForward         20022         10.3.244.4:22
 # IPv6 example
 LocalForward         all.com/22080       2001:0db8:85a3:0000:0000:8a2e:0370:7334/80
 User                 k0013
-
-Host picos
-ForwardX11           yes
-HostName             localhost
-Port                 20022
-User                 ocad
-ControlPersist       YES
 
 
