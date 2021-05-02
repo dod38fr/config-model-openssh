@@ -84,7 +84,7 @@ sub setup_choice {
     );
 }
 
-my $ssh_host = 'type=hash index_type=string cargo type=node '
+my $ssh_host = 'type=hash index_type=string ordered=1 cargo type=node '
     .'config_class_name=Ssh::HostElement';
 my $ssh_forward = 'type=list cargo type=node config_class_name="Ssh::PortForward"';
 my $uniline = 'type=leaf value_type=uniline';
