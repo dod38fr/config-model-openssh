@@ -44,6 +44,7 @@ matches.
 See
 I<PATTERNS> for more information on patterns.',
         'index_type' => 'string',
+        'ordered' => '1',
         'type' => 'hash'
       },
       'Match',
@@ -104,6 +105,7 @@ host. The B<localuser> keyword matches against the name
 of the local user running L<ssh(1)> (this keyword may be useful
 in system-wide B<ssh_config> files).',
         'index_type' => 'string',
+        'ordered' => '1',
         'type' => 'hash'
       }
     ],
