@@ -12,11 +12,6 @@ class:
       backend: OpenSsh::Ssh
       config_dir: ~/.ssh
       file: config
-      default_layer:
-        config_dir: /etc/ssh
-        file: ssh_config
-        os_config_dir:
-          darwin: /etc
   Ssh::HostElement:
     element:
       __skip_order: 1
