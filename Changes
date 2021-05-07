@@ -1,5 +1,15 @@
 {{$NEXT}}
 
+2.8.4.3 2021-05-07
+
+  Bug fixes:
+    * Keep order of Host and Match sections (fix #6)
+    * No longer use content of /etc/ssh/ssh_config as upstream
+      default values for ~/.ssh/config. See commit
+      766442b log for details
+    * Fix crash when starting with empty user file (fix #5)
+    * docs : fix typos and grammar
+
 2.8.4.2 2021-01-13
 
   Update:
