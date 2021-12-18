@@ -20,7 +20,7 @@ class:
           warn_if_match:
             \.pub$:
               fix: s/\.pub$//;
-              msg: 'identity file should be the private key '
+              msg: 'identity file must be the private key'
       UseRsh: &deprecated
         description: This parameter is now ignored by Ssh
         status: deprecated
