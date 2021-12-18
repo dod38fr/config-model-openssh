@@ -50,7 +50,7 @@ sub parse_html_man_page ($html_man_page) {
         # replace single utf-8 quote with ascii quote
         $text =~ s/\x{2019}/'/g;
         # avoid long unbreakable lines
-        $text =~ s/([,.])(\w)/$1 $2/g;
+        $text =~ s/,(\w)/, $1/g;
         push $data{element_data}{$parameter}->@*, $text if $parameter;
     };
 
