@@ -105,9 +105,10 @@ load_yaml_model($meta_root,"Ssh::PortForward");
 say "Creating ssh model...";
 create_ssh_model($meta_root);
 
-say "loading ssh model addendum";
+say "loading ssh model addendum from ssh-fixup.yaml";
 $meta_root->load_data(LoadFile('contrib/ssh-fixup.yaml'));
-say "loading ssh model IPQoS element";
+
+say "loading ssh model IPQoS element from fixup-element-ipqos.yml";
 $meta_root
     ->grab("class:Ssh::HostElement element:IPQoS")
     ->load_data(LoadFile('contrib/fixup-element-ipqos.yml'));
@@ -124,12 +125,13 @@ load_yaml_model($meta_root,"Sshd::MatchCondition");
 
 create_sshd_model($meta_root);
 
-say "loading sshd model addendum";
-
 # requires Sshd::MatchElement
 load_yaml_model($meta_root,"Sshd::MatchBlock");
 
+say "loading sshd model addendum from sshd-fixup.yaml";
 $meta_root->load_data(LoadFile('contrib/sshd-fixup.yaml'));
+
+say "loading ssh model IPQoS element from fixup-element-ipqos.yml";
 $meta_root
     ->grab("class:Sshd::MatchElement element:IPQoS")
     ->load_data(LoadFile('contrib/fixup-element-ipqos.yml'));
