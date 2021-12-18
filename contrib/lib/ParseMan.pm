@@ -139,9 +139,9 @@ sub create_load_data ($ssh_system, $name, @desc) {
     my ($set_choice, $get_choices) = setup_choice();
 
     # handle "The argument must be B<yes>, B<no> (the default) or B<ask>."
-    if ($desc =~ /(?:argument|option)s? (?:to this keyword )?(?:are|\w+ be)([^.]+)\./i) {
+    if ($desc =~ /(?:argument|option)s? (?:to this keyword )?(?:are|\w+ be)(?: one of)?(?:[\s:]+)(?=B<)([^.]+)\./i) {
         my $str = $1;
-        $set_choice->( $str =~ /B<([\w-]+)>/g );
+        $set_choice->( $str =~ /B<(\w[\w-]*)>/g );
     }
 
     if (my @values = ($desc =~ /(?:(?:if|when|with) (?:(?:$bold_name|th(?:e|is) option) (?:is )?)?set to|A value of|setting this to|The default(?: is|,)|Accepted values are) B<(\w+)>/gi)) {
