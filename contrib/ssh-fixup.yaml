@@ -27,6 +27,12 @@ class:
         type: leaf
         value_type: uniline
       FallBackToRsh: *deprecated
+      HostbasedKeyTypes: *deprecated
+      HostbasedAcceptedAlgorithms:
+        migrate_from:
+          variables:
+            old: "- HostbasedKeyTypes"
+          formula: "$old"
       PreferredAuthentications:
         cargo:
           warn_unless_match:
@@ -35,3 +41,9 @@ class:
                 Unexpected authentication method: 'C<$_>'. Expected one of
                 C<gssapi-with-mic>, C<hostbased>, C<publickey>,
                 C<keyboard-interactive> or C<password>
+      PubkeyAcceptedKeyTypes: *deprecated
+      PubkeyAcceptedAlgorithms:
+        migrate_from:
+          variables:
+            old: "- PubkeyAcceptedKeyTypes"
+          formula: "$old"

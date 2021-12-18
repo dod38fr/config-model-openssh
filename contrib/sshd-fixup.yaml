@@ -34,12 +34,22 @@ class:
           value_type: uniline
       AuthorizedKeysFile:
         migrate_values_from: "- AuthorizedKeysFile2"
-      # deprecated with Ssh protocol V1
-      Protocol: &deprecated
+      ChallengeResponseAuthentication:
+        status: deprecated
+        type: leaf
+        value_type: boolean
+      KbdInteractiveAuthentication:
+        migrate_from:
+          variables:
+            old: "- ChallengeResponseAuthentication"
+          formula: "$old"
+      KeyRegenerationInterval: &deprecated
         status: deprecated
         type: leaf
         value_type: uniline
+      # deprecated with Ssh protocol V1
+      Protocol: *deprecated
+      RDomain: *deprecated
       RSAAuthentication: *deprecated
       RhostsRSAAuthentication: *deprecated
       UsePrivilegeSeparation: *deprecated
-      KeyRegenerationInterval: *deprecated
