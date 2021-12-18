@@ -13,6 +13,7 @@ class:
       os_config_dir:
         darwin: /etc
     element:
+      __skip_order: 1
       Match:
         type: list
         cargo:
@@ -20,14 +21,7 @@ class:
           config_class_name: Sshd::MatchBlock
   Sshd::MatchElement:
     element:
-      __order:
-        - AuthorizedKeysFile2
-        - AuthorizedKeysFile
-        - Protocol
-        - RSAAuthentication
-        - RhostsRSAAuthentication
-        - UsePrivilegeSeparation
-        - KeyRegenerationInterval
+      __skip_order: 1
       AuthorizedKeysFile2:
         description: This parameter is now ignored by Ssh
         status: deprecated
