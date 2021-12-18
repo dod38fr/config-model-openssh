@@ -163,9 +163,14 @@ sub create_load_data ($ssh_system, $name, @desc) {
     }
 
     if ($desc =~ /(Specif\w+|Sets?) (a|the) (maximum )?(number|timeout)/) {
-        $value_type = 'integer';
+        my $upstream_default;
         if ($desc =~ /The default(?: value)?(?: is|,) (\d+)/) {
-            push @load_extra, "upstream_default=$1";
+            $upstream_default = $1;
+        }
+        # do not set integer type when upstream default value is not an integer
+        if (not defined $upstream_default or $upstream_default =~ /^\d+$/) {
+            $value_type = 'integer';
+            push @load_extra, qq!upstream_default="$upstream_default"! if defined $upstream_default;
         }
     }
     elsif (@choices == 1) {
