@@ -155,8 +155,8 @@ requires completion of every method in at least one of these
 lists.
 
 For example,
-"publickey,password
-publickey,keyboard-interactive" would require the user
+"publickey, password
+publickey, keyboard-interactive" would require the user
 to complete public key authentication, followed by either
 password or keyboard interactive authentication. Only
 methods that are next in one or more lists are offered at
@@ -177,7 +177,7 @@ If the
 publickey method is listed more than once, L<sshd(8)> verifies
 that keys that have been used successfully are not reused
 for subsequent authentications. For example,
-"publickey,publickey" requires successful
+"publickey, publickey" requires successful
 authentication using two different public keys.
 
 Note that each
@@ -439,6 +439,15 @@ See PATTERNS in
 L<ssh_config(5)> for more information on patterns.',
         'type' => 'list'
       },
+      'DisableForwarding',
+      {
+        'description' => 'Disables all forwarding
+features, including X11, L<ssh-agent(1)>, TCP and StreamLocal.
+This option overrides all other forwarding-related options
+and may simplify restricted configurations.',
+        'type' => 'leaf',
+        'value_type' => 'uniline'
+      },
       'ForceCommand',
       {
         'description' => 'Forces the execution of the
@@ -494,41 +503,41 @@ B<no>.',
           'yes'
         ]
       },
-      'HostbasedAcceptedKeyTypes',
+      'HostbasedAcceptedAlgorithms',
       {
-        'description' => 'Specifies the key types that
-will be accepted for hostbased authentication as a list of
-comma-separated patterns. Alternately if the specified list
-begins with a \'+\' character, then the specified
-key types will be appended to the default set instead of
+        'description' => 'Specifies the signature
+algorithms that will be accepted for hostbased
+authentication as a list of comma-separated patterns.
+Alternately if the specified list begins with a
+\'+\' character, then the specified signature
+algorithms will be appended to the default set instead of
 replacing them. If the specified list begins with a
-\'-\' character, then the specified key types
-(including wildcards) will be removed from the default set
-instead of replacing them. If the specified list begins with
-a \'^\' character, then the specified key types
-will be placed at the head of the default set. The default
-for this option is:
+\'-\' character, then the specified signature
+algorithms (including wildcards) will be removed from the
+default set instead of replacing them. If the specified list
+begins with a \'^\' character, then the specified
+signature algorithms will be placed at the head of the
+default set. The default for this option is:
 
+ssh-ed25519-cert-v01@openssh.com,
 ecdsa-sha2-nistp256-cert-v01@openssh.com,
-
-ecdsa-sha2-nistp384-cert-v01@openssh.com, 
-ecdsa-sha2-nistp521-cert-v01@openssh.com, 
-sk-ecdsa-sha2-nistp256-cert-v01@openssh.com, 
-ssh-ed25519-cert-v01@openssh.com, 
-sk-ssh-ed25519-cert-v01@openssh.com, 
-rsa-sha2-512-cert-v01@openssh.com, 
-rsa-sha2-256-cert-v01@openssh.com, 
-ssh-rsa-cert-v01@openssh.com, 
-
-ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,ecdsa-sha2-nistp521,
-
-sk-ecdsa-sha2-nistp256@openssh.com, 
-ssh-ed25519,sk-ssh-ed25519@openssh.com, 
-rsa-sha2-512,rsa-sha2-256,ssh-rsa
+ecdsa-sha2-nistp384-cert-v01@openssh.com,
+ecdsa-sha2-nistp521-cert-v01@openssh.com,
+sk-ssh-ed25519-cert-v01@openssh.com,
+sk-ecdsa-sha2-nistp256-cert-v01@openssh.com,
+rsa-sha2-512-cert-v01@openssh.com,
+rsa-sha2-256-cert-v01@openssh.com,
+ssh-rsa-cert-v01@openssh.com,
+ssh-ed25519,
+ecdsa-sha2-nistp256, ecdsa-sha2-nistp384, ecdsa-sha2-nistp521,
+sk-ssh-ed25519@openssh.com,
+sk-ecdsa-sha2-nistp256@openssh.com,
+rsa-sha2-512, rsa-sha2-256, ssh-rsa
 
 The list of
-available key types may also be obtained using "ssh -Q
-HostbasedAcceptedKeyTypes".',
+available signature algorithms may also be obtained using
+"ssh -Q HostbasedAcceptedAlgorithms". This was
+formerly named HostbasedAcceptedKeyTypes.',
         'type' => 'leaf',
         'value_type' => 'uniline'
       },
@@ -647,11 +656,18 @@ non-interactive sessions.',
       'KbdInteractiveAuthentication',
       {
         'description' => 'Specifies whether to allow
-keyboard-interactive authentication. The argument to this
-keyword must be B<yes> or B<no>. The default is to
-use whatever value B<ChallengeResponseAuthentication> is
-set to (by default B<yes>).',
+keyboard-interactive authentication. The default is
+B<yes>. The argument to this keyword must be B<yes>
+or B<no>. B<ChallengeResponseAuthentication> is a
+deprecated alias for this.',
+        'migrate_from' => {
+          'formula' => '$old',
+          'variables' => {
+            'old' => '- ChallengeResponseAuthentication'
+          }
+        },
         'type' => 'leaf',
+        'upstream_default' => 'yes',
         'value_type' => 'boolean',
         'write_as' => [
           'no',
@@ -883,41 +899,40 @@ B<yes>.',
           'yes'
         ]
       },
-      'PubkeyAcceptedKeyTypes',
+      'PubkeyAcceptedAlgorithms',
       {
-        'description' => 'Specifies the key types that
-will be accepted for public key authentication as a list of
-comma-separated patterns. Alternately if the specified list
-begins with a \'+\' character, then the specified
-key types will be appended to the default set instead of
+        'description' => 'Specifies the signature
+algorithms that will be accepted for public key
+authentication as a list of comma-separated patterns.
+Alternately if the specified list begins with a
+\'+\' character, then the specified algorithms
+will be appended to the default set instead of replacing
+them. If the specified list begins with a \'-\'
+character, then the specified algorithms (including
+wildcards) will be removed from the default set instead of
 replacing them. If the specified list begins with a
-\'-\' character, then the specified key types
-(including wildcards) will be removed from the default set
-instead of replacing them. If the specified list begins with
-a \'^\' character, then the specified key types
+\'^\' character, then the specified algorithms
 will be placed at the head of the default set. The default
 for this option is:
 
+ssh-ed25519-cert-v01@openssh.com,
 ecdsa-sha2-nistp256-cert-v01@openssh.com,
-
-ecdsa-sha2-nistp384-cert-v01@openssh.com, 
-ecdsa-sha2-nistp521-cert-v01@openssh.com, 
-sk-ecdsa-sha2-nistp256-cert-v01@openssh.com, 
-ssh-ed25519-cert-v01@openssh.com, 
-sk-ssh-ed25519-cert-v01@openssh.com, 
-rsa-sha2-512-cert-v01@openssh.com, 
-rsa-sha2-256-cert-v01@openssh.com, 
-ssh-rsa-cert-v01@openssh.com, 
-
-ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,ecdsa-sha2-nistp521,
-
-sk-ecdsa-sha2-nistp256@openssh.com, 
-ssh-ed25519,sk-ssh-ed25519@openssh.com, 
-rsa-sha2-512,rsa-sha2-256,ssh-rsa
+ecdsa-sha2-nistp384-cert-v01@openssh.com,
+ecdsa-sha2-nistp521-cert-v01@openssh.com,
+sk-ssh-ed25519-cert-v01@openssh.com,
+sk-ecdsa-sha2-nistp256-cert-v01@openssh.com,
+rsa-sha2-512-cert-v01@openssh.com,
+rsa-sha2-256-cert-v01@openssh.com,
+ssh-rsa-cert-v01@openssh.com,
+ssh-ed25519,
+ecdsa-sha2-nistp256, ecdsa-sha2-nistp384, ecdsa-sha2-nistp521,
+sk-ssh-ed25519@openssh.com,
+sk-ecdsa-sha2-nistp256@openssh.com,
+rsa-sha2-512, rsa-sha2-256, ssh-rsa
 
 The list of
-available key types may also be obtained using "ssh -Q
-PubkeyAcceptedKeyTypes".',
+available signature algorithms may also be obtained using
+"ssh -Q PubkeyAcceptedAlgorithms".',
         'type' => 'leaf',
         'value_type' => 'uniline'
       },
@@ -937,19 +952,20 @@ authentication is allowed. The default is B<yes>.',
       {
         'description' => 'Specifies the maximum amount of
 data that may be transmitted before the session key is
-renegotiated, optionally followed a maximum amount of time
-that may pass before the session key is renegotiated. The
-first argument is specified in bytes and may have a suffix
-of \'K\', \'M\', or \'G\' to
-indicate Kilobytes, Megabytes, or Gigabytes, respectively.
-The default is between \'1G\' and
-\'4G\', depending on the cipher. The optional
-second value is specified in seconds and may use any of the
-units documented in the I<TIME FORMATS> section. The
-default value for B<RekeyLimit> is B<default none>,
-which means that rekeying is performed after the
-cipher\'s default amount of data has been sent or
-received and no time based rekeying is done.',
+renegotiated, optionally followed by a maximum amount of
+time that may pass before the session key is renegotiated.
+The first argument is specified in bytes and may have a
+suffix of \'K\', \'M\', or
+\'G\' to indicate Kilobytes, Megabytes, or
+Gigabytes, respectively. The default is between
+\'1G\' and \'4G\', depending on the
+cipher. The optional second value is specified in seconds
+and may use any of the units documented in the I<TIME
+FORMATS> section. The default value for B<RekeyLimit>
+is B<default none>, which means that rekeying is
+performed after the cipher\'s default amount of data
+has been sent or received and no time based rekeying is
+done.',
         'type' => 'leaf',
         'value_type' => 'uniline'
       },
@@ -964,17 +980,6 @@ specified as a text file, listing one public key per line,
 or as an OpenSSH Key Revocation List (KRL) as generated by
 L<ssh-keygen(1)>. For more information on KRLs, see the KEY
 REVOCATION LISTS section in L<ssh-keygen(1)>.',
-        'type' => 'leaf',
-        'value_type' => 'uniline'
-      },
-      'RDomain',
-      {
-        'description' => 'Specifies an explicit routing
-domain that is applied after authentication has completed.
-The user session, as well and any forwarded or listening IP
-sockets, will be bound to this L<rdomain(4)>. If the routing
-domain is set to B<%D>, then the domain in which the
-incoming connection was received will be applied.',
         'type' => 'leaf',
         'value_type' => 'uniline'
       },
@@ -1121,7 +1126,25 @@ B<yes>.',
         'status' => 'deprecated',
         'type' => 'list'
       },
+      'ChallengeResponseAuthentication',
+      {
+        'status' => 'deprecated',
+        'type' => 'leaf',
+        'value_type' => 'boolean'
+      },
+      'KeyRegenerationInterval',
+      {
+        'status' => 'deprecated',
+        'type' => 'leaf',
+        'value_type' => 'uniline'
+      },
       'Protocol',
+      {
+        'status' => 'deprecated',
+        'type' => 'leaf',
+        'value_type' => 'uniline'
+      },
+      'RDomain',
       {
         'status' => 'deprecated',
         'type' => 'leaf',
@@ -1144,15 +1167,9 @@ B<yes>.',
         'status' => 'deprecated',
         'type' => 'leaf',
         'value_type' => 'uniline'
-      },
-      'KeyRegenerationInterval',
-      {
-        'status' => 'deprecated',
-        'type' => 'leaf',
-        'value_type' => 'uniline'
       }
     ],
-    'generated_by' => 'parse-man.pl from sshd_system  8.4p1 doc',
+    'generated_by' => 'parse-man.pl from sshd_system  8.7p1 doc',
     'license' => 'LGPL2',
     'name' => 'Sshd::MatchElement'
   }

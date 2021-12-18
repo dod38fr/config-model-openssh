@@ -19,10 +19,10 @@ by L<parse-man.pl|https://github.com/dod38fr/config-model-openssh/contrib/parse-
       'AddKeysToAgent',
       {
         'choice' => [
+          'no',
           'yes',
-          'ask',
           'confirm',
-          'no'
+          'ask'
         ],
         'description' => 'Specifies whether keys should
 be automatically added to a running L<ssh-agent(1)>. If this
@@ -128,7 +128,8 @@ B<CanonicalDomains>.',
         'choice' => [
           'no',
           'yes',
-          'always'
+          'always',
+          'none'
         ],
         'description' => 'Controls whether explicit
 hostname canonicalization is performed. The default,
@@ -145,7 +146,8 @@ canonicalization is applied to proxied connections too.
 If this option
 is enabled, then the configuration files are processed again
 using the new target name to pick up any new configuration
-in matching B<Host> and B<Match> stanzas.',
+in matching B<Host> and B<Match> stanzas. A value of
+B<none> disables the use of a B<ProxyJump> host.',
         'type' => 'leaf',
         'upstream_default' => 'no',
         'value_type' => 'enum'
@@ -185,9 +187,19 @@ or "*.c.example.com" domains.',
 allowed for signing of certificates by certificate
 authorities (CAs). The default is:
 
-ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,ecdsa-sha2-nistp521,
+ssh-ed25519, ecdsa-sha2-nistp256,
+ecdsa-sha2-nistp384, ecdsa-sha2-nistp521,
+sk-ssh-ed25519@openssh.com,
+sk-ecdsa-sha2-nistp256@openssh.com,
+rsa-sha2-512, rsa-sha2-256
 
-ssh-ed25519,rsa-sha2-512,rsa-sha2-256,ssh-rsa
+If the
+specified list begins with a \'+\' character, then
+the specified algorithms will be appended to the default set
+instead of replacing them. If the specified list begins with
+a \'-\' character, then the specified algorithms
+(including wildcards) will be removed from the default set
+instead of replacing them.
 
 L<ssh(1)> will not
 accept host certificates signed using algorithms other than
@@ -218,31 +230,18 @@ add to the list of certificates used for authentication.',
         'type' => 'leaf',
         'value_type' => 'uniline'
       },
-      'ChallengeResponseAuthentication',
-      {
-        'description' => 'Specifies whether to use
-challenge-response authentication. The argument to this
-keyword must be B<yes> (the default) or B<no>.',
-        'type' => 'leaf',
-        'upstream_default' => 'yes',
-        'value_type' => 'boolean',
-        'write_as' => [
-          'no',
-          'yes'
-        ]
-      },
       'CheckHostIP',
       {
-        'description' => 'If set to B<yes> (the
-default), L<ssh(1)> will additionally check the host IP address
-in the I<known_hosts> file. This allows it to detect if
-a host key changed due to DNS spoofing and will add
-addresses of destination hosts to I<~/.ssh/known_hosts>
-in the process, regardless of the setting of
+        'description' => 'If set to B<yes> L<ssh(1)>
+will additionally check the host IP address in the
+I<known_hosts> file. This allows it to detect if a host
+key changed due to DNS spoofing and will add addresses of
+destination hosts to I<~/.ssh/known_hosts> in the
+process, regardless of the setting of
 B<StrictHostKeyChecking>. If the option is set to
-B<no>, the check will not be executed.',
+B<no> (the default), the check will not be executed.',
         'type' => 'leaf',
-        'upstream_default' => 'yes',
+        'upstream_default' => 'no',
         'value_type' => 'boolean',
         'write_as' => [
           'no',
@@ -266,24 +265,23 @@ default set.
 The supported
 ciphers are:
 
-3des-cbc 
-aes128-cbc 
-aes192-cbc 
-aes256-cbc 
-aes128-ctr 
-aes192-ctr 
-aes256-ctr 
-aes128-gcm@openssh.com 
-aes256-gcm@openssh.com 
+3des-cbc
+aes128-cbc
+aes192-cbc
+aes256-cbc
+aes128-ctr
+aes192-ctr
+aes256-ctr
+aes128-gcm@openssh.com
+aes256-gcm@openssh.com
 chacha20-poly1305@openssh.com
 
 The default
 is:
 
 chacha20-poly1305@openssh.com,
-
-aes128-ctr,aes192-ctr,aes256-ctr, 
-aes128-gcm@openssh.com,aes256-gcm@openssh.com
+aes128-ctr, aes192-ctr, aes256-ctr,
+aes128-gcm@openssh.com, aes256-gcm@openssh.com
 
 The list of
 available ciphers may also be obtained using "ssh -Q
@@ -517,6 +515,36 @@ B<md5> and B<sha256> (the default).',
         'upstream_default' => 'sha256',
         'value_type' => 'enum'
       },
+      'ForkAfterAuthentication',
+      {
+        'description' => 'Requests B<ssh> to go to
+background just before command execution. This is useful if
+B<ssh> is going to ask for passwords or passphrases, but
+the user wants it in the background. This implies the
+B<StdinNull> configuration option being set to
+B<yes>. The recommended way to start X11 programs
+at a remote site is with something like B<ssh -f host
+xterm>, which is the same as B<ssh host xterm> if the
+B<ForkAfterAuthentication> configuration option is set
+to B<yes>.
+
+If the
+B<ExitOnForwardFailure> configuration option is set to
+B<yes>, then a client started with the
+B<ForkAfterAuthentication> configuration option being
+set to B<yes> will wait for all remote port
+forwards to be successfully established before placing
+itself in the background. The argument to this keyword must
+be B<yes> (same as the B<-f> option) or B<no>
+(the default).',
+        'type' => 'leaf',
+        'upstream_default' => 'no',
+        'value_type' => 'boolean',
+        'write_as' => [
+          'no',
+          'yes'
+        ]
+      },
       'ForwardAgent',
       {
         'description' => 'Specifies whether the
@@ -742,16 +770,15 @@ algorithms that are offered for GSSAPI key exchange.
 Possible values are
 
 gss-gex-sha1-,
-
-gss-group1-sha1-, 
-gss-group14-sha1-, 
-gss-group14-sha256-, 
-gss-group16-sha512-, 
-gss-nistp256-sha256-, 
+gss-group1-sha1-,
+gss-group14-sha1-,
+gss-group14-sha256-,
+gss-group16-sha512-,
+gss-nistp256-sha256-,
 gss-curve25519-sha256-
 
 The default is
-\x{201c}gss-group14-sha256-,gss-group16-sha512-,gss-nistp256-sha256-,gss-curve25519-sha256-,gss-gex-sha1-,gss-group14-sha1-\x{201d}.
+\x{201c}gss-group14-sha256-, gss-group16-sha512-, gss-nistp256-sha256-, gss-curve25519-sha256-, gss-gex-sha1-, gss-group14-sha1-\x{201d}.
 This option only applies to connections using GSSAPI.",
         'type' => 'leaf',
         'value_type' => 'uniline'
@@ -777,6 +804,48 @@ host names from I<~/.ssh/known_hosts>.',
           'yes'
         ]
       },
+      'HostbasedAcceptedAlgorithms',
+      {
+        'description' => 'Specifies the signature
+algorithms that will be used for hostbased authentication as
+a comma-separated list of patterns. Alternately if the
+specified list begins with a \'+\' character, then
+the specified signature algorithms will be appended to the
+default set instead of replacing them. If the specified list
+begins with a \'-\' character, then the specified
+signature algorithms (including wildcards) will be removed
+from the default set instead of replacing them. If the
+specified list begins with a \'^\' character, then
+the specified signature algorithms will be placed at the
+head of the default set. The default for this option is:
+
+ssh-ed25519-cert-v01@openssh.com,
+ecdsa-sha2-nistp256-cert-v01@openssh.com,
+ecdsa-sha2-nistp384-cert-v01@openssh.com,
+ecdsa-sha2-nistp521-cert-v01@openssh.com,
+sk-ssh-ed25519-cert-v01@openssh.com,
+sk-ecdsa-sha2-nistp256-cert-v01@openssh.com,
+rsa-sha2-512-cert-v01@openssh.com,
+rsa-sha2-256-cert-v01@openssh.com,
+ssh-rsa-cert-v01@openssh.com,
+ssh-ed25519,
+ecdsa-sha2-nistp256, ecdsa-sha2-nistp384, ecdsa-sha2-nistp521,
+sk-ssh-ed25519@openssh.com,
+sk-ecdsa-sha2-nistp256@openssh.com,
+rsa-sha2-512, rsa-sha2-256, ssh-rsa
+
+The B<-Q>
+option of L<ssh(1)> may be used to list supported signature
+algorithms. This was formerly named HostbasedKeyTypes.',
+        'migrate_from' => {
+          'formula' => '$old',
+          'variables' => {
+            'old' => '- HostbasedKeyTypes'
+          }
+        },
+        'type' => 'leaf',
+        'value_type' => 'uniline'
+      },
       'HostbasedAuthentication',
       {
         'description' => 'Specifies whether to try rhosts
@@ -790,82 +859,43 @@ argument must be B<yes> or B<no> (the default).',
           'yes'
         ]
       },
-      'HostbasedKeyTypes',
-      {
-        'description' => 'Specifies the key types that
-will be used for hostbased authentication as a
-comma-separated list of patterns. Alternately if the
-specified list begins with a \'+\' character, then
-the specified key types will be appended to the default set
-instead of replacing them. If the specified list begins with
-a \'-\' character, then the specified key types
-(including wildcards) will be removed from the default set
-instead of replacing them. If the specified list begins with
-a \'^\' character, then the specified key types
-will be placed at the head of the default set. The default
-for this option is:
-
-ecdsa-sha2-nistp256-cert-v01@openssh.com,
-
-ecdsa-sha2-nistp384-cert-v01@openssh.com, 
-ecdsa-sha2-nistp521-cert-v01@openssh.com, 
-sk-ecdsa-sha2-nistp256-cert-v01@openssh.com, 
-ssh-ed25519-cert-v01@openssh.com, 
-sk-ssh-ed25519-cert-v01@openssh.com, 
-rsa-sha2-512-cert-v01@openssh.com, 
-rsa-sha2-256-cert-v01@openssh.com, 
-ssh-rsa-cert-v01@openssh.com, 
-
-ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,ecdsa-sha2-nistp521,
-
-sk-ecdsa-sha2-nistp256@openssh.com, 
-ssh-ed25519,sk-ssh-ed25519@openssh.com, 
-rsa-sha2-512,rsa-sha2-256,ssh-rsa
-
-The B<-Q>
-option of L<ssh(1)> may be used to list supported key
-types.',
-        'type' => 'leaf',
-        'value_type' => 'uniline'
-      },
       'HostKeyAlgorithms',
       {
         'description' => 'Specifies the host key
-algorithms that the client wants to use in order of
-preference. Alternately if the specified list begins with a
-\'+\' character, then the specified key types will
-be appended to the default set instead of replacing them. If
-the specified list begins with a \'-\' character,
-then the specified key types (including wildcards) will be
-removed from the default set instead of replacing them. If
-the specified list begins with a \'^\' character,
-then the specified key types will be placed at the head of
-the default set. The default for this option is:
+signature algorithms that the client wants to use in order
+of preference. Alternately if the specified list begins with
+a \'+\' character, then the specified signature
+algorithms will be appended to the default set instead of
+replacing them. If the specified list begins with a
+\'-\' character, then the specified signature
+algorithms (including wildcards) will be removed from the
+default set instead of replacing them. If the specified list
+begins with a \'^\' character, then the specified
+signature algorithms will be placed at the head of the
+default set. The default for this option is:
 
+ssh-ed25519-cert-v01@openssh.com,
 ecdsa-sha2-nistp256-cert-v01@openssh.com,
-
-ecdsa-sha2-nistp384-cert-v01@openssh.com, 
-ecdsa-sha2-nistp521-cert-v01@openssh.com, 
-sk-ecdsa-sha2-nistp256-cert-v01@openssh.com, 
-ssh-ed25519-cert-v01@openssh.com, 
-sk-ssh-ed25519-cert-v01@openssh.com, 
-rsa-sha2-512-cert-v01@openssh.com, 
-rsa-sha2-256-cert-v01@openssh.com, 
-ssh-rsa-cert-v01@openssh.com, 
-
-ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,ecdsa-sha2-nistp521,
-
-sk-ecdsa-sha2-nistp256@openssh.com, 
-ssh-ed25519,sk-ssh-ed25519@openssh.com, 
-rsa-sha2-512,rsa-sha2-256,ssh-rsa
+ecdsa-sha2-nistp384-cert-v01@openssh.com,
+ecdsa-sha2-nistp521-cert-v01@openssh.com,
+sk-ssh-ed25519-cert-v01@openssh.com,
+sk-ecdsa-sha2-nistp256-cert-v01@openssh.com,
+rsa-sha2-512-cert-v01@openssh.com,
+rsa-sha2-256-cert-v01@openssh.com,
+ssh-rsa-cert-v01@openssh.com,
+ssh-ed25519,
+ecdsa-sha2-nistp256, ecdsa-sha2-nistp384, ecdsa-sha2-nistp521,
+sk-ecdsa-sha2-nistp256@openssh.com,
+sk-ssh-ed25519@openssh.com,
+rsa-sha2-512, rsa-sha2-256, ssh-rsa
 
 If hostkeys are
 known for the destination host then this default is modified
 to prefer their algorithms.
 
 The list of
-available key types may also be obtained using "ssh -Q
-HostKeyAlgorithms".',
+available signature algorithms may also be obtained using
+"ssh -Q HostKeyAlgorithms".',
         'type' => 'leaf',
         'value_type' => 'uniline'
       },
@@ -945,7 +975,7 @@ in the I<ENVIRONMENT VARIABLES> section.',
           'warn_if_match' => {
             '\\.pub$' => {
               'fix' => 's/\\.pub$//;',
-              'msg' => 'identity file should be the private key '
+              'msg' => 'identity file must be the private key'
             }
           }
         },
@@ -1064,7 +1094,9 @@ non-interactive sessions.',
       {
         'description' => 'Specifies whether to use
 keyboard-interactive authentication. The argument to this
-keyword must be B<yes> (the default) or B<no>.',
+keyword must be B<yes> (the default) or B<no>.
+B<ChallengeResponseAuthentication> is a deprecated alias
+for this.',
         'type' => 'leaf',
         'upstream_default' => 'yes',
         'value_type' => 'boolean',
@@ -1102,18 +1134,37 @@ the specified list begins with a \'^\' character,
 then the specified methods will be placed at the head of the
 default set. The default is:
 
-curve25519-sha256,curve25519-sha256@libssh.org,
-
-ecdh-sha2-nistp256,ecdh-sha2-nistp384,ecdh-sha2-nistp521,
-
-diffie-hellman-group-exchange-sha256, 
-diffie-hellman-group16-sha512, 
-diffie-hellman-group18-sha512, 
+curve25519-sha256, curve25519-sha256@libssh.org,
+ecdh-sha2-nistp256, ecdh-sha2-nistp384, ecdh-sha2-nistp521,
+diffie-hellman-group-exchange-sha256,
+diffie-hellman-group16-sha512,
+diffie-hellman-group18-sha512,
 diffie-hellman-group14-sha256
 
 The list of
 available key exchange algorithms may also be obtained using
 "ssh -Q kex".',
+        'type' => 'leaf',
+        'value_type' => 'uniline'
+      },
+      'KnownHostsCommand',
+      {
+        'description' => 'Specifies a command to use to
+obtain a list of host keys, in addition to those listed in
+B<UserKnownHostsFile> and B<GlobalKnownHostsFile>.
+This command is executed after the files have been read. It
+may write host key lines to standard output in identical
+format to the usual files (described in the I<VERIFYING
+HOST KEYS> section in L<ssh(1)>). Arguments to
+B<KnownHostsCommand> accept the tokens described in the
+I<TOKENS> section. The command may be invoked multiple
+times per connection: once when preparing the preference
+list of host key algorithms to use, again to obtain the host
+key for the requested host name and, if B<CheckHostIP>
+is enabled, one more time to obtain the host key matching
+the server\'s address. If the command exits abnormally
+or returns a non-zero exit status then the connection is
+terminated.',
         'type' => 'leaf',
         'value_type' => 'uniline'
       },
@@ -1194,6 +1245,25 @@ levels of verbose output.',
         'upstream_default' => 'INFO',
         'value_type' => 'enum'
       },
+      'LogVerbose',
+      {
+        'description' => 'Specify one or more overrides
+to LogLevel. An override consists of a pattern lists that
+matches the source file, function and line number to force
+detailed logging for. For example, an override pattern
+of:
+
+kex.c:*:1000,*:kex_exchange_identification():*, packet.c:*
+
+would enable
+detailed logging for line 1000 of I<kex.c>, everything
+in the B<kex_exchange_identification>() function, and
+all code in the I<packet.c> file. This option is
+intended for debugging and no overrides are enabled by
+default.',
+        'type' => 'leaf',
+        'value_type' => 'uniline'
+      },
       'MACs',
       {
         'description' => 'Specifies the
@@ -1218,14 +1288,11 @@ and their use recommended.
 The default
 is:
 
-umac-64-etm@openssh.com,umac-128-etm@openssh.com,
-
-
-hmac-sha2-256-etm@openssh.com,hmac-sha2-512-etm@openssh.com,
-
-hmac-sha1-etm@openssh.com, 
-umac-64@openssh.com,umac-128@openssh.com, 
-hmac-sha2-256,hmac-sha2-512,hmac-sha1
+umac-64-etm@openssh.com, umac-128-etm@openssh.com,
+hmac-sha2-256-etm@openssh.com, hmac-sha2-512-etm@openssh.com,
+hmac-sha1-etm@openssh.com,
+umac-64@openssh.com, umac-128@openssh.com,
+hmac-sha2-256, hmac-sha2-512, hmac-sha1
 
 The list of
 available MAC algorithms may also be obtained using
@@ -1282,6 +1349,33 @@ argument must be B<yes> or B<no> (the default).',
           'yes'
         ]
       },
+      'PermitRemoteOpen',
+      {
+        'cargo' => {
+          'type' => 'leaf',
+          'value_type' => 'uniline'
+        },
+        'description' => 'Specifies the destinations to
+which remote TCP port forwarding is permitted when
+B<RemoteForward> is used as a SOCKS proxy. The
+forwarding specification must be one of the following
+forms:
+
+B<PermitRemoteOpen>I<host>:I<port> B<
+PermitRemoteOpen> I<IPv4_addr>:I<port> B<
+PermitRemoteOpen> I<[IPv6_addr]>:I<port>
+
+Multiple
+forwards may be specified by separating them with
+whitespace. An argument of B<any> can be used to remove
+all restrictions and permit any forwarding requests. An
+argument of B<none> can be used to prohibit all
+forwarding requests. The wildcard \'*\' can be
+used for host or port to allow all hosts or ports
+respectively. Otherwise, no pattern matching or address
+lookups are performed on supplied names.',
+        'type' => 'list'
+      },
       'PKCS11Provider',
       {
         'description' => 'Specifies which PKCS#11
@@ -1321,9 +1415,8 @@ client to prefer one method (e.g.
 B<keyboard-interactive>) over another method (e.g.
 B<password>). The default is:
 
-gssapi-with-mic,hostbased,publickey,
-
-keyboard-interactive,password',
+gssapi-with-mic, hostbased, publickey,
+keyboard-interactive, password',
         'type' => 'list'
       },
       'ProxyCommand',
@@ -1372,7 +1465,8 @@ will be visited sequentially. Setting this option will cause
 L<ssh(1)> to connect to the target host by first making a
 L<ssh(1)> connection to the specified B<ProxyJump> host and
 then establishing a TCP forwarding to the ultimate target
-from there.
+from there. Setting the host to B<none> disables this
+option entirely.
 
 Note that this
 option will compete with the B<ProxyCommand> option -
@@ -1401,41 +1495,45 @@ data. The default is B<no>.',
           'yes'
         ]
       },
-      'PubkeyAcceptedKeyTypes',
+      'PubkeyAcceptedAlgorithms',
       {
-        'description' => 'Specifies the key types that
-will be used for public key authentication as a
-comma-separated list of patterns. If the specified list
-begins with a \'+\' character, then the key types
+        'description' => 'Specifies the signature
+algorithms that will be used for public key authentication
+as a comma-separated list of patterns. If the specified list
+begins with a \'+\' character, then the algorithms
 after it will be appended to the default instead of
 replacing it. If the specified list begins with a
-\'-\' character, then the specified key types
+\'-\' character, then the specified algorithms
 (including wildcards) will be removed from the default set
 instead of replacing them. If the specified list begins with
-a \'^\' character, then the specified key types
+a \'^\' character, then the specified algorithms
 will be placed at the head of the default set. The default
 for this option is:
 
+ssh-ed25519-cert-v01@openssh.com,
 ecdsa-sha2-nistp256-cert-v01@openssh.com,
-
-ecdsa-sha2-nistp384-cert-v01@openssh.com, 
-ecdsa-sha2-nistp521-cert-v01@openssh.com, 
-sk-ecdsa-sha2-nistp256-cert-v01@openssh.com, 
-ssh-ed25519-cert-v01@openssh.com, 
-sk-ssh-ed25519-cert-v01@openssh.com, 
-rsa-sha2-512-cert-v01@openssh.com, 
-rsa-sha2-256-cert-v01@openssh.com, 
-ssh-rsa-cert-v01@openssh.com, 
-
-ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,ecdsa-sha2-nistp521,
-
-sk-ecdsa-sha2-nistp256@openssh.com, 
-ssh-ed25519,sk-ssh-ed25519@openssh.com, 
-rsa-sha2-512,rsa-sha2-256,ssh-rsa
+ecdsa-sha2-nistp384-cert-v01@openssh.com,
+ecdsa-sha2-nistp521-cert-v01@openssh.com,
+sk-ssh-ed25519-cert-v01@openssh.com,
+sk-ecdsa-sha2-nistp256-cert-v01@openssh.com,
+rsa-sha2-512-cert-v01@openssh.com,
+rsa-sha2-256-cert-v01@openssh.com,
+ssh-rsa-cert-v01@openssh.com,
+ssh-ed25519,
+ecdsa-sha2-nistp256, ecdsa-sha2-nistp384, ecdsa-sha2-nistp521,
+sk-ssh-ed25519@openssh.com,
+sk-ecdsa-sha2-nistp256@openssh.com,
+rsa-sha2-512, rsa-sha2-256, ssh-rsa
 
 The list of
-available key types may also be obtained using "ssh -Q
-PubkeyAcceptedKeyTypes".',
+available signature algorithms may also be obtained using
+"ssh -Q PubkeyAcceptedAlgorithms".',
+        'migrate_from' => {
+          'formula' => '$old',
+          'variables' => {
+            'old' => '- PubkeyAcceptedKeyTypes'
+          }
+        },
         'type' => 'leaf',
         'value_type' => 'uniline'
       },
@@ -1456,19 +1554,20 @@ B<yes> (the default) or B<no>.',
       {
         'description' => 'Specifies the maximum amount of
 data that may be transmitted before the session key is
-renegotiated, optionally followed a maximum amount of time
-that may pass before the session key is renegotiated. The
-first argument is specified in bytes and may have a suffix
-of \'K\', \'M\', or \'G\' to
-indicate Kilobytes, Megabytes, or Gigabytes, respectively.
-The default is between \'1G\' and
-\'4G\', depending on the cipher. The optional
-second value is specified in seconds and may use any of the
-units documented in the TIME FORMATS section of
-L<sshd_config(5)>. The default value for B<RekeyLimit> is
-B<default none>, which means that rekeying is performed
-after the cipher\'s default amount of data has been
-sent or received and no time based rekeying is done.',
+renegotiated, optionally followed by a maximum amount of
+time that may pass before the session key is renegotiated.
+The first argument is specified in bytes and may have a
+suffix of \'K\', \'M\', or
+\'G\' to indicate Kilobytes, Megabytes, or
+Gigabytes, respectively. The default is between
+\'1G\' and \'4G\', depending on the
+cipher. The optional second value is specified in seconds
+and may use any of the units documented in the TIME FORMATS
+section of L<sshd_config(5)>. The default value for
+B<RekeyLimit> is B<default none>, which means that
+rekeying is performed after the cipher\'s default
+amount of data has been sent or received and no time based
+rekeying is done.',
         'type' => 'leaf',
         'value_type' => 'uniline'
       },
@@ -1502,7 +1601,9 @@ supports it, a Unix domain socket path. If forwarding to a
 specific destination then the second argument must be
 I<host>:I<hostport> or a Unix domain socket path,
 otherwise if no destination argument is specified then the
-remote forwarding will be established as a SOCKS proxy.
+remote forwarding will be established as a SOCKS proxy. When
+acting as a SOCKS proxy the destination of the connection
+can be restricted by B<PermitRemoteOpen>.
 
 IPv6 addresses
 can be specified by enclosing addresses in square brackets.
@@ -1642,15 +1743,48 @@ aliases for this option.',
         'upstream_default' => '0',
         'value_type' => 'integer'
       },
+      'SessionType',
+      {
+        'choice' => [
+          'none',
+          'subsystem',
+          'default'
+        ],
+        'description' => 'May be used to either request
+invocation of a subsystem on the remote system, or to
+prevent the execution of a remote command at all. The latter
+is useful for just forwarding ports. The argument to this
+keyword must be B<none> (same as the B<-N> option),
+B<subsystem> (same as the B<-s> option) or
+B<default> (shell or command execution).',
+        'type' => 'leaf',
+        'value_type' => 'enum'
+      },
       'SetEnv',
       {
         'description' => 'Directly
 specify one or more environment variables and their contents
-to be sent to the server. Similarly to B<SendEnv>, the
-server must be prepared to accept the environment
-variable.',
+to be sent to the server. Similarly to B<SendEnv>, with
+the exception of the TERM variable, the server must be
+prepared to accept the environment variable.',
         'type' => 'leaf',
         'value_type' => 'uniline'
+      },
+      'StdinNull',
+      {
+        'description' => 'Redirects stdin from
+I</dev/null> (actually, prevents reading from stdin).
+Either this or the equivalent B<-n> option must be used
+when B<ssh> is run in the background. The argument to
+this keyword must be B<yes> (same as the B<-n>
+option) or B<no> (the default).',
+        'type' => 'leaf',
+        'upstream_default' => 'no',
+        'value_type' => 'boolean',
+        'write_as' => [
+          'no',
+          'yes'
+        ]
       },
       'StreamLocalBindMask',
       {
@@ -1709,18 +1843,18 @@ add all new hosts.
 
 If this flag is
 set to \x{201c}accept-new\x{201d} then ssh will automatically
-add new host keys to the user known hosts files, but will
-not permit connections to hosts with changed host keys. If
-this flag is set to B<no> or B<off>,
-ssh will automatically add new host keys to the user known
-hosts files and allow connections to hosts with changed
-hostkeys to proceed, subject to some restrictions. If this
-flag is set to B<ask> (the default), new host keys will
-be added to the user known host files only after the user
-has confirmed that is what they really want to do, and ssh
-will refuse to connect to hosts whose host key has changed.
-The host keys of known hosts will be verified automatically
-in all cases.",
+add new host keys to the user's I<known_hosts>
+file, but will not permit connections to hosts with changed
+host keys. If this flag is set to B<no> or
+B<off>, ssh will automatically add new host keys
+to the user known hosts files and allow connections to hosts
+with changed hostkeys to proceed, subject to some
+restrictions. If this flag is set to B<ask> (the
+default), new host keys will be added to the user known host
+files only after the user has confirmed that is what they
+really want to do, and ssh will refuse to connect to hosts
+whose host key has changed. The host keys of known hosts
+will be verified automatically in all cases.",
         'type' => 'leaf',
         'upstream_default' => 'ask',
         'value_type' => 'enum'
@@ -1827,14 +1961,21 @@ B<UserKnownHostsFile>. The argument must be B<yes>,
 B<no> or B<ask>. This option allows learning
 alternate hostkeys for a server and supports graceful key
 rotation by allowing a server to send replacement public
-keys before old ones are removed. Additional hostkeys are
-only accepted if the key used to authenticate the host was
-already trusted or explicitly accepted by the user.
+keys before old ones are removed.
+
+Additional
+hostkeys are only accepted if the key used to authenticate
+the host was already trusted or explicitly accepted by the
+user, the host was authenticated via
+B<UserKnownHostsFile> (i.e. not
+B<GlobalKnownHostsFile>) and the host was authenticated
+using a plain key and not a certificate.
 
 B<UpdateHostKeys>
 is enabled by default if the user has not overridden the
-default B<UserKnownHostsFile> setting, otherwise
-B<UpdateHostKeys> will be set to B<ask>.
+default B<UserKnownHostsFile> setting and has not
+enabled B<VerifyHostKeyDNS>, otherwise
+B<UpdateHostKeys> will be set to B<no>.
 
 If
 B<UpdateHostKeys> is set to B<ask>, then the user is
@@ -1925,6 +2066,20 @@ I</usr/bin/xauth>.',
         'type' => 'leaf',
         'value_type' => 'uniline'
       },
+      'HostbasedKeyTypes',
+      {
+        'description' => 'This parameter is now ignored by Ssh',
+        'status' => 'deprecated',
+        'type' => 'leaf',
+        'value_type' => 'uniline'
+      },
+      'PubkeyAcceptedKeyTypes',
+      {
+        'description' => 'This parameter is now ignored by Ssh',
+        'status' => 'deprecated',
+        'type' => 'leaf',
+        'value_type' => 'uniline'
+      },
       'UseRsh',
       {
         'description' => 'This parameter is now ignored by Ssh',
@@ -1933,7 +2088,7 @@ I</usr/bin/xauth>.',
         'value_type' => 'uniline'
       }
     ],
-    'generated_by' => 'parse-man.pl from ssh_system  8.4p1 doc',
+    'generated_by' => 'parse-man.pl from ssh_system  8.7p1 doc',
     'license' => 'LGPL2',
     'name' => 'Ssh::HostElement'
   }

@@ -37,28 +37,25 @@ should be used by L<sshd(8)>. Valid arguments are B<any>
 allowed for signing of certificates by certificate
 authorities (CAs). The default is:
 
-ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,ecdsa-sha2-nistp521,
+ssh-ed25519, ecdsa-sha2-nistp256,
+ecdsa-sha2-nistp384, ecdsa-sha2-nistp521,
+sk-ssh-ed25519@openssh.com,
+sk-ecdsa-sha2-nistp256@openssh.com,
+rsa-sha2-512, rsa-sha2-256
 
-ssh-ed25519,rsa-sha2-512,rsa-sha2-256,ssh-rsa
+If the
+specified list begins with a \'+\' character, then
+the specified algorithms will be appended to the default set
+instead of replacing them. If the specified list begins with
+a \'-\' character, then the specified algorithms
+(including wildcards) will be removed from the default set
+instead of replacing them.
 
 Certificates
 signed using other algorithms will not be accepted for
 public key or host-based authentication.',
         'type' => 'leaf',
         'value_type' => 'uniline'
-      },
-      'ChallengeResponseAuthentication',
-      {
-        'description' => 'Specifies whether
-challenge-response authentication is allowed (e.g. via PAM).
-The default is B<yes>.',
-        'type' => 'leaf',
-        'upstream_default' => 'yes',
-        'value_type' => 'boolean',
-        'write_as' => [
-          'no',
-          'yes'
-        ]
       },
       'Ciphers',
       {
@@ -76,24 +73,23 @@ be placed at the head of the default set.
 The supported
 ciphers are:
 
-3des-cbc 
-aes128-cbc 
-aes192-cbc 
-aes256-cbc 
-aes128-ctr 
-aes192-ctr 
-aes256-ctr 
-aes128-gcm@openssh.com 
-aes256-gcm@openssh.com 
+3des-cbc
+aes128-cbc
+aes192-cbc
+aes256-cbc
+aes128-ctr
+aes192-ctr
+aes256-ctr
+aes128-gcm@openssh.com
+aes256-gcm@openssh.com
 chacha20-poly1305@openssh.com
 
 The default
 is:
 
 chacha20-poly1305@openssh.com,
-
-aes128-ctr,aes192-ctr,aes256-ctr, 
-aes128-gcm@openssh.com,aes256-gcm@openssh.com
+aes128-ctr, aes192-ctr, aes256-ctr,
+aes128-gcm@openssh.com, aes256-gcm@openssh.com
 
 The list of
 available ciphers may also be obtained using "ssh -Q
@@ -130,15 +126,6 @@ B<yes>.',
           'no',
           'yes'
         ]
-      },
-      'DisableForwarding',
-      {
-        'description' => 'Disables all forwarding
-features, including X11, L<ssh-agent(1)>, TCP and StreamLocal.
-This option overrides all other forwarding-related options
-and may simplify restricted configurations.',
-        'type' => 'leaf',
-        'value_type' => 'uniline'
       },
       'ExposeAuthInfo',
       {
@@ -242,16 +229,15 @@ algorithms that are accepted by GSSAPI key exchange.
 Possible values are
 
 gss-gex-sha1-,
-
-gss-group1-sha1-, 
-gss-group14-sha1-, 
-gss-group14-sha256-, 
-gss-group16-sha512-, 
-gss-nistp256-sha256-, 
+gss-group1-sha1-,
+gss-group14-sha1-,
+gss-group14-sha256-,
+gss-group16-sha512-,
+gss-nistp256-sha256-,
 gss-curve25519-sha256-
 
 The default is
-\x{201c}gss-group14-sha256-,gss-group16-sha512-,gss-nistp256-sha256-,gss-curve25519-sha256-,gss-gex-sha1-,gss-group14-sha1-\x{201d}.
+\x{201c}gss-group14-sha256-, gss-group16-sha512-, gss-nistp256-sha256-, gss-curve25519-sha256-, gss-gex-sha1-, gss-group14-sha1-\x{201d}.
 This option only applies to connections using GSSAPI.",
         'type' => 'leaf',
         'value_type' => 'uniline'
@@ -302,29 +288,27 @@ variable.',
       'HostKeyAlgorithms',
       {
         'description' => 'Specifies the host key
-algorithms that the server offers. The default for this
-option is:
+signature algorithms that the server offers. The default for
+this option is:
 
+ssh-ed25519-cert-v01@openssh.com,
 ecdsa-sha2-nistp256-cert-v01@openssh.com,
-
-ecdsa-sha2-nistp384-cert-v01@openssh.com, 
-ecdsa-sha2-nistp521-cert-v01@openssh.com, 
-sk-ecdsa-sha2-nistp256-cert-v01@openssh.com, 
-ssh-ed25519-cert-v01@openssh.com, 
-sk-ssh-ed25519-cert-v01@openssh.com, 
-rsa-sha2-512-cert-v01@openssh.com, 
-rsa-sha2-256-cert-v01@openssh.com, 
-ssh-rsa-cert-v01@openssh.com, 
-
-ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,ecdsa-sha2-nistp521,
-
-sk-ecdsa-sha2-nistp256@openssh.com, 
-ssh-ed25519,sk-ssh-ed25519@openssh.com, 
-rsa-sha2-512,rsa-sha2-256,ssh-rsa
+ecdsa-sha2-nistp384-cert-v01@openssh.com,
+ecdsa-sha2-nistp521-cert-v01@openssh.com,
+sk-ssh-ed25519-cert-v01@openssh.com,
+sk-ecdsa-sha2-nistp256-cert-v01@openssh.com,
+rsa-sha2-512-cert-v01@openssh.com,
+rsa-sha2-256-cert-v01@openssh.com,
+ssh-rsa-cert-v01@openssh.com,
+ssh-ed25519,
+ecdsa-sha2-nistp256, ecdsa-sha2-nistp384, ecdsa-sha2-nistp521,
+sk-ssh-ed25519@openssh.com,
+sk-ecdsa-sha2-nistp256@openssh.com,
+rsa-sha2-512, rsa-sha2-256, ssh-rsa
 
 The list of
-available key types may also be obtained using "ssh -Q
-HostKeyAlgorithms".',
+available signature algorithms may also be obtained using
+"ssh -Q HostKeyAlgorithms".',
         'type' => 'leaf',
         'value_type' => 'uniline'
       },
@@ -399,31 +383,26 @@ character, then the specified methods will be placed at the
 head of the default set. The supported algorithms are:
 
 curve25519-sha256
-
-curve25519-sha256@libssh.org 
-diffie-hellman-group1-sha1 
-diffie-hellman-group14-sha1 
-diffie-hellman-group14-sha256 
-diffie-hellman-group16-sha512 
-diffie-hellman-group18-sha512 
-diffie-hellman-group-exchange-sha1 
-diffie-hellman-group-exchange-sha256 
-ecdh-sha2-nistp256 
-ecdh-sha2-nistp384 
-ecdh-sha2-nistp521 
-sntrup4591761x25519-sha512@tinyssh.org
+curve25519-sha256@libssh.org
+diffie-hellman-group1-sha1
+diffie-hellman-group14-sha1
+diffie-hellman-group14-sha256
+diffie-hellman-group16-sha512
+diffie-hellman-group18-sha512
+diffie-hellman-group-exchange-sha1
+diffie-hellman-group-exchange-sha256
+ecdh-sha2-nistp256
+ecdh-sha2-nistp384
+ecdh-sha2-nistp521
+sntrup761x25519-sha512@openssh.com
 
 The default
 is:
 
-curve25519-sha256,curve25519-sha256@libssh.org,
-
-ecdh-sha2-nistp256,ecdh-sha2-nistp384,ecdh-sha2-nistp521,
-
-diffie-hellman-group-exchange-sha256, 
-
-diffie-hellman-group16-sha512,diffie-hellman-group18-sha512,
-
+curve25519-sha256, curve25519-sha256@libssh.org,
+ecdh-sha2-nistp256, ecdh-sha2-nistp384, ecdh-sha2-nistp521,
+diffie-hellman-group-exchange-sha256,
+diffie-hellman-group16-sha512, diffie-hellman-group18-sha512,
 diffie-hellman-group14-sha256
 
 The list of
@@ -438,24 +417,18 @@ available key exchange algorithms may also be obtained using
 L<sshd(8)> should listen on. The following forms may be
 used:
 
-B<ListenAddress>I<hostname>|I<address> [B<rdomain>I<domain>] B<
-ListenAddress> I<hostname>:I<port>
-[B<rdomain> I<domain>] B<
-ListenAddress> I<IPv4_address>:I<port>
-[B<rdomain> I<domain>] B<
+B<ListenAddress>I<hostname>|I<address> B<
+ListenAddress> I<hostname>:I<port> B<
+ListenAddress> I<IPv4_address>:I<port> B<
 ListenAddress> [
 
 I<hostname>|I<address> ]:I<port>
-[B<rdomain> I<domain>]
 
-The optional
-B<rdomain> qualifier requests L<sshd(8)> listen in an
-explicit routing domain. If I<port> is not specified,
-sshd will listen on the address and all B<Port> options
-specified. The default is to listen on all local addresses
-on the current default routing domain. Multiple
-B<ListenAddress> options are permitted. For more
-information on routing domains, see L<rdomain(4)>.',
+If I<port>
+is not specified, sshd will listen on the address and all
+B<Port> options specified. The default is to listen on
+all local addresses. Multiple B<ListenAddress> options
+are permitted.',
         'type' => 'leaf',
         'value_type' => 'uniline'
       },
@@ -465,6 +438,25 @@ information on routing domains, see L<rdomain(4)>.',
 this time if the user has not successfully logged in. If the
 value is 0, there is no time limit. The default is 120
 seconds.',
+        'type' => 'leaf',
+        'value_type' => 'uniline'
+      },
+      'LogVerbose',
+      {
+        'description' => 'Specify one or more overrides
+to LogLevel. An override consists of a pattern lists that
+matches the source file, function and line number to force
+detailed logging for. For example, an override pattern
+of:
+
+kex.c:*:1000,*:kex_exchange_identification():*, packet.c:*
+
+would enable
+detailed logging for line 1000 of I<kex.c>, everything
+in the B<kex_exchange_identification>() function, and
+all code in the I<packet.c> file. This option is
+intended for debugging and no overrides are enabled by
+default.',
         'type' => 'leaf',
         'value_type' => 'uniline'
       },
@@ -488,34 +480,31 @@ that contain "-etm" calculate the MAC after
 encryption (encrypt-then-mac). These are considered safer
 and their use recommended. The supported MACs are:
 
-hmac-md5 
-hmac-md5-96 
-hmac-sha1 
-hmac-sha1-96 
-hmac-sha2-256 
-hmac-sha2-512 
-umac-64@openssh.com 
-umac-128@openssh.com 
-hmac-md5-etm@openssh.com 
-hmac-md5-96-etm@openssh.com 
-hmac-sha1-etm@openssh.com 
-hmac-sha1-96-etm@openssh.com 
-hmac-sha2-256-etm@openssh.com 
-hmac-sha2-512-etm@openssh.com 
-umac-64-etm@openssh.com 
+hmac-md5
+hmac-md5-96
+hmac-sha1
+hmac-sha1-96
+hmac-sha2-256
+hmac-sha2-512
+umac-64@openssh.com
+umac-128@openssh.com
+hmac-md5-etm@openssh.com
+hmac-md5-96-etm@openssh.com
+hmac-sha1-etm@openssh.com
+hmac-sha1-96-etm@openssh.com
+hmac-sha2-256-etm@openssh.com
+hmac-sha2-512-etm@openssh.com
+umac-64-etm@openssh.com
 umac-128-etm@openssh.com
 
 The default
 is:
 
-umac-64-etm@openssh.com,umac-128-etm@openssh.com,
-
-
-hmac-sha2-256-etm@openssh.com,hmac-sha2-512-etm@openssh.com,
-
-hmac-sha1-etm@openssh.com, 
-umac-64@openssh.com,umac-128@openssh.com, 
-hmac-sha2-256,hmac-sha2-512,hmac-sha1
+umac-64-etm@openssh.com, umac-128-etm@openssh.com,
+hmac-sha2-256-etm@openssh.com, hmac-sha2-512-etm@openssh.com,
+hmac-sha1-etm@openssh.com,
+umac-64@openssh.com, umac-128@openssh.com,
+hmac-sha2-256, hmac-sha2-512, hmac-sha1
 
 The list of
 available MAC algorithms may also be obtained using
@@ -542,10 +531,8 @@ The arguments
 to B<Match> are one or more criteria-pattern pairs or
 the single token B<All> which matches all criteria. The
 available criteria are B<User>, B<Group>,
-B<Host>, B<LocalAddress>, B<LocalPort>,
-B<RDomain>, and B<Address> (with B<RDomain>
-representing the L<rdomain(4)> on which the connection was
-received).
+B<Host>, B<LocalAddress>, B<LocalPort>, and
+B<Address>.
 
 The match
 patterns may consist of single entries or comma-separated
@@ -576,9 +563,10 @@ B<AuthorizedPrincipalsCommandUser>,
 B<AuthorizedPrincipalsFile>, B<Banner>,
 B<ChrootDirectory>, B<ClientAliveCountMax>,
 B<ClientAliveInterval>, B<DenyGroups>,
-B<DenyUsers>, B<ForceCommand>, B<GatewayPorts>,
+B<DenyUsers>, B<DisableForwarding>,
+B<ForceCommand>, B<GatewayPorts>,
 B<GSSAPIAuthentication>,
-B<HostbasedAcceptedKeyTypes>,
+B<HostbasedAcceptedAlgorithms>,
 B<HostbasedAuthentication>,
 B<HostbasedUsesNameFromPacketOnly>, B<IgnoreRhosts>,
 B<Include>, B<IPQoS>,
@@ -589,12 +577,12 @@ B<PasswordAuthentication>, B<PermitEmptyPasswords>,
 B<PermitListen>, B<PermitOpen>,
 B<PermitRootLogin>, B<PermitTTY>,
 B<PermitTunnel>, B<PermitUserRC>,
-B<PubkeyAcceptedKeyTypes>, B<PubkeyAuthentication>,
-B<RekeyLimit>, B<RevokedKeys>, B<RDomain>,
-B<SetEnv>, B<StreamLocalBindMask>,
-B<StreamLocalBindUnlink>, B<TrustedUserCAKeys>,
-B<X11DisplayOffset>, B<X11Forwarding> and
-B<X11UseLocalhost>.',
+B<PubkeyAcceptedAlgorithms>,
+B<PubkeyAuthentication>, B<RekeyLimit>,
+B<RevokedKeys>, B<SetEnv>,
+B<StreamLocalBindMask>, B<StreamLocalBindUnlink>,
+B<TrustedUserCAKeys>, B<X11DisplayOffset>,
+B<X11Forwarding> and B<X11UseLocalhost>.',
         'type' => 'list'
       },
       'MaxStartups',
@@ -618,6 +606,17 @@ reaches full (60).',
         'upstream_default' => '10',
         'value_type' => 'uniline'
       },
+      'ModuliFile',
+      {
+        'description' => "Specifies the L<moduli(5)> file
+that contains the Diffie-Hellman groups used for the
+\x{201c}diffie-hellman-group-exchange-sha1\x{201d} and
+\x{201c}diffie-hellman-group-exchange-sha256\x{201d} key
+exchange methods. The default is I</etc/ssh/moduli>.",
+        'type' => 'leaf',
+        'upstream_default' => '/etc/ssh/moduli',
+        'value_type' => 'uniline'
+      },
       'PermitUserEnvironment',
       {
         'description' => 'Specifies whether
@@ -625,7 +624,7 @@ I<~/.ssh/environment> and B<environment=> options in
 I<~/.ssh/authorized_keys> are processed by L<sshd(8)>.
 Valid options are B<yes>, B<no> or a pattern-list
 specifying which environment variable names to accept (for
-example "LANG,LC_*"). The default is B<no>.
+example "LANG, LC_*"). The default is B<no>.
 Enabling environment processing may enable users to bypass
 access restrictions in some configurations using mechanisms
 such as LD_PRELOAD.',
@@ -636,6 +635,29 @@ such as LD_PRELOAD.',
           'no',
           'yes'
         ]
+      },
+      'PerSourceMaxStartups',
+      {
+        'description' => 'Specifies the number of
+unauthenticated connections allowed from a given source
+address, or B<none> if there is no limit. This
+limit is applied in addition to B<MaxStartups>,
+whichever is lower. The default is B<none>.',
+        'type' => 'leaf',
+        'upstream_default' => 'none',
+        'value_type' => 'uniline'
+      },
+      'PerSourceNetBlockSize',
+      {
+        'description' => 'Specifies the number of bits of
+source address that are grouped together for the purposes of
+applying PerSourceMaxStartups limits. Values for IPv4 and
+optionally IPv6 may be specified, separated by a colon. The
+default is B<32:128>, which means each address is
+considered individually.',
+        'type' => 'leaf',
+        'upstream_default' => '32:128',
+        'value_type' => 'uniline'
       },
       'PidFile',
       {
@@ -685,6 +707,7 @@ B<yes>.',
       'PubkeyAuthOptions',
       {
         'choice' => [
+          'none',
           'touch-required',
           'verify-required'
         ],
@@ -846,15 +869,15 @@ directives.',
         'description' => 'Enables the
 Pluggable Authentication Module interface. If set to
 B<yes> this will enable PAM authentication using
-B<ChallengeResponseAuthentication> and
+B<KbdInteractiveAuthentication> and
 B<PasswordAuthentication> in addition to PAM account and
 session module processing for all authentication types.
 
 Because PAM
-challenge-response authentication usually serves an
+keyboard-interactive authentication usually serves an
 equivalent role to password authentication, you should
 disable either B<PasswordAuthentication> or
-B<ChallengeResponseAuthentication.>
+B<KbdInteractiveAuthentication>.
 
 If
 B<UsePAM> is enabled, you will not be able to run
@@ -885,7 +908,7 @@ default is I</usr/bin/xauth>.',
         'value_type' => 'uniline'
       }
     ],
-    'generated_by' => 'parse-man.pl from sshd_system  8.4p1 doc',
+    'generated_by' => 'parse-man.pl from sshd_system  8.7p1 doc',
     'include' => [
       'Sshd::MatchElement'
     ],
