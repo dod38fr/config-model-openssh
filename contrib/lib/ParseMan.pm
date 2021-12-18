@@ -144,6 +144,11 @@ sub create_load_data ($ssh_system, $name, @desc) {
         $set_choice->( $str =~ /B<(\w[\w-]*)>/g );
     }
 
+    if ($desc =~ /supported keywords are(?:[\s:]+)(?=B<)([^.]+)\./i) {
+        my $str = $1;
+        $set_choice->( $str =~ /B<(\w[\w-]*)>/g );
+    }
+
     if (my @values = ($desc =~ /(?:(?:if|when|with) (?:(?:$bold_name|th(?:e|is) option) (?:is )?)?set to|A value of|setting this to|The default(?: is|,)|Accepted values are) B<(\w+)>/gi)) {
         $set_choice->(@values);
     }
