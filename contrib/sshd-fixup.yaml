@@ -19,6 +19,9 @@ class:
         cargo:
           type: node
           config_class_name: Sshd::MatchBlock
+      PerSourceNetBlockSize: &uniline
+        value_type: uniline
+      PerSourceMaxStartups: *uniline
   Sshd::MatchElement:
     element:
       __skip_order: 1
