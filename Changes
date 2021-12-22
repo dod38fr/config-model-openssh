@@ -1,5 +1,23 @@
 {{$NEXT}}
 
+2.8.7.1 2021-12-22
+
+  Update:
+    * Support for OpenSsh 8.7
+    * Added migration instructions for some parameters deprecated
+      between OpenSsh 8.4 and 8.7
+
+  Bug fix related to generation of OpenSsh model:
+    * fix (model generation): add deprecated elements
+    * fix (ParseMan): handle description like "supported keywords are..."
+    * fix (model generation): override value types of PerSource*
+    * fix (model): improve warning about identity file
+    * fix (parse-man.pl): improve user messages
+    * fix (model generation): avoid long unbreakable lines (origin/master)
+
+  Other changes:
+    * build depends on Config::Model 2.146
+
 2.8.4.3 2021-05-07
 
   Bug fixes:
