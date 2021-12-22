@@ -8,7 +8,7 @@
       default values for ~/.ssh/config. See commit
       766442b log for details
     * Fix crash when starting with empty user file (fix #5)
-    * docs : fix typos and grammar
+    * docs: fix typos and grammar
 
 2.8.4.2 2021-01-13
 
@@ -48,7 +48,7 @@
   Other changes:
   * update test specifications (requires Config::Model::Tester 4.001)
   * require Config::Model 2.134
-  
+
 1.241 2018-12-01
 
     * Tests require Config::Model 2.128 (gh #4)
@@ -89,10 +89,10 @@
 
 1.236 2014-05-22
 
-    * removed experience parameters from OpenSsh model 
+    * removed experience parameters from OpenSsh model
       with config-model-edit
     * removed build time dependency on AnyEvent
-    * warn and propose a fix when public key is used as 
+    * warn and propose a fix when public key is used as
       IdendityFile
 
 1.235 2014-04-04
@@ -108,7 +108,7 @@
 
 1.233 2014-02-13
 
-    * Ssh backends: send a clear error message when unknown 
+    * Ssh backends: send a clear error message when unknown
       parameters are found (RT 92639)
     * Ssh: added deprecated UseRSh and FallBackToRsh (RT 92639)
 
@@ -169,23 +169,23 @@
     * 'cme edit ssh|sshd|system-ssh' is now working on MacOS X
     * '/etc/ssh/ssh_config' is now handled by system-ssh. I.e.
        use 'cme edit system-ssh' to change this file
-    * root user can edit its ~/.ssh/config file like any other user 
+    * root user can edit its ~/.ssh/config file like any other user
       with 'cme edit ssh'.
 
 	[ Bug fixes ]
 
     * corrected OpenSSH project name (was OpenSsh)
-    * ssh backend: fix bug that prevented reading user file with 
+    * ssh backend: fix bug that prevented reading user file with
       global parameters
     * Ssh model: allow config file creation
 
     [ Other changes ]
 
     * renamed ChangeLog in Changes
-    * Ssh model: use new default layer from C::M 2.040 to 
-      read system config file (hence the updated requirement 
+    * Ssh model: use new default layer from C::M 2.040 to
+      read system config file (hence the updated requirement
       on Config::Model 2.040)
-    * All backends: removed custom code to open file. Lets 
+    * All backends: removed custom code to open file. Lets
       Config::Model::BackendMgr handle this
 
 2013-04-04 - 1.227
@@ -258,20 +258,20 @@
 
 2011-12-07  Dominique Dumont <domi.dumont@free.fr> v 1.219
 
-	* Ssh model: do not warp LocalForward with GatewayPorts. 
+	* Ssh model: do not warp LocalForward with GatewayPorts.
 	  They are independant
-	* Ssh backend: store root config in layered data instead of 
-	  preset data (also fix RT#72916) 
+	* Ssh backend: store root config in layered data instead of
+	  preset data (also fix RT#72916)
 	* Depends on Config::Model 1.265
 
 2011-07-22  Dominique Dumont <domi.dumont@free.fr> v 1.218
 
-        * OpenSsh backend: Fix bug that tried to open a file in /etc 
-          when saving ssh config as a regular user. 
+        * OpenSsh backend: Fix bug that tried to open a file in /etc
+          when saving ssh config as a regular user.
 
 2011-05-11  Dominique Dumont <domi.dumont@free.fr> v 1.217
 
-        * All Backend: test value with length instead of defined 
+        * All Backend: test value with length instead of defined
           (avoid keyword without value lines)
         * added Test::Difference build dependency
         * lib/Config/Model/user.d/ssh: added forgotten user file for ssh
@@ -280,9 +280,9 @@
 
     * All: use Any::Moose instead of plain Moose
     * depends on Any::Moose (fix RT# 67307)
-    
+
 2011-04-04  Dominique Dumont  <domi.dumont@free.fr> v 1.215
-    
+
         * All models: Added author, license and class_description
         * Added generated documentation from configuration classes.
         * Requires Config::Model 1.236
@@ -305,13 +305,13 @@
 
 	* *.t: fixed tests (Fix Debian bug #605792)
 	* demo: split user and maintainer demo
-	* removed config-edit-*. config-edit now has auto-completion and 
+	* removed config-edit-*. config-edit now has auto-completion and
 	  can be invoked with '-application ssh' or '-application sshd'
         * removed dependency on Parse::RecDescent
         * depend on Config::Model 1.234
         * Single backend was split in 3 (OpenSsh, Ssh and Sshd) to benefit
           from C::M::Backend::Any
-           
+
 2010-02-02  Dominique Dumont  <dominique.dumont@hp.com>
 
 	* demo/demo.pl (my_system): new demo (requires Config::Model::Itself)
@@ -404,15 +404,15 @@
 
 	* Sshd files: Major bug fixes for Augeas integration
 
-	* lib/Config/Model/OpenSsh.pm (read_ssh_file): Fix:  Host names 
+	* lib/Config/Model/OpenSsh.pm (read_ssh_file): Fix:  Host names
 	  are separated by white spaces and not comma
 
-2008-11-16  Domi  <domi@bilbo.maison> 
+2008-11-16  Domi  <domi@bilbo.maison>
 
 	* lib/Config/Model/models/Sshd.pl: Added write through Augeas so
-	comment in /etc/ssh/sshd_config can be preserved (requires Augeas and 
+	comment in /etc/ssh/sshd_config can be preserved (requires Augeas and
 	Config::Model::Backend::Augeas)
-	
+
 	* config-edit-ssh: new command line to edit ~/.ssh/config file (as
 	normal user) or /etc/ssh/ssh_config (as root)
 
@@ -422,7 +422,7 @@
 
 2008-05-24  Dominique Dumont v0.103
 
-	* lib/Config/Model/Sshd.pm (): Added doc 
+	* lib/Config/Model/Sshd.pm (): Added doc
 
 	* config-edit-sshd: new file
 
