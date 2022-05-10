@@ -177,7 +177,12 @@ For example,
 "*.a.example.com:*.b.example.com,*.c.example.com"
 will allow hostnames matching "*.a.example.com" to
 be canonicalized to names in the "*.b.example.com"
-or "*.c.example.com" domains.',
+or "*.c.example.com" domains.
+
+A single
+argument of "none" causes no CNAMEs to be
+considered for canonicalization. This is the default
+behaviour.',
         'type' => 'leaf',
         'value_type' => 'uniline'
       },
@@ -232,7 +237,7 @@ add to the list of certificates used for authentication.',
       },
       'CheckHostIP',
       {
-        'description' => 'If set to B<yes> L<ssh(1)>
+        'description' => 'If set to B<yes>, L<ssh(1)>
 will additionally check the host IP address in the
 I<known_hosts> file. This allows it to detect if a host
 key changed due to DNS spoofing and will add addresses of
@@ -827,12 +832,11 @@ sk-ssh-ed25519-cert-v01@openssh.com,
 sk-ecdsa-sha2-nistp256-cert-v01@openssh.com,
 rsa-sha2-512-cert-v01@openssh.com,
 rsa-sha2-256-cert-v01@openssh.com,
-ssh-rsa-cert-v01@openssh.com,
 ssh-ed25519,
 ecdsa-sha2-nistp256, ecdsa-sha2-nistp384, ecdsa-sha2-nistp521,
 sk-ssh-ed25519@openssh.com,
 sk-ecdsa-sha2-nistp256@openssh.com,
-rsa-sha2-512, rsa-sha2-256, ssh-rsa
+rsa-sha2-512, rsa-sha2-256
 
 The B<-Q>
 option of L<ssh(1)> may be used to list supported signature
@@ -882,12 +886,11 @@ sk-ssh-ed25519-cert-v01@openssh.com,
 sk-ecdsa-sha2-nistp256-cert-v01@openssh.com,
 rsa-sha2-512-cert-v01@openssh.com,
 rsa-sha2-256-cert-v01@openssh.com,
-ssh-rsa-cert-v01@openssh.com,
 ssh-ed25519,
 ecdsa-sha2-nistp256, ecdsa-sha2-nistp384, ecdsa-sha2-nistp521,
 sk-ecdsa-sha2-nistp256@openssh.com,
 sk-ssh-ed25519@openssh.com,
-rsa-sha2-512, rsa-sha2-256, ssh-rsa
+rsa-sha2-512, rsa-sha2-256
 
 If hostkeys are
 known for the destination host then this default is modified
@@ -982,10 +985,10 @@ in the I<ENVIRONMENT VARIABLES> section.',
         'description' => 'Specifies a file from which the
 user\'s DSA, ECDSA, authenticator-hosted ECDSA,
 Ed25519, authenticator-hosted Ed25519 or RSA authentication
-identity is read. The default is I<~/.ssh/id_dsa>,
+identity is read. The default is I<~/.ssh/id_rsa>,
 I<~/.ssh/id_ecdsa>, I<~/.ssh/id_ecdsa_sk>,
 I<~/.ssh/id_ed25519>, I<~/.ssh/id_ed25519_sk> and
-I<~/.ssh/id_rsa>. Additionally, any identities
+I<~/.ssh/id_dsa>. Additionally, any identities
 represented by the authentication agent will be used for
 authentication unless B<IdentitiesOnly> is set. If no
 certificates have been explicitly specified by
@@ -1125,15 +1128,17 @@ B<pam>.',
         'description' => 'Specifies the available KEX
 (Key Exchange) algorithms. Multiple algorithms must be
 comma-separated. If the specified list begins with a
-\'+\' character, then the specified methods will
-be appended to the default set instead of replacing them. If
-the specified list begins with a \'-\' character,
-then the specified methods (including wildcards) will be
-removed from the default set instead of replacing them. If
-the specified list begins with a \'^\' character,
-then the specified methods will be placed at the head of the
-default set. The default is:
+\'+\' character, then the specified algorithms
+will be appended to the default set instead of replacing
+them. If the specified list begins with a \'-\'
+character, then the specified algorithms (including
+wildcards) will be removed from the default set instead of
+replacing them. If the specified list begins with a
+\'^\' character, then the specified algorithms
+will be placed at the head of the default set. The default
+is:
 
+sntrup761x25519-sha512@openssh.com,
 curve25519-sha256, curve25519-sha256@libssh.org,
 ecdh-sha2-nistp256, ecdh-sha2-nistp384, ecdh-sha2-nistp521,
 diffie-hellman-group-exchange-sha256,
@@ -1518,12 +1523,11 @@ sk-ssh-ed25519-cert-v01@openssh.com,
 sk-ecdsa-sha2-nistp256-cert-v01@openssh.com,
 rsa-sha2-512-cert-v01@openssh.com,
 rsa-sha2-256-cert-v01@openssh.com,
-ssh-rsa-cert-v01@openssh.com,
 ssh-ed25519,
 ecdsa-sha2-nistp256, ecdsa-sha2-nistp384, ecdsa-sha2-nistp521,
 sk-ssh-ed25519@openssh.com,
 sk-ecdsa-sha2-nistp256@openssh.com,
-rsa-sha2-512, rsa-sha2-256, ssh-rsa
+rsa-sha2-512, rsa-sha2-256
 
 The list of
 available signature algorithms may also be obtained using
@@ -1539,16 +1543,22 @@ available signature algorithms may also be obtained using
       },
       'PubkeyAuthentication',
       {
+        'choice' => [
+          'yes',
+          'no',
+          'unbound',
+          'host-bound'
+        ],
         'description' => 'Specifies whether to try public
 key authentication. The argument to this keyword must be
-B<yes> (the default) or B<no>.',
+B<yes> (the default), B<no>, B<unbound> or
+B<host-bound>. The final two options enable public key
+authentication while respectively disabling or enabling the
+OpenSSH host-bound authentication protocol extension
+required for restricted L<ssh-agent(1)> forwarding.',
         'type' => 'leaf',
         'upstream_default' => 'yes',
-        'value_type' => 'boolean',
-        'write_as' => [
-          'no',
-          'yes'
-        ]
+        'value_type' => 'enum'
       },
       'RekeyLimit',
       {
@@ -1602,7 +1612,7 @@ specific destination then the second argument must be
 I<host>:I<hostport> or a Unix domain socket path,
 otherwise if no destination argument is specified then the
 remote forwarding will be established as a SOCKS proxy. When
-acting as a SOCKS proxy the destination of the connection
+acting as a SOCKS proxy, the destination of the connection
 can be restricted by B<PermitRemoteOpen>.
 
 IPv6 addresses
@@ -1831,7 +1841,7 @@ must be B<yes> or B<no> (the default).',
           'off',
           'ask'
         ],
-        'description' => "If this flag is set to
+        'description' => 'If this flag is set to
 B<yes>, L<ssh(1)> will never automatically add host keys to
 the I<~/.ssh/known_hosts> file, and refuses to connect
 to hosts whose host key has changed. This provides maximum
@@ -1842,19 +1852,19 @@ are frequently made. This option forces the user to manually
 add all new hosts.
 
 If this flag is
-set to \x{201c}accept-new\x{201d} then ssh will automatically
-add new host keys to the user's I<known_hosts>
-file, but will not permit connections to hosts with changed
-host keys. If this flag is set to B<no> or
-B<off>, ssh will automatically add new host keys
-to the user known hosts files and allow connections to hosts
-with changed hostkeys to proceed, subject to some
-restrictions. If this flag is set to B<ask> (the
-default), new host keys will be added to the user known host
-files only after the user has confirmed that is what they
-really want to do, and ssh will refuse to connect to hosts
-whose host key has changed. The host keys of known hosts
-will be verified automatically in all cases.",
+set to B<accept-new> then ssh will automatically add new
+host keys to the user\'s I<known_hosts> file, but
+will not permit connections to hosts with changed host keys.
+If this flag is set to B<no> or B<off>, ssh will
+automatically add new host keys to the user known hosts
+files and allow connections to hosts with changed hostkeys
+to proceed, subject to some restrictions. If this flag is
+set to B<ask> (the default), new host keys will be added
+to the user known host files only after the user has
+confirmed that is what they really want to do, and ssh will
+refuse to connect to hosts whose host key has changed. The
+host keys of known hosts will be verified automatically in
+all cases.',
         'type' => 'leaf',
         'upstream_default' => 'ask',
         'value_type' => 'enum'
@@ -2088,7 +2098,7 @@ I</usr/bin/xauth>.',
         'value_type' => 'uniline'
       }
     ],
-    'generated_by' => 'parse-man.pl from ssh_system  8.7p1 doc',
+    'generated_by' => 'parse-man.pl from ssh_system  9.0p1 doc',
     'license' => 'LGPL2',
     'name' => 'Ssh::HostElement'
   }

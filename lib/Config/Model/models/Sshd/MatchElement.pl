@@ -324,6 +324,32 @@ displayed.',
         'type' => 'leaf',
         'value_type' => 'uniline'
       },
+      'CASignatureAlgorithms',
+      {
+        'description' => 'Specifies which algorithms are
+allowed for signing of certificates by certificate
+authorities (CAs). The default is:
+
+ssh-ed25519, ecdsa-sha2-nistp256,
+ecdsa-sha2-nistp384, ecdsa-sha2-nistp521,
+sk-ssh-ed25519@openssh.com,
+sk-ecdsa-sha2-nistp256@openssh.com,
+rsa-sha2-512, rsa-sha2-256
+
+If the
+specified list begins with a \'+\' character, then
+the specified algorithms will be appended to the default set
+instead of replacing them. If the specified list begins with
+a \'-\' character, then the specified algorithms
+(including wildcards) will be removed from the default set
+instead of replacing them.
+
+Certificates
+signed using other algorithms will not be accepted for
+public key or host-based authentication.',
+        'type' => 'leaf',
+        'value_type' => 'uniline'
+      },
       'ChrootDirectory',
       {
         'description' => 'Specifies the pathname of a
@@ -448,6 +474,22 @@ and may simplify restricted configurations.',
         'type' => 'leaf',
         'value_type' => 'uniline'
       },
+      'ExposeAuthInfo',
+      {
+        'description' => 'Writes a temporary file
+containing a list of authentication methods and public
+credentials (e.g. keys) used to authenticate the user. The
+location of the file is exposed to the user session through
+the SSH_USER_AUTH environment variable. The default is
+B<no>.',
+        'type' => 'leaf',
+        'upstream_default' => 'no',
+        'value_type' => 'boolean',
+        'write_as' => [
+          'no',
+          'yes'
+        ]
+      },
       'ForceCommand',
       {
         'description' => 'Forces the execution of the
@@ -527,12 +569,11 @@ sk-ssh-ed25519-cert-v01@openssh.com,
 sk-ecdsa-sha2-nistp256-cert-v01@openssh.com,
 rsa-sha2-512-cert-v01@openssh.com,
 rsa-sha2-256-cert-v01@openssh.com,
-ssh-rsa-cert-v01@openssh.com,
 ssh-ed25519,
 ecdsa-sha2-nistp256, ecdsa-sha2-nistp384, ecdsa-sha2-nistp521,
 sk-ssh-ed25519@openssh.com,
 sk-ecdsa-sha2-nistp256@openssh.com,
-rsa-sha2-512, rsa-sha2-256, ssh-rsa
+rsa-sha2-512, rsa-sha2-256
 
 The list of
 available signature algorithms may also be obtained using
@@ -923,18 +964,50 @@ sk-ssh-ed25519-cert-v01@openssh.com,
 sk-ecdsa-sha2-nistp256-cert-v01@openssh.com,
 rsa-sha2-512-cert-v01@openssh.com,
 rsa-sha2-256-cert-v01@openssh.com,
-ssh-rsa-cert-v01@openssh.com,
 ssh-ed25519,
 ecdsa-sha2-nistp256, ecdsa-sha2-nistp384, ecdsa-sha2-nistp521,
 sk-ssh-ed25519@openssh.com,
 sk-ecdsa-sha2-nistp256@openssh.com,
-rsa-sha2-512, rsa-sha2-256, ssh-rsa
+rsa-sha2-512, rsa-sha2-256
 
 The list of
 available signature algorithms may also be obtained using
 "ssh -Q PubkeyAcceptedAlgorithms".',
         'type' => 'leaf',
         'value_type' => 'uniline'
+      },
+      'PubkeyAuthOptions',
+      {
+        'choice' => [
+          'none',
+          'touch-required',
+          'verify-required'
+        ],
+        'description' => 'Sets one or more public key
+authentication options. The supported keywords are:
+B<none> (the default; indicating no additional options
+are enabled), B<touch-required> and
+B<verify-required>.
+
+The
+B<touch-required> option causes public key
+authentication using a FIDO authenticator algorithm (i.e.
+B<ecdsa-sk> or B<ed25519-sk>) to always require the
+signature to attest that a physically present user
+explicitly confirmed the authentication (usually by touching
+the authenticator). By default, L<sshd(8)> requires user
+presence unless overridden with an authorized_keys option.
+The B<touch-required> flag disables this override.
+
+The
+B<verify-required> option requires a FIDO key signature
+attest that the user was verified, e.g. via a PIN.
+
+Neither the
+B<touch-required> or B<verify-required> options have
+any effect for other, non-FIDO, public key types.',
+        'type' => 'leaf',
+        'value_type' => 'enum'
       },
       'PubkeyAuthentication',
       {
@@ -1169,7 +1242,7 @@ B<yes>.',
         'value_type' => 'uniline'
       }
     ],
-    'generated_by' => 'parse-man.pl from sshd_system  8.7p1 doc',
+    'generated_by' => 'parse-man.pl from sshd_system  9.0p1 doc',
     'license' => 'LGPL2',
     'name' => 'Sshd::MatchElement'
   }
