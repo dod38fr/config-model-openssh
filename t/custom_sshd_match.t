@@ -30,7 +30,6 @@ my $inst = $model->instance (
     root_class_name   => 'Sshd',
     instance_name     => 'sshd_instance',
     root_dir          => $wr_dir1,
-    backend => 'OpenSsh::Sshd',
 );
 
 ok($inst,"Read $ssh_file1 and created instance") ;
@@ -63,7 +62,6 @@ my $inst2 = $model->instance (
     root_class_name   => 'Sshd',
     instance_name     => 'sshd_instance2',
     root_dir          => $wr_dir2,
-    backend => 'OpenSsh::Sshd',
 );
 
 ok($inst2,"Read $ssh_file2 and created instance") ;
