@@ -1,5 +1,11 @@
 {{$NEXT}}
 
+2.9.0.2 2022-08-07
+
+  Fix test:
+    * remove obsolete "backend" constructor parameter
+      (Debian #1016295)
+
 2.9.0.1 2022-05-10
 
   Update:
