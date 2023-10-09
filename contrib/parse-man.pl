@@ -4,6 +4,7 @@ use strict;
 use warnings;
 use 5.22.0;
 use utf8;
+use open      qw(:std :utf8);    # undeclared streams in UTF-8
 
 use lib 'contrib/lib';
 
@@ -22,15 +23,16 @@ use ParseMan;
 path('lib/Config/Model/models/')->remove_tree;
 
 sub parse_man_page ($man_page_name) {
+    my $path = `man --path $man_page_name`;
+    chomp $path;
     my $pipe = IO::Pipe->new();
-    $pipe->reader("roff2html $man_page_name");
+    $pipe->reader("zcat $path | man2html");
     my @lines = $pipe->getlines;
     $pipe->close;
     return parse_html_man_page(join('',@lines));
 }
 
 sub store_description ($obj, @desc) {
-    shift @desc; # remove keyword
     $obj->fetch_element("description")->store(join("\n\n", @desc));
 }
 

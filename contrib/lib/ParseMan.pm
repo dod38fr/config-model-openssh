@@ -8,11 +8,14 @@ package ParseMan;
 
 use 5.22.0;
 use utf8;
+use English;
 
 use lib qw(lib contrib/lib);
 use experimental qw/postderef signatures/ ;
 use XML::Twig;
 use List::MoreUtils qw/any/;
+use Text::Wrap;
+$Text::Wrap::columns = 80;
 
 use Exporter 'import';
 
@@ -36,38 +39,71 @@ sub parse_html_man_page ($html_man_page) {
     my $turn_to_pod_c = sub { my $t = $_->text(); $_->set_text("C<$t>");};
 
     my $ssh_param = sub {
-        # remove B<> that was added by a twig_handler
-        ($parameter) = ($_->text() =~ /B<(\w+)>/);
+        $parameter = $_->text();
+        $parameter =~ s/\s//g;
+        say "Found parameter «$parameter»";
         push $data{element_list}->@*, $parameter;
         $data{element_data}{$parameter} = [];
     };
 
-    my $ssh_data = sub {
-        my $text = $_->text();
+    my $store_ssh_data = sub ($text) {
         $text =~ s/([\w-]+)\((\d+)\)/L<$1($2)>/g;
         # replace utf-8 quotes with B<>
         $text =~ s/\x{201c}(\w+)\x{201d}/B<$1>/g;
         # replace single utf-8 quote with ascii quote
         $text =~ s/\x{2019}/'/g;
+        # replace backquote with quote
+        $text =~ s/`/'/g;
         # avoid long unbreakable lines
         $text =~ s/,(\w)/, $1/g;
+        # avoid leading whitespace
+        $text =~ s/^\s+//mg;
         # avoid trailing whitespace
         $text =~ s/\s+$//mg;
-        push $data{element_data}{$parameter}->@*, $text if $parameter;
+        # convert a roff tag missed by man2html
+        $text =~ s/^Sx\s(.*)$/I<$1>/mg;
+        # put text in a single line (roff conversion lead to a lot of \n)
+        $text =~ s/\n+/ /g;
+        $text =~ s/\s*<<>>\s*/\n\n/g;
+        my $desc = fill('','', $text);
+        push $data{element_data}{$parameter}->@*, $desc if $parameter;
     };
 
-    my $twig = XML::Twig->new (
-        twig_handlers => {
-            'html/body/p[@style="margin-top: 1em"]/[string(b)=~ /^[A-Z]+\w/]'
-                => $ssh_param,
-            # try to stop at the section after the parameter list
-            'html/body/p[@style="margin-top: 1em"]/[string(b)=~ /^[A-Z\s]+$/]'
-                => sub { $parameter = '';},
-            'html/body/p' => $ssh_data,
-            'b' => sub { my $t = $_->text; $_->set_text("B<$t>")},
-            'i' => sub { my $t = $_->text; $_->set_text("I<$t>")},
+    my $buggy_ssh_param = sub {
+        # a bug in man2html sometimes (for
+        # CanonicalizePermittedCNAMEs) adds part of the description in
+        # DT element outside of <B>
+        my $desc_part = $_->text();
+        # remove B<> that was handled by $ssh_param
+        $desc_part =~ s!B<.*>\s*!!i;
+        $store_ssh_data->($desc_part) if $desc_part;
+    };
+
+    my $ssh_data = sub {
+        $store_ssh_data->($_->text());
+    };
+
+    my $twig = XML::Twig->new;
+
+    my $handlers = {
+            'html/body/h2' => sub {
+                # de-installing handler at the end of DESCRIPTION section
+                $twig->setTwigHandlers({});
+            },
+            'html/body/p/dl/dt/b' => $ssh_param,
+            'html/body/p/dl/dt' => $buggy_ssh_param,
+            'html/body/p/dl/dd' => $ssh_data,
+            'b' => sub { my $t = $_->text; $t =~ s/^\s+|\s+$//g; $_->set_text("B<$t> ")},
+            'i' => sub { my $t = $_->text; $_->set_text("I<$t> ")},
+            'p' => sub { my $t = $_->text; $_->set_text("\n<<>>\n$t")},
+        };
+
+    $twig->setTwigHandlers({
+        'html/body/h2[string() = "DESCRIPTION"]' => sub {
+            # installing handler";
+            $twig->setTwigHandlers($handlers);
         }
-    );
+    });
 
     $twig->parse_html($html_man_page);
     return \%data;
@@ -93,20 +129,24 @@ my $ssh_host = 'type=hash index_type=string ordered=1 cargo type=node '
 my $ssh_forward = 'type=list cargo type=node config_class_name="Ssh::PortForward"';
 my $uniline = 'type=leaf value_type=uniline';
 my $uniline_list = "type=list cargo $uniline";
+my $yes_no_leaf = "type=leaf value_type=boolean write_as=no,yes";
 my %override = (
     all => {
         IPQoS => 'type=leaf value_type=uniline upstream_default="af21 cs1"',
+        KbdInteractiveAuthentication => "$yes_no_leaf upstream_default=yes",
     },
     ssh => {
         # description is too complex to parse
         EscapeChar => $uniline,
         ControlPersist => $uniline,
+        GlobalKnownHostsFile => $uniline.' default="/etc/ssh/ssh_known_hosts /etc/ssh/ssh_known_hosts2"',
         Host => $ssh_host,
         IdentityFile => $uniline_list,
         LocalForward => $ssh_forward,
         Match => $ssh_host,
         StrictHostKeyChecking => 'type=leaf value_type=enum '
-            . 'choice=yes,accept-new,no,off,ask upstream_default=ask',
+           . 'choice=yes,accept-new,no,off,ask upstream_default=ask',
+        UserKnownHostsFile => "$uniline_list",
         KbdInteractiveDevices => $uniline_list,
         PreferredAuthentications => $uniline_list,
         RemoteForward => $ssh_forward,
@@ -117,6 +157,8 @@ my %override = (
         AuthorizedPrincipalsFile => 'type=leaf value_type=uniline upstream_default="none"',
         ChrootDirectory => 'type=leaf value_type=uniline upstream_default="none"',
         ForceCommand => 'type=leaf value_type=uniline upstream_default="none"',
+        GSSAPIStoreCredentialsOnRekey => "$yes_no_leaf upstream_default=no",
+        IgnoreUserKnownHosts => "$yes_no_leaf upstream_default=no",
         Subsystem => 'type=hash index_type=string '
             . 'cargo type=leaf value_type=uniline mandatory=1 - - ',
         MaxStartups => 'type=leaf value_type=uniline upstream_default=10',
@@ -125,11 +167,18 @@ my %override = (
 );
 
 sub create_load_data ($ssh_system, $name, @desc) {
-    my $bold_name = shift @desc; # drop '<b>Keyword</b>'
     my $desc = join('', @desc);
 
-    return $override{$ssh_system}{$name} if $override{$ssh_system}{$name};
-    return $override{'all'}{$name} if $override{'all'}{$name};
+    if ($override{$ssh_system}{$name}) {
+        say "Parameter $ssh_system $name is overridden";
+        return $override{$ssh_system}{$name};
+    }
+    if ($override{'all'}{$name}) {
+        say "Parameter $ssh_system $name is overridden in ssh and sshd";
+        return $override{'all'}{$name};
+    }
+
+    say "Parameter $ssh_system $name: analysing description";
 
     # trim description (which is not saved in this sub) to simplify
     # the regexp below
@@ -138,10 +187,11 @@ sub create_load_data ($ssh_system, $name, @desc) {
     my @load_extra;
     my ($set_choice, $get_choices) = setup_choice();
 
-    # handle "The argument must be B<yes>, B<no> (the default) or B<ask>."
-    if ($desc =~ /(?:argument|option)s? (?:to this keyword )?(?:are|\w+ be)(?: one of)?(?:[\s:]+)(?=B<)([^.]+)\./i) {
+    # handle "The argument must be B<yes>, B<no> (the default) or B<ask>"
+    # since man2html is used, dot after B<> are no longer found.
+    if ($desc =~ /(?:argument|option)s? (?:to this keyword )?(?:are|\w+ be)(?: one of)?(?:[\s:]+)(?=B<)([^.]+)/i) {
         my $str = $1;
-        $set_choice->( $str =~ /B<(\w[\w-]*)>/g );
+        $set_choice->( $str =~ /(?<!-)B<(\w[\w-]*)>/g );
     }
 
     if ($desc =~ /supported keywords are(?:[\s:]+)(?=B<)([^.]+)\./i) {
@@ -149,7 +199,7 @@ sub create_load_data ($ssh_system, $name, @desc) {
         $set_choice->( $str =~ /B<(\w[\w-]*)>/g );
     }
 
-    if (my @values = ($desc =~ /(?:(?:if|when|with) (?:(?:$bold_name|th(?:e|is) option) (?:is )?)?set to|A value of|setting this to|The default(?: is|,)|Accepted values are) B<(\w+)>/gi)) {
+    if (my @values = ($desc =~ /(?:(?:if|when|with) (?:(?:B<$name>|th(?:e|is) option) (?:is )?)?set to|A value of|setting this to|The default(?: is|,)|Accepted values are) B<([a-z]\w+)>/gi)) {
         $set_choice->(@values);
     }
 
@@ -167,7 +217,7 @@ sub create_load_data ($ssh_system, $name, @desc) {
         push @choices, 'no';
     }
 
-    if ($desc =~ /(Specif\w+|Sets?) (a|the) (maximum )?(number|timeout)/) {
+    if ($desc =~ /(Specif\w+|Sets?) (a|the) (maximum )?(number|timeout)|size \(in bits\)/) {
         my $upstream_default;
         if ($desc =~ /The default(?: value)?(?: is|,) (\d+)/) {
             $upstream_default = $1;
@@ -188,10 +238,11 @@ sub create_load_data ($ssh_system, $name, @desc) {
     }
     elsif (@choices) {
         $value_type = 'enum';
-        push @load_extra, 'choice='.join(',',@choices);
+        push @load_extra, 'choice='.join(',',sort @choices);
     }
 
     if ($desc =~ m!The default(?: is|,) [BI]<([\w/:]+)>! or
+            $desc =~ m!The default(?: is|,) ((?:/\w+)+)\b! or
             $desc =~ /The default(?: is|,) ([A-Z]{3,}\d?)\b/ or
             $desc =~ /B<([\w]+)> \(the default\)/) {
         push @load_extra, "upstream_default=$1";
