@@ -1,5 +1,15 @@
 {{$NEXT}}
 
+2.9.4.1 2023-10-14
+
+  Update:
+    * Add support for OpenSsh 9.4
+
+  Generation of SSh model:
+    * man2html is now used instead of roff2html. The program parsing
+      parameter description (parse-man.pl) to extract parameter
+      properties was updated to cope with this change.
+
 2.9.0.2 2022-08-07
 
   Fix test:
