@@ -7,6 +7,7 @@ use utf8;
 use open      qw(:std :utf8);    # undeclared streams in UTF-8
 
 use lib 'contrib/lib';
+use lib 'lib';
 
 use IO::Pipe;
 use Path::Tiny;

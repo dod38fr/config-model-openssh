@@ -49,7 +49,7 @@ See I<PATTERNS> for more information on patterns.',
 keyword) to be used only when the conditions following the B<Match> keyword are
 satisfied. Match conditions are specified using one or more criteria or the
 single token B<all> which always matches. The available criteria keywords are:
-B<canonical> B<final> B<exec> B<localnetwork> B<host> B<originalhost> B<Tag>
+B<canonical> B<final> B<exec> B<localnetwork> B<host> B<originalhost> B<tagged>
 B<user> and B<localuser> The B<all> criteria must appear alone or immediately
 after B<canonical> or B<final> Other criteria may be combined arbitrarily. All
 criteria but B<all> B<canonical> and B<final> require an argument. Criteria may
@@ -94,7 +94,7 @@ files).',
         'type' => 'hash'
       }
     ],
-    'generated_by' => 'parse-man.pl from ssh_system  9.4p1 doc',
+    'generated_by' => 'parse-man.pl from ssh_system  9.8p1 doc',
     'include' => [
       'Ssh::HostElement'
     ],
