@@ -159,9 +159,13 @@ my %override = (
         ForceCommand => 'type=leaf value_type=uniline upstream_default="none"',
         GSSAPIStoreCredentialsOnRekey => "$yes_no_leaf upstream_default=no",
         IgnoreUserKnownHosts => "$yes_no_leaf upstream_default=no",
+        MaxStartups => 'type=leaf value_type=uniline upstream_default=10',
+        PAMServiceName => 'type=leaf value_type=uniline level=hidden ' .
+        # this parameter shows up only when UsePAM is true
+        'warp follow:use_pam="- UsePAM" rules:"$use_pam" level=normal',
+        PasswordAuthentication => 'type=leaf value_type=uniline upstream_default=sshd',
         Subsystem => 'type=hash index_type=string '
             . 'cargo type=leaf value_type=uniline mandatory=1 - - ',
-        MaxStartups => 'type=leaf value_type=uniline upstream_default=10',
         VersionAddendum => $uniline,
     }
 );
