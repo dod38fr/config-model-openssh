@@ -137,19 +137,20 @@ my %override = (
     },
     ssh => {
         # description is too complex to parse
-        EscapeChar => $uniline,
         ControlPersist => $uniline,
+        EscapeChar => $uniline,
         GlobalKnownHostsFile => $uniline.' default="/etc/ssh/ssh_known_hosts /etc/ssh/ssh_known_hosts2"',
         Host => $ssh_host,
         IdentityFile => $uniline_list,
+        KbdInteractiveDevices => $uniline_list,
         LocalForward => $ssh_forward,
         Match => $ssh_host,
-        StrictHostKeyChecking => 'type=leaf value_type=enum '
-           . 'choice=yes,accept-new,no,off,ask upstream_default=ask',
-        UserKnownHostsFile => "$uniline_list",
-        KbdInteractiveDevices => $uniline_list,
+        ObscureKeystrokeTiming => 'type=leaf value_type=uniline upstream_default="interval:20"',
         PreferredAuthentications => $uniline_list,
         RemoteForward => $ssh_forward,
+        StrictHostKeyChecking => 'type=leaf value_type=enum '
+        . 'choice=yes,accept-new,no,off,ask upstream_default=ask',
+        UserKnownHostsFile => "$uniline_list",
     },
     sshd => {
         AuthenticationMethods => $uniline,
