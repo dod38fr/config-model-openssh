@@ -164,7 +164,9 @@ my %override = (
         PAMServiceName => 'type=leaf value_type=uniline level=hidden ' .
         # this parameter shows up only when UsePAM is true
         'warp follow:use_pam="- UsePAM" rules:"$use_pam" level=normal',
+        ForceCommand => 'type=leaf value_type=uniline upstream_default="none"',
         PasswordAuthentication => 'type=leaf value_type=uniline upstream_default=sshd',
+        PerSourcePenalties => 'type=leaf value_type=uniline',
         Subsystem => 'type=hash index_type=string '
             . 'cargo type=leaf value_type=uniline mandatory=1 - - ',
         VersionAddendum => $uniline,
