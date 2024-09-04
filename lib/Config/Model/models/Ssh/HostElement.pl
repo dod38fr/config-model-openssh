@@ -194,6 +194,51 @@ authentication.',
         'type' => 'leaf',
         'value_type' => 'uniline'
       },
+      'ChannelTimeout',
+      {
+        'description' => 'Specifies whether and how quickly L<ssh(1)> should close inactive channels.
+Timeouts are specified as one or more \'\'type=interval\'\' pairs separated by
+whitespace, where the \'\'type\'\' must be the special keyword \'\'global\'\' or a
+channel type name from the list below, optionally containing wildcard
+characters.
+
+The timeout value \'\'interval\'\' is specified in seconds or may use any of the
+units documented in the I<TIME FORMATS> section. For example, \'\'session=5m\'\'
+would cause interactive sessions to terminate after five minutes of inactivity.
+Specifying a zero value disables the inactivity timeout.
+
+The special timeout \'\'global\'\' applies to all active channels, taken together.
+Traffic on any active channel will reset the timeout, but when the timeout
+expires then all open channels will be closed. Note that this global timeout is
+not matched by wildcards and must be specified explicitly.
+
+The available channel type names include:
+
+B<agent-connection> Open connections to ssh-agent1. B<direct-tcpip ,
+direct-streamlocal@openssh.com> Open TCP or Unix socket (respectively)
+connections that have been established from a L<ssh(1)> local forwarding, i.e.
+B<LocalForward> or B<DynamicForward> B<forwarded-tcpip ,
+forwarded-streamlocal@openssh.com> Open TCP or Unix socket (respectively)
+connections that have been established to a L<sshd(8)> listening on behalf of a
+L<ssh(1)> remote forwarding, i.e. B<RemoteForward> B<session> The interactive
+main session, including shell session, command execution, L<scp(1)>,
+L<sftp(1)>, etc. B<tun-connection> Open B<TunnelForward> connections.
+B<x11-connection> Open X11 forwarding sessions.
+
+Note that in all the above cases, terminating an inactive session does not
+guarantee to remove all resources associated with the session, e.g. shell
+processes or X11 clients relating to the session may continue to execute.
+
+Moreover, terminating an inactive channel or session does not necessarily close
+the SSH connection, nor does it prevent a client from requesting another
+channel of the same type. In particular, expiring an inactive forwarding
+session does not prevent another identical forwarding from being subsequently
+created.
+
+The default is not to expire channels of any type for inactivity.',
+        'type' => 'leaf',
+        'value_type' => 'uniline'
+      },
       'CheckHostIP',
       {
         'description' => 'If set to B<yes> L<ssh(1)> will additionally check the host IP address in the
@@ -777,20 +822,21 @@ variables as described in the I<ENVIRONMENT VARIABLES> section.',
             }
           }
         },
-        'description' => 'Specifies a file from which the user\'s DSA, ECDSA, authenticator-hosted ECDSA,
+        'description' => 'Specifies a file from which the user\'s ECDSA, authenticator-hosted ECDSA,
 Ed25519, authenticator-hosted Ed25519 or RSA authentication identity is read.
 You can also specify a public key file to use the corresponding private key
 that is loaded in ssh-agent1 when the private key file is not present locally.
 The default is ~/.ssh/id_rsa ~/.ssh/id_ecdsa ~/.ssh/id_ecdsa_sk
-~/.ssh/id_ed25519 ~/.ssh/id_ed25519_sk and ~/.ssh/id_dsa Additionally, any
-identities represented by the authentication agent will be used for
-authentication unless B<IdentitiesOnly> is set. If no certificates have been
-explicitly specified by B<CertificateFile> L<ssh(1)> will try to load
-certificate information from the filename obtained by appending -cert.pub to
-the path of a specified B<IdentityFile>
+~/.ssh/id_ed25519 and ~/.ssh/id_ed25519_sk Additionally, any identities
+represented by the authentication agent will be used for authentication unless
+B<IdentitiesOnly> is set. If no certificates have been explicitly specified by
+B<CertificateFile> L<ssh(1)> will try to load certificate information from the
+filename obtained by appending -cert.pub to the path of a specified
+B<IdentityFile>
 
 Arguments to B<IdentityFile> may use the tilde syntax to refer to a user\'s home
-directory or the tokens described in the I<TOKENS> section.
+directory or the tokens described in the I<TOKENS> section. Alternately an
+argument of B<none> may be used to indicate no identity files should be loaded.
 
 It is possible to have multiple identity files specified in configuration
 files; all these identities will be tried in sequence. Multiple B<IdentityFile>
@@ -893,20 +939,25 @@ B<pam>',
       },
       'KexAlgorithms',
       {
-        'description' => 'Specifies the available KEX (Key Exchange) algorithms. Multiple algorithms must
-be comma-separated. If the specified list begins with a \'+\' character, then the
-specified algorithms will be appended to the default set instead of replacing
-them. If the specified list begins with a \'-\' character, then the specified
-algorithms (including wildcards) will be removed from the default set instead
-of replacing them. If the specified list begins with a \'^\' character, then the
-specified algorithms will be placed at the head of the default set. The default
-is: sntrup761x25519-sha512@openssh.com, curve25519-sha256,
+        'description' => 'Specifies the permitted KEX (Key Exchange) algorithms that will be used and
+their preference order. The selected algorithm will the the first algorithm in
+this list that the server also supports. Multiple algorithms must be
+comma-separated.
+
+If the specified list begins with a \'+\' character, then the specified
+algorithms will be appended to the default set instead of replacing them. If
+the specified list begins with a \'-\' character, then the specified algorithms
+(including wildcards) will be removed from the default set instead of replacing
+them. If the specified list begins with a \'^\' character, then the specified
+algorithms will be placed at the head of the default set.
+
+The default is: sntrup761x25519-sha512@openssh.com, curve25519-sha256,
 curve25519-sha256@libssh.org, ecdh-sha2-nistp256, ecdh-sha2-nistp384,
 ecdh-sha2-nistp521, diffie-hellman-group-exchange-sha256,
 diffie-hellman-group16-sha512, diffie-hellman-group18-sha512,
 diffie-hellman-group14-sha256
 
-The list of available key exchange algorithms may also be obtained using Qq ssh
+The list of supported key exchange algorithms may also be obtained using Qq ssh
 -Q kex .',
         'type' => 'leaf',
         'value_type' => 'uniline'
@@ -1043,6 +1094,21 @@ keyword must be an integer. The default is 3.',
         'type' => 'leaf',
         'upstream_default' => '3',
         'value_type' => 'integer'
+      },
+      'ObscureKeystrokeTiming',
+      {
+        'description' => 'Specifies whether L<ssh(1)> should try to obscure inter-keystroke timings from
+passive observers of network traffic. If enabled, then for interactive
+sessions, L<ssh(1)> will send keystrokes at fixed intervals of a few tens of
+milliseconds and will send fake keystroke packets for some time after typing
+ceases. The argument to this keyword must be B<yes> B<no> or an interval
+specifier of the form B<interval:milliseconds> (e.g. B<interval:80> for 80
+milliseconds). The default is to obscure keystrokes using a 20ms packet
+interval. Note that smaller intervals will result in higher fake keystroke
+packet rates.',
+        'type' => 'leaf',
+        'upstream_default' => 'interval:20',
+        'value_type' => 'uniline'
       },
       'PasswordAuthentication',
       {
@@ -1692,7 +1758,7 @@ be printed for unknown host keys.',
         'value_type' => 'uniline'
       }
     ],
-    'generated_by' => 'parse-man.pl from ssh_system  9.4p1 doc',
+    'generated_by' => 'parse-man.pl from ssh_system  9.8p1 doc',
     'license' => 'LGPL2',
     'name' => 'Ssh::HostElement'
   }

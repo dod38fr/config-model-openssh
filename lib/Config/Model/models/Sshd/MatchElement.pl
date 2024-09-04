@@ -285,15 +285,21 @@ or host-based authentication.',
       {
         'description' => 'Specifies whether and how quickly L<sshd(8)> should close inactive channels.
 Timeouts are specified as one or more \'\'type=interval\'\' pairs separated by
-whitespace, where the \'\'type\'\' must be a channel type name (as described in the
-table below), optionally containing wildcard characters.
+whitespace, where the \'\'type\'\' must be the special keyword \'\'global\'\' or a
+channel type name from the list below, optionally containing wildcard
+characters.
 
 The timeout value \'\'interval\'\' is specified in seconds or may use any of the
-units documented in the I<TIME FORMATS> section. For example, \'\'session:*=5m\'\'
-would cause all sessions to terminate after five minutes of inactivity.
+units documented in the I<TIME FORMATS> section. For example, \'\'session=5m\'\'
+would cause interactive sessions to terminate after five minutes of inactivity.
 Specifying a zero value disables the inactivity timeout.
 
-The available channel types include:
+The special timeout \'\'global\'\' applies to all active channels, taken together.
+Traffic on any active channel will reset the timeout, but when the timeout
+expires then all open channels will be closed. Note that this global timeout is
+not matched by wildcards and must be specified explicitly.
+
+The available channel type names include:
 
 B<agent-connection> Open connections to ssh-agent1. B<direct-tcpip ,
 direct-streamlocal@openssh.com> Open TCP or Unix socket (respectively)
@@ -301,11 +307,10 @@ connections that have been established from a L<ssh(1)> local forwarding, i.e.
 B<LocalForward> or B<DynamicForward> B<forwarded-tcpip ,
 forwarded-streamlocal@openssh.com> Open TCP or Unix socket (respectively)
 connections that have been established to a L<sshd(8)> listening on behalf of a
-L<ssh(1)> remote forwarding, i.e. B<RemoteForward> B<session:command> Command
-execution sessions. B<session:shell> Interactive shell sessions.
-B<session:subsystem:...> Subsystem sessions, e.g. for L<sftp(1)>, which could
-be identified as B<session:subsystem:sftp> B<x11-connection> Open X11
-forwarding sessions.
+L<ssh(1)> remote forwarding, i.e. B<RemoteForward> B<session> The interactive
+main session, including shell session, command execution, L<scp(1)>,
+L<sftp(1)>, etc. B<tun-connection> Open B<TunnelForward> connections.
+B<x11-connection> Open X11 forwarding sessions.
 
 Note that in all the above cases, terminating an inactive session does not
 guarantee to remove all resources associated with the session, e.g. shell
@@ -315,8 +320,7 @@ Moreover, terminating an inactive channel or session does not necessarily close
 the SSH connection, nor does it prevent a client from requesting another
 channel of the same type. In particular, expiring an inactive forwarding
 session does not prevent another identical forwarding from being subsequently
-created. See also B<UnusedConnectionTimeout> which may be used in conjunction
-with this option.
+created.
 
 The default is not to expire channels of any type for inactivity.',
         'type' => 'leaf',
@@ -326,10 +330,10 @@ The default is not to expire channels of any type for inactivity.',
       {
         'description' => 'Specifies the pathname of a directory to L<chroot(2)> to after authentication.
 At session startup L<sshd(8)> checks that all components of the pathname are
-root-owned directories which are not writable by any other user or group. After
-the chroot, L<sshd(8)> changes the working directory to the user\'s home
-directory. Arguments to B<ChrootDirectory> accept the tokens described in the
-I<TOKENS> section.
+root-owned directories which are not writable by group or others. After the
+chroot, L<sshd(8)> changes the working directory to the user\'s home directory.
+Arguments to B<ChrootDirectory> accept the tokens described in the I<TOKENS>
+section.
 
 The B<ChrootDirectory> must contain the necessary files and directories to
 support the user\'s session. For an interactive session this requires at least a
@@ -682,16 +686,32 @@ forwarding. The default is 10.',
         'upstream_default' => '10',
         'value_type' => 'integer'
       },
+      'PAMServiceName',
+      {
+        'description' => 'Specifies the service name used for Pluggable Authentication Modules (PAM)
+authentication, authorisation and session controls when B<UsePAM> is enabled.
+The default is B<sshd>',
+        'level' => 'hidden',
+        'type' => 'leaf',
+        'value_type' => 'uniline',
+        'warp' => {
+          'follow' => {
+            'use_pam' => '- UsePAM'
+          },
+          'rules' => [
+            '$use_pam',
+            {
+              'level' => 'normal'
+            }
+          ]
+        }
+      },
       'PasswordAuthentication',
       {
-        'description' => 'Specifies whether password authentication is allowed. The default is B<yes>',
+        'description' => 'Specifies whether password authentication is allowed. The default is B<sshd>',
         'type' => 'leaf',
-        'upstream_default' => 'yes',
-        'value_type' => 'boolean',
-        'write_as' => [
-          'no',
-          'yes'
-        ]
+        'upstream_default' => 'sshd',
+        'value_type' => 'uniline'
       },
       'PermitEmptyPasswords',
       {
@@ -1079,7 +1099,7 @@ argument must be B<yes> or B<no> The default is B<yes>',
         'value_type' => 'uniline'
       }
     ],
-    'generated_by' => 'parse-man.pl from sshd_system  9.4p1 doc',
+    'generated_by' => 'parse-man.pl from sshd_system  9.8p1 doc',
     'license' => 'LGPL2',
     'name' => 'Sshd::MatchElement'
   }
