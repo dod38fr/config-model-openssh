@@ -708,7 +708,7 @@ The default is B<sshd>',
       },
       'PasswordAuthentication',
       {
-        'description' => 'Specifies whether password authentication is allowed. The default is B<sshd>',
+        'description' => 'Specifies whether password authentication is allowed. The default is B<yes>',
         'type' => 'leaf',
         'upstream_default' => 'sshd',
         'value_type' => 'uniline'
@@ -894,6 +894,15 @@ other, non-FIDO, public key types.',
           'no',
           'yes'
         ]
+      },
+      'RefuseConnection',
+      {
+        'description' => 'Indicates that L<sshd(8)> should unconditionally terminate the connection.
+Additionally, a B<refuseconnection> penalty may be recorded against the source
+of the connection if B<PerSourcePenalties> are enabled. This option is only
+really useful in a B<Match> block.',
+        'type' => 'leaf',
+        'value_type' => 'uniline'
       },
       'RekeyLimit',
       {
@@ -1099,7 +1108,7 @@ argument must be B<yes> or B<no> The default is B<yes>',
         'value_type' => 'uniline'
       }
     ],
-    'generated_by' => 'parse-man.pl from sshd_system  9.8p1 doc',
+    'generated_by' => 'parse-man.pl from sshd_system  9.9p2 doc',
     'license' => 'LGPL2',
     'name' => 'Sshd::MatchElement'
   }

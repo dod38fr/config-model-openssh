@@ -316,7 +316,8 @@ sometimes fails. The default is 1.',
         'description' => 'Specifies the timeout (in seconds) used when connecting to the SSH server,
 instead of using the default system TCP timeout. This timeout is applied both
 to establishing the connection and to performing the initial SSH protocol
-handshake and key exchange.',
+handshake and key exchange. B<SetupTimeOut> is a Debian-specific compatibility
+alias for this option.',
         'type' => 'leaf',
         'value_type' => 'integer'
       },
@@ -866,12 +867,14 @@ it will not be applied to unknown options that appear before it.',
           'value_type' => 'uniline'
         },
         'description' => 'Include the specified configuration file(s). Multiple pathnames may be
-specified and each pathname may contain L<glob(7)> wildcards and, for user
-configurations, shell-like \'~\' references to user home directories. Wildcards
-will be expanded and processed in lexical order. Files without absolute paths
-are assumed to be in ~/.ssh if included in a user configuration file or
-/etc/ssh if included from the system configuration file. B<Include> directive
-may appear inside a B<Match> or B<Host> block to perform conditional inclusion.',
+specified and each pathname may contain L<glob(7)> wildcards, tokens as
+described in the I<TOKENS> section, environment variables as described in the
+I<ENVIRONMENT VARIABLES> section and, for user configurations, shell-like \'~\'
+references to user home directories. Wildcards will be expanded and processed
+in lexical order. Files without absolute paths are assumed to be in ~/.ssh if
+included in a user configuration file or /etc/ssh if included from the system
+configuration file. B<Include> directive may appear inside a B<Match> or
+B<Host> block to perform conditional inclusion.',
         'type' => 'list'
       },
       'IPQoS',
@@ -940,7 +943,7 @@ B<pam>',
       'KexAlgorithms',
       {
         'description' => 'Specifies the permitted KEX (Key Exchange) algorithms that will be used and
-their preference order. The selected algorithm will the the first algorithm in
+their preference order. The selected algorithm will be the first algorithm in
 this list that the server also supports. Multiple algorithms must be
 comma-separated.
 
@@ -951,11 +954,11 @@ the specified list begins with a \'-\' character, then the specified algorithms
 them. If the specified list begins with a \'^\' character, then the specified
 algorithms will be placed at the head of the default set.
 
-The default is: sntrup761x25519-sha512@openssh.com, curve25519-sha256,
-curve25519-sha256@libssh.org, ecdh-sha2-nistp256, ecdh-sha2-nistp384,
-ecdh-sha2-nistp521, diffie-hellman-group-exchange-sha256,
-diffie-hellman-group16-sha512, diffie-hellman-group18-sha512,
-diffie-hellman-group14-sha256
+The default is: sntrup761x25519-sha512, sntrup761x25519-sha512@openssh.com,
+mlkem768x25519-sha256, curve25519-sha256, curve25519-sha256@libssh.org,
+ecdh-sha2-nistp256, ecdh-sha2-nistp384, ecdh-sha2-nistp521,
+diffie-hellman-group-exchange-sha256, diffie-hellman-group16-sha512,
+diffie-hellman-group18-sha512, diffie-hellman-group14-sha256
 
 The list of supported key exchange algorithms may also be obtained using Qq ssh
 -Q kex .',
@@ -1039,9 +1042,9 @@ DEBUG2 and DEBUG3 each specify higher levels of verbose output.',
       },
       'LogVerbose',
       {
-        'description' => 'Specify one or more overrides to LogLevel. An override consists of a pattern
-lists that matches the source file, function and line number to force detailed
-logging for. For example, an override pattern of:
+        'description' => 'Specify one or more overrides to LogLevel. An override consists of one or more
+pattern lists that matches the source file, function and line number to force
+detailed logging for. For example, an override pattern of:
 kex.c:*:1000,*:kex_exchange_identification():*, packet.c:*
 
 would enable detailed logging for line 1000 of kex.c everything in the Fn
@@ -1451,8 +1454,8 @@ becomes unresponsive, ssh will disconnect after approximately 45 seconds.',
 from the server, L<ssh(1)> will send a message through the encrypted channel to
 request a response from the server. The default is 0, indicating that these
 messages will not be sent to the server, or 300 if the B<BatchMode> option is
-set (Debian-specific). B<ProtocolKeepAlives> and B<SetupTimeOut> are
-Debian-specific compatibility aliases for this option.',
+set (Debian-specific). B<ProtocolKeepAlives> is a Debian-specific compatibility
+alias for this option.',
         'type' => 'leaf',
         'upstream_default' => '0',
         'value_type' => 'integer'
@@ -1758,7 +1761,7 @@ be printed for unknown host keys.',
         'value_type' => 'uniline'
       }
     ],
-    'generated_by' => 'parse-man.pl from ssh_system  9.8p1 doc',
+    'generated_by' => 'parse-man.pl from ssh_system  9.9p2 doc',
     'license' => 'LGPL2',
     'name' => 'Ssh::HostElement'
   }

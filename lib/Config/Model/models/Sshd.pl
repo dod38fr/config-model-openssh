@@ -279,14 +279,14 @@ B<diffie-hellman-group1-sha1> B<diffie-hellman-group14-sha1>
 B<diffie-hellman-group14-sha256> B<diffie-hellman-group16-sha512>
 B<diffie-hellman-group18-sha512> B<diffie-hellman-group-exchange-sha1>
 B<diffie-hellman-group-exchange-sha256> B<ecdh-sha2-nistp256>
-B<ecdh-sha2-nistp384> B<ecdh-sha2-nistp521>
-B<sntrup761x25519-sha512@openssh.com>
+B<ecdh-sha2-nistp384> B<ecdh-sha2-nistp521> B<mlkem768x25519-sha256>
+B<sntrup761x25519-sha512> B<sntrup761x25519-sha512@openssh.com>
 
-The default is: sntrup761x25519-sha512@openssh.com, curve25519-sha256,
-curve25519-sha256@libssh.org, ecdh-sha2-nistp256, ecdh-sha2-nistp384,
-ecdh-sha2-nistp521, diffie-hellman-group-exchange-sha256,
-diffie-hellman-group16-sha512, diffie-hellman-group18-sha512,
-diffie-hellman-group14-sha256
+The default is: sntrup761x25519-sha512, sntrup761x25519-sha512@openssh.com,
+mlkem768x25519-sha256, curve25519-sha256, curve25519-sha256@libssh.org,
+ecdh-sha2-nistp256, ecdh-sha2-nistp384, ecdh-sha2-nistp521,
+diffie-hellman-group-exchange-sha256, diffie-hellman-group16-sha512,
+diffie-hellman-group18-sha512, diffie-hellman-group14-sha256
 
 The list of supported key exchange algorithms may also be obtained using Qq ssh
 -Q KexAlgorithms .',
@@ -317,9 +317,9 @@ in. If the value is 0, there is no time limit. The default is 120 seconds.',
       },
       'LogVerbose',
       {
-        'description' => 'Specify one or more overrides to B<LogLevel> An override consists of a pattern
-lists that matches the source file, function and line number to force detailed
-logging for. For example, an override pattern of:
+        'description' => 'Specify one or more overrides to B<LogLevel> An override consists of one or
+more pattern lists that matches the source file, function and line number to
+force detailed logging for. For example, an override pattern of:
 kex.c:*:1000,*:kex_exchange_identification():*, packet.c:*
 
 would enable detailed logging for line 1000 of kex.c everything in the Fn
@@ -372,9 +372,11 @@ section of the config file, until either another B<Match> line or the end of
 the file. If a keyword appears in multiple B<Match> blocks that are satisfied,
 only the first instance of the keyword is applied.
 
-The arguments to B<Match> are one or more criteria-pattern pairs or the single
-token B<All> which matches all criteria. The available criteria are B<User>
-B<Group> B<Host> B<LocalAddress> B<LocalPort> and B<Address>
+The arguments to B<Match> are one or more criteria-pattern pairs or one of the
+single token criteria: B<All> which matches all criteria, or B<Invalid-User>
+which matches when the requested user-name does not match any known account.
+The available criteria are B<User> B<Group> B<Host> B<LocalAddress>
+B<LocalPort> and B<Address>
 
 The match patterns may consist of single entries or comma-separated lists and
 may use the wildcard and negation operators described in the I<PATTERNS>
@@ -403,10 +405,10 @@ B<KbdInteractiveAuthentication> B<KerberosAuthentication> B<LogLevel>
 B<MaxAuthTries> B<MaxSessions> B<PAMServiceName> B<PasswordAuthentication>
 B<PermitEmptyPasswords> B<PermitListen> B<PermitOpen> B<PermitRootLogin>
 B<PermitTTY> B<PermitTunnel> B<PermitUserRC> B<PubkeyAcceptedAlgorithms>
-B<PubkeyAuthentication> B<PubkeyAuthOptions> B<RekeyLimit> B<RevokedKeys>
-B<SetEnv> B<StreamLocalBindMask> B<StreamLocalBindUnlink> B<TrustedUserCAKeys>
-B<UnusedConnectionTimeout> B<X11DisplayOffset> B<X11Forwarding> and
-B<X11UseLocalhost>',
+B<PubkeyAuthentication> B<PubkeyAuthOptions> B<RefuseConnection> B<RekeyLimit>
+B<RevokedKeys> B<SetEnv> B<StreamLocalBindMask> B<StreamLocalBindUnlink>
+B<TrustedUserCAKeys> B<UnusedConnectionTimeout> B<X11DisplayOffset>
+B<X11Forwarding> and B<X11UseLocalhost>',
         'type' => 'list'
       },
       'MaxStartups',
@@ -484,32 +486,34 @@ to a maximum. Conversely, penalties are not applied until a minimum threshold
 time has been accumulated.
 
 Penalties are enabled by default with the default settings listed below but may
-disabled using the B<off> keyword. The defaults may be overridden by specifying
+disabled using the B<no> keyword. The defaults may be overridden by specifying
 one or more of the keywords below, separated by whitespace. All keywords accept
 arguments, e.g. Qq crash:2m .
 
 B<crash:duration> Specifies how long to refuse clients that cause a crash of
 L<sshd(8)>(default:90s). B<authfail:duration> Specifies how long to refuse
 clients that disconnect after making one or more unsuccessful authentication
-attempts (default: 5s). B<noauth:duration> Specifies how long to refuse clients
-that disconnect without attempting authentication (default: 1s). This timeout
-should be used cautiously otherwise it may penalise legitimate scanning tools
-such as ssh-keyscan1. B<grace-exceeded:duration> Specifies how long to refuse
-clients that fail to authenticate after B<LoginGraceTime> (default: 20s).
-B<max:duration> Specifies the maximum time a particular source address range
-will be refused access for (default: 10m). Repeated penalties will accumulate
-up to this maximum. B<min:duration> Specifies the minimum penalty that must
-accrue before enforcement begins (default: 15s). B<max-sources4:number ,
-max-sources6:number> Specifies the maximum number of client IPv4 and IPv6
-address ranges to track for penalties (default: 65536 for both).
-B<overflow:mode> Controls how the server behaves when B<max-sources4> or
-B<max-sources6> is exceeded. There are two operating modes: B<deny-all> which
-denies all incoming connections other than those exempted via
-B<PerSourcePenaltyExemptList> until a penalty expires, and B<permissive> which
-allows new connections by removing existing penalties early (default:
-permissive). Note that client penalties below the B<min> threshold count
-against the total number of tracked penalties. IPv4 and IPv6 addresses are
-tracked separately, so an overflow in one will not affect the other.
+attempts (default: 5s). B<refuseconnection:duration> Specifies how long to
+refuse clients that were administratively prohibited connection via the
+B<RefuseConnection> option (default: 10s). B<noauth:duration> Specifies how
+long to refuse clients that disconnect without attempting authentication
+(default: 1s). This timeout should be used cautiously otherwise it may penalise
+legitimate scanning tools such as ssh-keyscan1. B<grace-exceeded:duration>
+Specifies how long to refuse clients that fail to authenticate after
+B<LoginGraceTime> (default: 10s). B<max:duration> Specifies the maximum time a
+particular source address range will be refused access for (default: 10m).
+Repeated penalties will accumulate up to this maximum. B<min:duration>
+Specifies the minimum penalty that must accrue before enforcement begins
+(default: 15s). B<max-sources4:number , max-sources6:number> Specifies the
+maximum number of client IPv4 and IPv6 address ranges to track for penalties
+(default: 65536 for both). B<overflow:mode> Controls how the server behaves
+when B<max-sources4> or B<max-sources6> is exceeded. There are two operating
+modes: B<deny-all> which denies all incoming connections other than those
+exempted via B<PerSourcePenaltyExemptList> until a penalty expires, and
+B<permissive> which allows new connections by removing existing penalties early
+(default: permissive). Note that client penalties below the B<min> threshold
+count against the total number of tracked penalties. IPv4 and IPv6 addresses
+are tracked separately, so an overflow in one will not affect the other.
 B<overflow6:mode> Allows specifying a different overflow mode for IPv6
 addresses. The default it to use the same overflow mode as was specified for
 IPv4.',
@@ -733,7 +737,7 @@ one. The default is /usr/bin/xauth',
         'value_type' => 'uniline'
       }
     ],
-    'generated_by' => 'parse-man.pl from sshd_system  9.8p1 doc',
+    'generated_by' => 'parse-man.pl from sshd_system  9.9p2 doc',
     'include' => [
       'Sshd::MatchElement'
     ],

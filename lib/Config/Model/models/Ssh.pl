@@ -94,7 +94,7 @@ files).',
         'type' => 'hash'
       }
     ],
-    'generated_by' => 'parse-man.pl from ssh_system  9.8p1 doc',
+    'generated_by' => 'parse-man.pl from ssh_system  9.9p2 doc',
     'include' => [
       'Ssh::HostElement'
     ],
