@@ -115,21 +115,3 @@ If you want to install this software without packaging, you can also run:
 
  dzil install
 
-=head1 Update OpenSSH model
-
-To update the model, the easiest way is to use the following command in the git repo:
-
-   $ cme meta edit
-
-This command requires L<Config::Model::Itself>.
-
-On  debian or ubuntu, do:
-
-	sudo apt install libconfig-model-itself-perl
-
-Then you can explore the configuration elements in the GUI.
-
-For more information on model update, see this
-L<wiki page|https://github.com/dod38fr/config-model/wiki/How-to-add-a-new-parameter-to-an-existing-model>
-
-
