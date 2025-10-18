@@ -2,7 +2,13 @@
 
 2.9.9.1 2025-04-07
 
+  Update:
+    * Add support for OpenSsh 9.9
+
 2.9.8.1 2024-09-04
+
+  Update:
+    * Add support for OpenSsh 9.8
 
 2.9.4.1 2023-10-14
 
