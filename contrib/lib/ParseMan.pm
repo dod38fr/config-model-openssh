@@ -132,7 +132,7 @@ my $uniline_list = "type=list cargo $uniline";
 my $yes_no_leaf = "type=leaf value_type=boolean write_as=no,yes";
 my %override = (
     all => {
-        IPQoS => 'type=leaf value_type=uniline upstream_default="af21 cs1"',
+        IPQoS => $uniline,
         KbdInteractiveAuthentication => "$yes_no_leaf upstream_default=yes",
         VersionAddendum => $uniline,
     },
@@ -156,18 +156,18 @@ my %override = (
     sshd => {
         AuthenticationMethods => $uniline,
         AuthorizedKeysFile => $uniline_list,
-        AuthorizedPrincipalsFile => 'type=leaf value_type=uniline upstream_default="none"',
-        ChrootDirectory => 'type=leaf value_type=uniline upstream_default="none"',
-        ForceCommand => 'type=leaf value_type=uniline upstream_default="none"',
+        AuthorizedPrincipalsFile => $uniline . ' upstream_default="none"',
+        ChrootDirectory => $uniline . ' upstream_default="none"',
+        ForceCommand => $uniline . ' upstream_default="none"',
         GSSAPIStoreCredentialsOnRekey => "$yes_no_leaf upstream_default=no",
         IgnoreUserKnownHosts => "$yes_no_leaf upstream_default=no",
-        MaxStartups => 'type=leaf value_type=uniline upstream_default=10',
-        PAMServiceName => 'type=leaf value_type=uniline level=hidden ' .
+        MaxStartups => $uniline . ' upstream_default=10',
+        PAMServiceName => $uniline . ' level=hidden ' .
         # this parameter shows up only when UsePAM is true
         'warp follow:use_pam="- UsePAM" rules:"$use_pam" level=normal',
-        ForceCommand => 'type=leaf value_type=uniline upstream_default="none"',
-        PasswordAuthentication => 'type=leaf value_type=uniline upstream_default=sshd',
-        PerSourcePenalties => 'type=leaf value_type=uniline',
+        ForceCommand => $uniline . ' upstream_default="none"',
+        PasswordAuthentication => $uniline . ' upstream_default=sshd',
+        PerSourcePenalties => $uniline,
         Subsystem => 'type=hash index_type=string '
             . 'cargo type=leaf value_type=uniline mandatory=1 - - ',
     }
