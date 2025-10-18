@@ -134,6 +134,7 @@ my %override = (
     all => {
         IPQoS => 'type=leaf value_type=uniline upstream_default="af21 cs1"',
         KbdInteractiveAuthentication => "$yes_no_leaf upstream_default=yes",
+        VersionAddendum => $uniline,
     },
     ssh => {
         # description is too complex to parse
@@ -169,7 +170,6 @@ my %override = (
         PerSourcePenalties => 'type=leaf value_type=uniline',
         Subsystem => 'type=hash index_type=string '
             . 'cargo type=leaf value_type=uniline mandatory=1 - - ',
-        VersionAddendum => $uniline,
     }
 );
 
