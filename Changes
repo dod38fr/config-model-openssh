@@ -1,5 +1,10 @@
 {{$NEXT}}
 
+2.10.2.1 2025-10-18
+
+  Update:
+    * Add support for OpenSsh 10.2
+
 2.9.9.1 2025-04-07
 
   Update:
