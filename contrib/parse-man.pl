@@ -30,6 +30,9 @@ sub parse_man_page ($man_page_name) {
     $pipe->reader("zcat $path | man2html");
     my @lines = $pipe->getlines;
     $pipe->close;
+    if (scalar @lines == 0) {
+        die "Did not get any lines from man2html conversion. Aborting.\n";
+    }
     return parse_html_man_page(join('',@lines));
 }
 
