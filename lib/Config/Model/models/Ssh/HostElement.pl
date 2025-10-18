@@ -216,14 +216,14 @@ The available channel type names include:
 
 B<agent-connection> Open connections to ssh-agent1. B<direct-tcpip ,
 direct-streamlocal@openssh.com> Open TCP or Unix socket (respectively)
-connections that have been established from a L<ssh(1)> local forwarding, i.e.
+connections that have been established from an L<ssh(1)> local forwarding, i.e.
 B<LocalForward> or B<DynamicForward> B<forwarded-tcpip ,
 forwarded-streamlocal@openssh.com> Open TCP or Unix socket (respectively)
-connections that have been established to a L<sshd(8)> listening on behalf of a
-L<ssh(1)> remote forwarding, i.e. B<RemoteForward> B<session> The interactive
-main session, including shell session, command execution, L<scp(1)>,
-L<sftp(1)>, etc. B<tun-connection> Open B<TunnelForward> connections.
-B<x11-connection> Open X11 forwarding sessions.
+connections that have been established to an L<sshd(8)> listening on behalf of
+an L<ssh(1)> remote forwarding, i.e. B<RemoteForward> B<session> The
+interactive main session, including shell session, command execution,
+L<scp(1)>, L<sftp(1)>, etc. B<tun-connection> Open B<TunnelForward>
+connections. B<x11-connection> Open X11 forwarding sessions.
 
 Note that in all the above cases, terminating an inactive session does not
 guarantee to remove all resources associated with the session, e.g. shell
@@ -268,8 +268,8 @@ The supported ciphers are: 3des-cbc aes128-cbc aes192-cbc aes256-cbc aes128-ctr
 aes192-ctr aes256-ctr
 aes128-gcm@openssh.comaes256-gcm@openssh.comchacha20-poly1305@openssh.com
 
-The default is: chacha20-poly1305@openssh.com, aes128-ctr, aes192-ctr,
-aes256-ctr, aes128-gcm@openssh.com, aes256-gcm@openssh.com
+The default is: chacha20-poly1305@openssh.com, aes128-gcm@openssh.com,
+aes256-gcm@openssh.com, aes128-ctr, aes192-ctr, aes256-ctr
 
 The list of available ciphers may also be obtained using Qq ssh -Q cipher .',
         'type' => 'leaf',
@@ -900,18 +900,17 @@ return @good == @v ? 1 : 0;
 '
           }
         },
-        'description' => 'Specifies the IPv4 type-of-service or DSCP class for connections. Accepted
-values are B<af11> B<af12> B<af13> B<af21> B<af22> B<af23> B<af31> B<af32>
-B<af33> B<af41> B<af42> B<af43> B<cs0> B<cs1> B<cs2> B<cs3> B<cs4> B<cs5>
-B<cs6> B<cs7> B<ef> B<le> B<lowdelay> B<throughput> B<reliability> a numeric
-value, or B<none> to use the operating system default. This option may take one
-or two arguments, separated by whitespace. If one argument is specified, it is
-used as the packet class unconditionally. If two values are specified, the
-first is automatically selected for interactive sessions and the second for
-non-interactive sessions. The default is B<lowdelay> for interactive sessions
-and B<throughput> for non-interactive sessions.',
+        'description' => 'Specifies the I<Differentiated Services Field Codepoint (DSCP) > value for
+connections. Accepted values are B<af11> B<af12> B<af13> B<af21> B<af22>
+B<af23> B<af31> B<af32> B<af33> B<af41> B<af42> B<af43> B<cs0> B<cs1> B<cs2>
+B<cs3> B<cs4> B<cs5> B<cs6> B<cs7> B<ef> B<le> a numeric value, or B<none> to
+use the operating system default. This option may take one or two arguments,
+separated by whitespace. If one argument is specified, it is used as the packet
+class unconditionally. If two values are specified, the first is automatically
+selected for interactive sessions and the second for non-interactive sessions.
+The default is B<ef> (Expedited Forwarding) for interactive sessions and
+B<none> (the operating system default) for non-interactive sessions.',
         'type' => 'leaf',
-        'upstream_default' => 'af21 cs1',
         'value_type' => 'uniline'
       },
       'KbdInteractiveAuthentication',
@@ -954,11 +953,12 @@ the specified list begins with a \'-\' character, then the specified algorithms
 them. If the specified list begins with a \'^\' character, then the specified
 algorithms will be placed at the head of the default set.
 
-The default is: sntrup761x25519-sha512, sntrup761x25519-sha512@openssh.com,
-mlkem768x25519-sha256, curve25519-sha256, curve25519-sha256@libssh.org,
-ecdh-sha2-nistp256, ecdh-sha2-nistp384, ecdh-sha2-nistp521,
-diffie-hellman-group-exchange-sha256, diffie-hellman-group16-sha512,
-diffie-hellman-group18-sha512, diffie-hellman-group14-sha256
+The default is: mlkem768x25519-sha256, sntrup761x25519-sha512,
+sntrup761x25519-sha512@openssh.com, curve25519-sha256,
+curve25519-sha256@libssh.org, ecdh-sha2-nistp256, ecdh-sha2-nistp384,
+ecdh-sha2-nistp521, diffie-hellman-group-exchange-sha256,
+diffie-hellman-group16-sha512, diffie-hellman-group18-sha512,
+diffie-hellman-group14-sha256
 
 The list of supported key exchange algorithms may also be obtained using Qq ssh
 -Q kex .',
@@ -1001,13 +1001,18 @@ This directive is ignored unless B<PermitLocalCommand> has been enabled.',
           'config_class_name' => 'Ssh::PortForward',
           'type' => 'node'
         },
-        'description' => 'Specifies that a TCP port on the local machine be forwarded over the secure
-channel to the specified host and port from the remote machine. The first
-argument specifies the listener and may be [I<bind_address : port> ] or a Unix
-domain socket path. The second argument is the destination and may be I<host :
-> B<> I<hostport> or a Unix domain socket path if the remote host supports it.
+        'description' => 'Specifies that a TCP port or Unix-domain socket on the local machine be
+forwarded over the secure channel to the specified host and port (or
+Unix-domain socket) from the remote machine. For a TCP port, the first argument
+must be [I<bind_address : port> ] or a Unix domain socket path. The second
+argument is the destination and may be I<host : > B<> I<hostport> or a Unix
+domain socket path if the remote host supports it.
 
 IPv6 addresses can be specified by enclosing addresses in square brackets.
+
+If either argument contains a \'/\' in it, that argument will be interpreted as a
+Unix-domain socket (on the corresponding host) rather than a TCP port.
+
 Multiple forwardings may be specified, and additional forwardings can be given
 on the command line. Only the superuser can forward privileged ports. By
 default, the local port is bound in accordance with the B<GatewayPorts>
@@ -1222,9 +1227,9 @@ For example, the following directive would connect via an HTTP proxy at
           'value_type' => 'uniline'
         },
         'description' => 'Specifies one or more jump proxies as either [I<user > B<@> ] I<host> [: B<>
-I<port> ] or an ssh URI . Multiple proxies may be separated by comma characters
+I<port> ] or an ssh URI. Multiple proxies may be separated by comma characters
 and will be visited sequentially. Setting this option will cause L<ssh(1)> to
-connect to the target host by first making a L<ssh(1)> connection to the
+connect to the target host by first making an L<ssh(1)> connection to the
 specified B<ProxyJump> host and then establishing a TCP forwarding to the
 ultimate target from there. Setting the host to B<none> disables this option
 entirely.
@@ -1297,6 +1302,16 @@ for restricted ssh-agent1 forwarding.',
         'upstream_default' => 'yes',
         'value_type' => 'enum'
       },
+      'RefuseConnection',
+      {
+        'description' => 'Allows a connection to be refused by the configuration file. If this option is
+specified, then L<ssh(1)> will terminate immediately before attempting to
+connect to the remote host, display an error message that contains the argument
+to this keyword and return a non-zero exit status. This option may be useful to
+express reminders or warnings to the user via B<ssh_config.>',
+        'type' => 'leaf',
+        'value_type' => 'uniline'
+      },
       'RekeyLimit',
       {
         'description' => 'Specifies the maximum amount of data that may be transmitted or received before
@@ -1327,19 +1342,23 @@ tokens described in the I<TOKENS> section.',
           'config_class_name' => 'Ssh::PortForward',
           'type' => 'node'
         },
-        'description' => 'Specifies that a TCP port on the remote machine be forwarded over the secure
-channel. The remote port may either be forwarded to a specified host and port
-from the local machine, or may act as a SOCKS 4/5 proxy that allows a remote
-client to connect to arbitrary destinations from the local machine. The first
-argument is the listening specification and may be [I<bind_address : port> ]
-or, if the remote host supports it, a Unix domain socket path. If forwarding to
-a specific destination then the second argument must be I<host : > B<>
-I<hostport> or a Unix domain socket path, otherwise if no destination argument
-is specified then the remote forwarding will be established as a SOCKS proxy.
-When acting as a SOCKS proxy, the destination of the connection can be
-restricted by B<PermitRemoteOpen>
+        'description' => 'Specifies that a TCP port or Unix-domain socket on the remote machine be
+forwarded over the secure channel. The remote port may either be forwarded to a
+specified host and port or Unix-domain socket from the local machine, or may
+act as a SOCKS 4/5 proxy that allows a remote client to connect to arbitrary
+destinations from the local machine. The first argument is the listening
+specification and may be [I<bind_address : port> ] or, if the remote host
+supports it, a Unix domain socket path. If forwarding to a specific destination
+then the second argument must be I<host : > B<> I<hostport> or a Unix domain
+socket path, otherwise if no destination argument is specified then the remote
+forwarding will be established as a SOCKS proxy. When acting as a SOCKS proxy,
+the destination of the connection can be restricted by B<PermitRemoteOpen>
 
 IPv6 addresses can be specified by enclosing addresses in square brackets.
+
+If either argument contains a \'/\' in it, that argument will be interpreted as a
+Unix-domain socket (on the corresponding host) rather than a TCP port.
+
 Multiple forwardings may be specified, and additional forwardings can be given
 on the command line. Privileged ports can be forwarded only when logging in as
 root on the remote machine. Unix domain socket paths may use the tokens
@@ -1478,8 +1497,12 @@ as the -B<N> option), B<subsystem> (same as the -B<s> option) or B<default>
       'SetEnv',
       {
         'description' => 'Directly specify one or more environment variables and their contents to be
-sent to the server. Similarly to B<SendEnv> with the exception of the B<TERM>
-variable, the server must be prepared to accept the environment variable.',
+sent to the server in the form \'\'NAME=VALUE\'\' Similarly to B<SendEnv> with the
+exception of the B<TERM> variable, the server must be prepared to accept the
+environment variable.
+
+The \'\'VALUE\'\' may use the tokens described in the I<TOKENS> section and
+environment variables as described in the I<ENVIRONMENT VARIABLES> section.',
         'type' => 'leaf',
         'value_type' => 'uniline'
       },
@@ -1675,7 +1698,9 @@ server\'s hostkeys.',
       {
         'description' => 'Specifies the user to log in as. This can be useful when a different user name
 is used on different machines. This saves the trouble of having to remember to
-give the user name on the command line.',
+give the user name on the command line. Arguments to B<User> may use the tokens
+described in the I<TOKENS> section (with the exception of %r and %C) and
+environment variables as described in the I<ENVIRONMENT VARIABLES> section.',
         'type' => 'leaf',
         'value_type' => 'uniline'
       },
@@ -1713,6 +1738,13 @@ See also I<VERIFYING HOST KEYS> in L<ssh(1)>.',
         'upstream_default' => 'no',
         'value_type' => 'enum'
       },
+      'VersionAddendum',
+      {
+        'description' => 'Optionally specifies additional text to append to the SSH protocol banner sent
+by the client upon connection. The default is B<none>',
+        'type' => 'leaf',
+        'value_type' => 'uniline'
+      },
       'VisualHostKey',
       {
         'description' => 'If this flag is set to B<yes> an ASCII art representation of the remote host
@@ -1722,6 +1754,17 @@ fingerprint strings are printed at login and only the fingerprint string will
 be printed for unknown host keys.',
         'type' => 'leaf',
         'upstream_default' => 'no',
+        'value_type' => 'uniline'
+      },
+      'WarnWeakCrypto',
+      {
+        'description' => 'controls whether the user is warned when the cryptographic algorithms
+negotiated for the connection are weak or otherwise recommended against.
+Warnings may be disabled by turning off a specific warning or by disabling all
+warnings. Warnings about connections that don\'t use a post-quantum key exchange
+may be disabled using the B<no-pq-kex> flag. B<no> will disable all warnings.
+The default, equivalent to B<yes> is to enable all warnings.',
+        'type' => 'leaf',
         'value_type' => 'uniline'
       },
       'XAuthLocation',
@@ -1761,7 +1804,7 @@ be printed for unknown host keys.',
         'value_type' => 'uniline'
       }
     ],
-    'generated_by' => 'parse-man.pl from ssh_system  9.9p2 doc',
+    'generated_by' => 'parse-man.pl from ssh_system  10.2p1 doc',
     'license' => 'LGPL2',
     'name' => 'Ssh::HostElement'
   }

@@ -45,8 +45,8 @@ B<3des-cbc> B<aes128-cbc> B<aes192-cbc> B<aes256-cbc> B<aes128-ctr>
 B<aes192-ctr> B<aes256-ctr> B<aes128-gcm@openssh.com> B<aes256-gcm@openssh.com>
 B<chacha20-poly1305@openssh.com>
 
-The default is: chacha20-poly1305@openssh.com, aes128-ctr, aes192-ctr,
-aes256-ctr, aes128-gcm@openssh.com, aes256-gcm@openssh.com
+The default is: chacha20-poly1305@openssh.com, aes128-gcm@openssh.com,
+aes256-gcm@openssh.com, aes128-ctr, aes192-ctr, aes256-ctr
 
 The list of available ciphers may also be obtained using Qq ssh -Q cipher .',
         'type' => 'leaf',
@@ -282,11 +282,10 @@ B<diffie-hellman-group-exchange-sha256> B<ecdh-sha2-nistp256>
 B<ecdh-sha2-nistp384> B<ecdh-sha2-nistp521> B<mlkem768x25519-sha256>
 B<sntrup761x25519-sha512> B<sntrup761x25519-sha512@openssh.com>
 
-The default is: sntrup761x25519-sha512, sntrup761x25519-sha512@openssh.com,
-mlkem768x25519-sha256, curve25519-sha256, curve25519-sha256@libssh.org,
-ecdh-sha2-nistp256, ecdh-sha2-nistp384, ecdh-sha2-nistp521,
-diffie-hellman-group-exchange-sha256, diffie-hellman-group16-sha512,
-diffie-hellman-group18-sha512, diffie-hellman-group14-sha256
+The default is: mlkem768x25519-sha256, sntrup761x25519-sha512,
+sntrup761x25519-sha512@openssh.com, curve25519-sha256,
+curve25519-sha256@libssh.org, ecdh-sha2-nistp256, ecdh-sha2-nistp384,
+ecdh-sha2-nistp521
 
 The list of supported key exchange algorithms may also be obtained using Qq ssh
 -Q KexAlgorithms .',
@@ -298,13 +297,19 @@ The list of supported key exchange algorithms may also be obtained using Qq ssh
         'description' => 'Specifies the local addresses L<sshd(8)> should listen on. The following forms
 may be used:
 
-B<ListenAddress> I<hostname | address> B<ListenAddress> I<hostname : port>
-B<ListenAddress> I<IPv4_address : port> B<ListenAddress> [I<hostname | address
-: port> ]
+B<ListenAddress> I<hostname | address> [B<rdomain> I<domain> ] B<ListenAddress>
+I<hostname : port> [B<rdomain> I<domain> ] B<ListenAddress> I<IPv4_address :
+port> [B<rdomain> I<domain> ] B<ListenAddress> [I<hostname | address : port> ]
+[B<rdomain> I<domain> ]
 
-If I<port> is not specified, sshd will listen on the address and all B<Port>
-options specified. The default is to listen on all local addresses. Multiple
-B<ListenAddress> options are permitted.',
+The optional B<rdomain> qualifier requests L<sshd(8)> listen in an explicit
+routing domain. If I<port> is not specified, sshd will listen on the address
+and all B<Port> options specified. The default is to listen on all local
+addresses on the current default routing domain. Multiple B<ListenAddress>
+options are permitted.
+
+On Linux, routing domains are implemented using Virtual Routing and Forwarding
+domains (VRFs); for more information, see ip-vrf8.',
         'type' => 'leaf',
         'value_type' => 'uniline'
       },
@@ -376,7 +381,8 @@ The arguments to B<Match> are one or more criteria-pattern pairs or one of the
 single token criteria: B<All> which matches all criteria, or B<Invalid-User>
 which matches when the requested user-name does not match any known account.
 The available criteria are B<User> B<Group> B<Host> B<LocalAddress>
-B<LocalPort> and B<Address>
+B<LocalPort> B<Version> B<RDomain> and B<Address> (with B<RDomain> representing
+the routing domain on which the connection was received; see ip-vrf8).
 
 The match patterns may consist of single entries or comma-separated lists and
 may use the wildcard and negation operators described in the I<PATTERNS>
@@ -388,6 +394,9 @@ Note that the mask length provided must be consistent with the address - it is
 an error to specify a mask length that is too long for the address or one with
 bits set in this host portion of the address. For example, 192.0.2.0/33 and
 192.0.2.0/8, respectively.
+
+The B<Version> keyword matches against the version string of L<sshd(8)>, for
+example \'\'OpenSSH_10.0\'\'
 
 Only a subset of keywords may be used on the lines following a B<Match>
 keyword. Available keywords are B<AcceptEnv> B<AllowAgentForwarding>
@@ -589,6 +598,15 @@ support.',
         'type' => 'leaf',
         'value_type' => 'uniline'
       },
+      'SshdAuthPath',
+      {
+        'description' => 'Overrides the default path to the B<sshd-auth> binary that is invoked to
+complete user authentication. The default is /usr/lib/openssh/sshd-auth This
+option is intended for use by tests.',
+        'type' => 'leaf',
+        'upstream_default' => '/usr/lib/openssh/sshd',
+        'value_type' => 'uniline'
+      },
       'SshdSessionPath',
       {
         'description' => 'Overrides the default path to the B<sshd-session> binary that is invoked to
@@ -737,7 +755,7 @@ one. The default is /usr/bin/xauth',
         'value_type' => 'uniline'
       }
     ],
-    'generated_by' => 'parse-man.pl from sshd_system  9.9p2 doc',
+    'generated_by' => 'parse-man.pl from sshd_system  10.2p1 doc',
     'include' => [
       'Sshd::MatchElement'
     ],

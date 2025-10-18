@@ -169,7 +169,7 @@ described in the I<TOKENS> section. If no arguments are specified then the
 username of the target user is used.
 
 The program should produce on standard output zero or more lines of
-authorized_keys output (see I<AUTHORIZED_KEYS> in L<sshd(8)>).
+authorized_keys output (see B<AUTHORIZED_KEYS> in L<sshd(8)>).
 B<AuthorizedKeysCommand> is tried after the usual B<AuthorizedKeysFile> files
 and will not be executed if a matching key is found there. By default, no
 B<AuthorizedKeysCommand> is run.',
@@ -193,12 +193,12 @@ B<AuthorizedKeysCommandUser> is not, then L<sshd(8)> will refuse to start.',
         },
         'description' => 'Specifies the file that contains the public keys used for user authentication.
 The format is described in the AUTHORIZED_KEYS FILE FORMAT section of
-L<sshd(8)>. Arguments to B<AuthorizedKeysFile> accept the tokens described in
-the I<TOKENS> section. After expansion, B<AuthorizedKeysFile> is taken to be an
-absolute path or one relative to the user\'s home directory. Multiple files may
-be listed, separated by whitespace. Alternately this option may be set to
-B<none> to skip checking for user keys in files. The default is Qq
-.ssh/authorized_keys .ssh/authorized_keys2 .',
+L<sshd(8)>. Arguments to B<AuthorizedKeysFile> may include wildcards and accept
+the tokens described in the I<TOKENS> section. After expansion,
+B<AuthorizedKeysFile> is taken to be an absolute path or one relative to the
+user\'s home directory. Multiple files may be listed, separated by whitespace.
+Alternately this option may be set to B<none> to skip checking for user keys in
+files. The default is Qq .ssh/authorized_keys .ssh/authorized_keys2 .',
         'migrate_values_from' => '- AuthorizedKeysFile2',
         'type' => 'list'
       },
@@ -236,14 +236,15 @@ start.',
 authentication. When using certificates signed by a key listed in
 B<TrustedUserCAKeys> this file lists names, one of which must appear in the
 certificate for it to be accepted for authentication. Names are listed one per
-line preceded by key options (as described in I<AUTHORIZED_KEYS FILE FORMAT> in
+line preceded by key options (as described in B<AUTHORIZED_KEYS FILE FORMAT> in
 L<sshd(8)>). Empty lines and comments starting with \'#\' are ignored.
 
-Arguments to B<AuthorizedPrincipalsFile> accept the tokens described in the
-I<TOKENS> section. After expansion, B<AuthorizedPrincipalsFile> is taken to be
-an absolute path or one relative to the user\'s home directory. The default is
-B<none> i.e. not to use a principals file - in this case, the username of the
-user must appear in a certificate\'s principals list for it to be accepted.
+Arguments to B<AuthorizedPrincipalsFile> may include wildcards and accept the
+tokens described in the I<TOKENS> section. After expansion,
+B<AuthorizedPrincipalsFile> is taken to be an absolute path or one relative to
+the user\'s home directory. The default is B<none> i.e. not to use a principals
+file - in this case, the username of the user must appear in a certificate\'s
+principals list for it to be accepted.
 
 Note that B<AuthorizedPrincipalsFile> is only used when authentication proceeds
 using a CA listed in B<TrustedUserCAKeys> and is not consulted for
@@ -303,14 +304,14 @@ The available channel type names include:
 
 B<agent-connection> Open connections to ssh-agent1. B<direct-tcpip ,
 direct-streamlocal@openssh.com> Open TCP or Unix socket (respectively)
-connections that have been established from a L<ssh(1)> local forwarding, i.e.
+connections that have been established from an L<ssh(1)> local forwarding, i.e.
 B<LocalForward> or B<DynamicForward> B<forwarded-tcpip ,
 forwarded-streamlocal@openssh.com> Open TCP or Unix socket (respectively)
-connections that have been established to a L<sshd(8)> listening on behalf of a
-L<ssh(1)> remote forwarding, i.e. B<RemoteForward> B<session> The interactive
-main session, including shell session, command execution, L<scp(1)>,
-L<sftp(1)>, etc. B<tun-connection> Open B<TunnelForward> connections.
-B<x11-connection> Open X11 forwarding sessions.
+connections that have been established to an L<sshd(8)> listening on behalf of
+an L<ssh(1)> remote forwarding, i.e. B<RemoteForward> B<session> The
+interactive main session, including shell session, command execution,
+L<scp(1)>, L<sftp(1)>, etc. B<tun-connection> Open B<TunnelForward>
+connections. B<x11-connection> Open X11 forwarding sessions.
 
 Note that in all the above cases, terminating an inactive session does not
 guarantee to remove all resources associated with the session, e.g. shell
@@ -596,18 +597,17 @@ return @good == @v ? 1 : 0;
 '
           }
         },
-        'description' => 'Specifies the IPv4 type-of-service or DSCP class for the connection. Accepted
-values are B<af11> B<af12> B<af13> B<af21> B<af22> B<af23> B<af31> B<af32>
-B<af33> B<af41> B<af42> B<af43> B<cs0> B<cs1> B<cs2> B<cs3> B<cs4> B<cs5>
-B<cs6> B<cs7> B<ef> B<le> B<lowdelay> B<throughput> B<reliability> a numeric
-value, or B<none> to use the operating system default. This option may take one
-or two arguments, separated by whitespace. If one argument is specified, it is
-used as the packet class unconditionally. If two values are specified, the
-first is automatically selected for interactive sessions and the second for
-non-interactive sessions. The default is B<lowdelay> for interactive sessions
-and B<throughput> for non-interactive sessions.',
+        'description' => 'Specifies the I<Differentiated Services Field Codepoint (DSCP) > value for the
+connection. Accepted values are B<af11> B<af12> B<af13> B<af21> B<af22> B<af23>
+B<af31> B<af32> B<af33> B<af41> B<af42> B<af43> B<cs0> B<cs1> B<cs2> B<cs3>
+B<cs4> B<cs5> B<cs6> B<cs7> B<ef> B<le> a numeric value, or B<none> to use the
+operating system default. This option may take one or two arguments, separated
+by whitespace. If one argument is specified, it is used as the packet class
+unconditionally. If two values are specified, the first is automatically
+selected for interactive sessions and the second for non-interactive sessions.
+The default is B<ef> (Expedited Forwarding) for interactive sessions and
+B<none> (the operating system default) for non-interactive sessions.',
         'type' => 'leaf',
-        'upstream_default' => 'af21 cs1',
         'value_type' => 'uniline'
       },
       'KbdInteractiveAuthentication',
@@ -1108,7 +1108,7 @@ argument must be B<yes> or B<no> The default is B<yes>',
         'value_type' => 'uniline'
       }
     ],
-    'generated_by' => 'parse-man.pl from sshd_system  9.9p2 doc',
+    'generated_by' => 'parse-man.pl from sshd_system  10.2p1 doc',
     'license' => 'LGPL2',
     'name' => 'Sshd::MatchElement'
   }

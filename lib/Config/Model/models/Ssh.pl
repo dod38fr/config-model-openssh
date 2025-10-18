@@ -50,10 +50,10 @@ keyword) to be used only when the conditions following the B<Match> keyword are
 satisfied. Match conditions are specified using one or more criteria or the
 single token B<all> which always matches. The available criteria keywords are:
 B<canonical> B<final> B<exec> B<localnetwork> B<host> B<originalhost> B<tagged>
-B<user> and B<localuser> The B<all> criteria must appear alone or immediately
-after B<canonical> or B<final> Other criteria may be combined arbitrarily. All
-criteria but B<all> B<canonical> and B<final> require an argument. Criteria may
-be negated by prepending an exclamation mark (\'!\' )
+B<command> B<user> B<localuser> and B<version> The B<all> criteria must appear
+alone or immediately after B<canonical> or B<final> Other criteria may be
+combined arbitrarily. All criteria but B<all> B<canonical> and B<final> require
+an argument. Criteria may be negated by prepending an exclamation mark (\'!\' )
 
 The B<canonical> keyword matches only when the configuration file is being
 re-parsed after hostname canonicalization (see the B<CanonicalizeHostname>
@@ -80,21 +80,36 @@ configuration.
 
 The other keywords\' criteria must be single entries or comma-separated lists
 and may use the wildcard and negation operators described in the I<PATTERNS>
-section. The criteria for the B<host> keyword are matched against the target
-hostname, after any substitution by the B<Hostname> or B<CanonicalizeHostname>
-options. The B<originalhost> keyword matches against the hostname as it was
-specified on the command-line. The B<tagged> keyword matches a tag name
-specified by a prior B<Tag> directive or on the L<ssh(1)> command-line using
-the -B<P> flag. The B<user> keyword matches against the target username on the
-remote host. The B<localuser> keyword matches against the name of the local
-user running L<ssh(1)> (this keyword may be useful in system-wide B<ssh_config>
-files).',
+section.
+
+The criteria for the B<host> keyword are matched against the target hostname,
+after any substitution by the B<Hostname> or B<CanonicalizeHostname> options.
+The B<originalhost> keyword matches against the hostname as it was specified on
+the command-line.
+
+The B<tagged> keyword matches a tag name specified by a prior B<Tag> directive
+or on the L<ssh(1)> command-line using the -B<P> flag. The B<command> keyword
+matches the remote command that has been requested, or the subsystem name that
+is being invoked (e.g. Qq sftp for an SFTP session). The empty string will
+match the case where a command or tag has not been specified, i.e. \'Match tag \'
+The B<version> keyword matches against the version string of L<ssh(1)>, for
+example \'\'OpenSSH_10.0\'\'
+
+The B<user> keyword matches against the target username on the remote host. The
+B<localuser> keyword matches against the name of the local user running
+L<ssh(1)> (this keyword may be useful in system-wide B<ssh_config> files).
+
+Finally, the B<sessiontype> keyword matches the requested session type, which
+may be one of B<shell> for interactive sessions, B<exec> for command execution
+sessions, B<subsystem> for subsystem invocations such as L<sftp(1)>, or B<none>
+for transport-only sessions, such as when L<ssh(1)> is started with the -B<N>
+flag.',
         'index_type' => 'string',
         'ordered' => '1',
         'type' => 'hash'
       }
     ],
-    'generated_by' => 'parse-man.pl from ssh_system  9.9p2 doc',
+    'generated_by' => 'parse-man.pl from ssh_system  10.2p1 doc',
     'include' => [
       'Ssh::HostElement'
     ],
